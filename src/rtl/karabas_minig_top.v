@@ -18,10 +18,10 @@
 --                                                                                 #             # #             # 
 -- https://github.com/andykarpov/karabas-go                                        ############### ############### 
 --
--- FPGA TS-Conf core for Karabas-Go Mini
+-- ZX Evolution BaseConf core for Karabas-Go Mini G
 --
--- @author Andy Karpov <andy.karpov@gmail.com>
--- EU, 2024-2025
+-- The port of the ZX-Evo Base Configuration (c) NedoPC: Sergei Lemeshev (lordamot), 2026.
+-- The board wrapper is that of the TS-Conf core: Andy Karpov <andy.karpov@gmail.com>, 2024-2025
 ------------------------------------------------------------------------------------------------------------------*/
 
 // Warning! HW_ID2 and HW_ID3 macroses are defined in the Synthesize - XST process properties!
@@ -125,243 +125,326 @@ module karabas_minig_top (
 	output wire 			FLASH_SCK,
 	output wire 			FLASH_WP_N,
 	output wire 			FLASH_HOLD_N
-);	assign FLASH_CS_N = 1'b1;
-	assign FLASH_DI = 1'b1;
-	assign FLASH_SCK = 1'b0;
-	assign FLASH_WP_N = 1'b1;
-	assign FLASH_HOLD_N = 1'b1;
-	
+);
 
-	
-	wire clk_sys;
-	wire clk_8mhz;
-	wire clk_bus;
-	wire clk_12mhz;
-   wire locked;
-	wire areset;
-	// VCO 50 * 37 / 2 = 925 MHz, phase 0: clk_sys 84.09 MHz (/11), clk_8 7.97 MHz (/116), clk_bus 28.03 MHz (/33,
-	// every third edge of clk_sys), MIDI 12.01 MHz (/77). clk_bus was a BUFGCE of clk_sys with ce_28m. Its BUFG is
-	// here, as on the Mini (where its PLL output also drives the BUFGMUXes of HDMI): the same net names in the ucf.
-	wire [5:0] pll_clk;
-	kg_pll #(
-		.DIVCLK_DIVIDE(2), .CLKFBOUT_MULT(37),
-		.CLKOUT0_DIVIDE(11), .CLKOUT1_DIVIDE(116), .CLKOUT2_DIVIDE(33), .CLKOUT3_DIVIDE(77),
-		.BUFG_MASK(6'b001011)
-	) pll (
-		.clk_in(CLK_50MHZ),
-		.rst(1'b0),
-		.clk_out(pll_clk),
-		.locked(locked)
-	);
-	assign clk_sys = pll_clk[0];
-	assign clk_8mhz = pll_clk[1];
-	BUFG bufg_clk_bus(.I(pll_clk[2]), .O(clk_bus));
-	assign clk_12mhz = pll_clk[3];
-	
-	assign areset = ~locked;
-	
-	// clk_sys enables of the edges of clk_bus: ce_28m for the SRAM controller, v_clk for the V_CLK pin
-	wire ce_28m, v_clk;
-	bus_ce bus_ce(.clk_sys(clk_sys), .clk_bus(clk_bus), .ce(ce_28m), .v_clk(v_clk));
-	
-	reg tape_in_r;
-	always @(posedge clk_bus)
-	begin
-		tape_in_r <= TAPE_IN;
-	end 
-	
-	wire [7:0] video_r;
-	wire [7:0] video_g;
-	wire [7:0] video_b;
-	wire [7:0] osd_r;
-	wire [7:0] osd_g;
-	wire [7:0] osd_b;
-	wire video_hsync;
-    wire video_blank;
-	wire video_vsync;
-	wire btn_reset_n;
-	wire audio_beeper;
-	wire [15:0] audio_out_l;
-	wire [15:0] audio_out_r;
-	wire [12:0] joy_l;
-	wire [12:0] joy_r;
-	wire [2:0] mouse_addr;
-	reg [7:0] mouse_data;
-	wire [15:8] keyboard_addr;
-	wire [5:0] keyboard_data;
-	wire [7:0] keyboard_scancode;
-	wire [7:0] rtc_addr;
-	wire [7:0] rtc_di;
-	wire [7:0] rtc_do;
-	wire rtc_wr, rtc_rd;
-	wire [7:0] uart_rx_data;
-	wire [7:0] uart_rx_idx;
-	wire [7:0] uart_tx_data;
-	wire uart_tx_wr;
-	wire [7:0] uart_dlm;
-	wire [7:0] uart_dll;
-	wire uart_dll_wr, uart_dlm_wr, uart_tx_mode;
-	wire [7:0] hid_kb_status;
-	wire [7:0] hid_kb_dat0;
-	wire [7:0] hid_kb_dat1;
-	wire [7:0] hid_kb_dat2;
-	wire [7:0] hid_kb_dat3;
-	wire [7:0] hid_kb_dat4;
-	wire [7:0] hid_kb_dat5;
-	wire [7:0] ps2_scancode;
-	wire ps2_scancode_upd;
-	assign keyboard_scancode = ps2_scancode;
-	wire loader_act;
-	wire [31:0] loader_addr;
-	wire [7:0] loader_data;
-	wire loader_wr;
-	wire [15:0] softsw_command;
-	wire [15:0] osd_command;
-	wire [2:0] kb_joy_type_l;
-	wire [2:0] kb_joy_type_r;
-	wire kb_vga_60hz;
-	wire [7:0] joy_bus;
-	wire kb_pause;
-	wire kb_reset;
-	wire kb_nmi;
-	wire mcu_busy;
-	wire f1;
-	wire [1:0] hw_btn;
+// unused signals yet
+assign FLASH_CS_N 	= 1'b1;
+assign FLASH_DI 		= 1'b1;
+assign FLASH_SCK 		= 1'b0;
+assign FLASH_WP_N 	= 1'b1;
+assign FLASH_HOLD_N 	= 1'b1;
 
-	baseconf machine (
-        .fdc_rdata(1'b0), .fdc_wprt(1'b1), .fdc_tr00(1'b0), .fdc_index(1'b0),
-        .VGA_BLANK(video_blank),
-     .clk(clk_sys),
-	  .clk8(clk_8mhz),
-	  .ce(ce_28m),
-	  .resetbtn_n(btn_reset_n),	
-		.resetgsbtn_n(1'b1),
-	  .locked(locked),
-	  .clk_bus(clk_bus),
-	  .f1_out(f1),
-	  
-	  .sram_addr(MA),
-	  .sram_data(MD),
-     .sram_we_n(MWR_N),
-     .sram_rd_n(MRD_N),
-	  
-     .VGA_R(video_r),
-     .VGA_G(video_g),
-     .VGA_B(video_b),
-     .VGA_HS(video_hsync),
-     .VGA_VS(video_vsync),	  
-     
-	  .beep(audio_beeper),
-	  .audio_out_l(audio_out_l),
-	  .audio_out_r(audio_out_r),
+// system clocks
+wire clk_sys, clk_8mhz, clk_bus, clk_bus_pll, clk_12mhz;
+wire locked, areset;
 
-	  .sdcs_n(SD_CS_N),
-     .sdclk(SD_CLK),
-     .sddo(SD_DI),
-     .sddi(SD_DO),
-	  
-	  .ftcs_n(ftcs_n),
-	  .espcs_n(espcs_n),
-	  .espcs_in(espcs_in),
-	  .esp_ft_spi_dis(esp_ft_spi_dis),		  
-	  .ftclk(ftclk),
-	  .ftdo(ftdo),
-	  .ftdi(ftdi),
-	  .ftint(ftint),
-	  .vdac2_sel(vdac2_sel),
-	  
-	  .joy_data (joy_bus),
+// VCO 50 * 37 / 2 = 925 MHz, phase 0: clk_sys 84.09 MHz (/11), clk_8 7.97 MHz (/116), clk_bus 28.03 MHz (/33,
+// every third edge of clk_sys), MIDI 12.01 MHz (/77). Its PLL output of clk_bus has no BUFG in kg_pll: it drives
+// the BUFG of clk_bus and the BUFGMUXes of hdmi_pll (no BUFG in front of them).
+wire [5:0] pll_clk;
+kg_pll #(
+	.DIVCLK_DIVIDE(2), .CLKFBOUT_MULT(37),
+	.CLKOUT0_DIVIDE(11), .CLKOUT1_DIVIDE(116), .CLKOUT2_DIVIDE(33), .CLKOUT3_DIVIDE(77),
+	.BUFG_MASK(6'b001011)
+) pll (
+	.clk_in			(CLK_50MHZ),
+	.rst				(1'b0),
+	.clk_out			(pll_clk),
+	.locked			(locked)
+);
+assign clk_sys = pll_clk[0];
+assign clk_8mhz = pll_clk[1];
+assign clk_bus_pll = pll_clk[2];
+assign clk_12mhz = pll_clk[3];
+BUFG bufg_clk_bus(.I(clk_bus_pll), .O(clk_bus));
 
-	  .mouse_addr(mouse_addr),
-	  .mouse_data(mouse_data),
-		
-	  .keyboard_addr(keyboard_addr),
-	  .keyboard_data(keyboard_data[4:0]),
-	  .keyboard_scancode(keyboard_scancode),
-		
-	  .rtc_addr(rtc_addr),
-	  .rtc_di(rtc_di),
-	  .rtc_do(rtc_do_mapped),
-	  .rtc_wr(rtc_wr),
-	  .rtc_rd(rtc_rd),
-	  
-	  .uart_rx(UART_RX),
-	  .uart_tx(UART_TX),
-	  .uart_cts(UART_CTS),
-	  
-	  .ide_d(WD),
-	  .ide_rs_n(WRESET_N),
-	  .ide_a(WA),
-	  .ide_dir(),
-	  .ide_cs0_n(WCS_N[0]),
-	  .ide_cs1_n(WCS_N[1]),
-	  .ide_rd_n(WRD_N),
-	  .ide_wr_n(WWR_N),
-	  .ide_rdy(1'b1),
-	  
-	  .tape_in(tape_in_r),
-	  .tape_out(TAPE_OUT),
-	  
-	  .covox_en(covox_en),
-	  .psg_mix(psg_mix),
-	  .psg_type(psg_type),
-	  .vga_60hz(kb_vga_60hz),
-      .pause(kb_pause), .nmi_button(kb_nmi),
-	  
-	  .loader_act(loader_act),
-	  .loader_a(loader_addr),
-	  .loader_d(loader_data),
-	  .loader_wr(loader_wr),
-	  
-	  .usb_uart_rx_data(uart_rx_data),
-	  .usb_uart_rx_idx(uart_rx_idx),	 
-	  .usb_uart_tx_data(uart_tx_data),
-	  .usb_uart_tx_wr(uart_tx_wr),
-	  .usb_uart_tx_mode(uart_tx_mode),
-	  .usb_uart_dll(uart_dll),
-	  .usb_uart_dlm(uart_dlm),
-	  .usb_uart_dll_wr(uart_dll_wr),
-	  .usb_uart_dlm_wr(uart_dlm_wr),
+// ft clk 8mhz out: the FT812 must always have its clock, also when the core does not use it (without it its
+// audio output hums into the ADC and the analog outputs)
+ODDR2 u_ft_clk (.Q(FT_CLK_OUT), .C0(clk_8mhz), .C1(~clk_8mhz), .CE(1'b1), .D0(1'b1), .D1(1'b0), .R(1'b0), .S(1'b0));
 
-		.sdram_clk(),
-      .sdram_ba(SDR_BA),
-      .sdram_a(SDR_A),
-      .sdram_dqm(SDR_DQM),
-      .sdram_we_n(SDR_WE_N),
-      .sdram_cas_n(SDR_CAS_N),
-      .sdram_ras_n(SDR_RAS_N),
-      .sdram_dq(SDR_DQ),
-		
-		.midi_reset_n(),
-		.midi_tx(MIDI_TX)
-	  
-	 );
-	 
-wire [7:0] rtc_do_mapped;
-	 
+// sdram clock, inverted (the controller of baseconf_sdram.v runs on clk_sys)
+ODDR2 sdr_clock(.Q(SDR_CLK), .C0(clk_sys), .C1(~clk_sys), .CE(1'b1), .D0(1'b0), .D1(1'b1), .R(1'b0), .S(1'b0));
+
+assign areset = ~locked;
+
+// clk_sys enable of the edges of clk_bus, for the SRAM controller
+wire ce_28m;
+bus_ce bus_ce(.clk_sys(clk_sys), .clk_bus(clk_bus), .ce(ce_28m), .v_clk());
+
+// tape in reg
+reg tape_in_r;
+always @(posedge clk_bus)
+begin
+	tape_in_r <= TAPE_IN;
+end
+
+// baseconf core
+wire [7:0] video_r, video_g, video_b, osd_r, osd_g, osd_b;
+wire video_hsync, video_vsync, video_blank;
+wire btn_reset_n;
+wire audio_beeper;
+wire [15:0] audio_out_l, audio_out_r;
+wire [15:0] audio_mix_l, audio_mix_r;
+wire [12:0] joy_l, joy_r;
+wire [2:0] mouse_addr;
+reg [7:0] mouse_data;
+wire [15:8] keyboard_addr;
+wire [5:0] keyboard_data;
+wire [7:0] rtc_addr;
+wire [7:0] rtc_di, rtc_do, rtc_do_mapped;
+wire rtc_wr, rtc_rd;
+wire [7:0] uart_rx_data, uart_rx_idx, uart_tx_data;
+wire uart_tx_wr;
+wire [7:0] uart_dlm, uart_dll;
+wire uart_dll_wr, uart_dlm_wr, uart_tx_mode;
+wire [7:0] hid_kb_status, hid_kb_dat0, hid_kb_dat1, hid_kb_dat2, hid_kb_dat3, hid_kb_dat4, hid_kb_dat5;
+wire [7:0] ps2_scancode;
+wire ps2_scancode_upd;
+wire loader_act;
+wire [31:0] loader_addr;
+wire [7:0] loader_data;
+wire loader_wr;
+wire [15:0] softsw_command;
+wire [15:0] osd_command;
+wire [2:0] kb_joy_type_l, kb_joy_type_r;
+wire kb_vga_60hz;
+wire [7:0] joy_bus;
+wire kb_pause, kb_reset, kb_nmi, mcu_busy;
+wire covox_en, psg_type;
+wire [1:0] psg_mix;
+wire f1;
+wire [7:0] hwid;
+wire dvi_only;
+wire [1:0] hw_btn;
+
+baseconf machine (
+	.clk					(clk_sys),
+	.clk8					(clk_8mhz),
+	.ce					(ce_28m),
+	.resetbtn_n			(btn_reset_n),
+	.resetgsbtn_n		(1'b1),
+	.locked				(locked),
+	.clk_bus				(clk_bus),
+	.f1_out				(f1),
+
+	.sram_addr			(MA),
+	.sram_data			(MD),
+	.sram_we_n			(MWR_N),
+	.sram_rd_n			(MRD_N),
+
+	.VGA_R				(video_r),
+	.VGA_G				(video_g),
+	.VGA_B				(video_b),
+	.VGA_HS				(video_hsync),
+	.VGA_VS				(video_vsync),
+	.VGA_BLANK			(video_blank),
+
+	.beep					(audio_beeper),
+	.audio_out_l		(audio_out_l),
+	.audio_out_r		(audio_out_r),
+	.adc_in_l			(adc_l[23:8]),
+	.adc_in_r			(adc_r[23:8]),
+	.esp_in_l			(esp_l[15:0]),
+	.esp_in_r			(esp_r[15:0]),
+
+	.sdcs_n				(SD_CS_N),
+	.sdclk				(SD_CLK),
+	.sddo					(SD_DI),
+	.sddi					(SD_DO),
+
+	.ftcs_n				(ftcs_n),
+	.espcs_n				(espcs_n),
+	.espcs_in			(espcs_in),
+	.esp_ft_spi_dis	(esp_ft_spi_dis),
+	.ftclk				(ftclk),
+	.ftdo					(ftdo),
+	.ftdi					(ftdi),
+	.ftint				(ftint),
+	.vdac2_sel			(vdac2_sel),
+
+	.joy_data			(joy_bus),
+
+	.mouse_addr			(mouse_addr),
+	.mouse_data			(mouse_data),
+
+	.keyboard_addr		(keyboard_addr),
+	.keyboard_data		(keyboard_data[4:0]),
+	.keyboard_scancode(ps2_scancode),
+
+	.rtc_addr			(rtc_addr),
+	.rtc_di				(rtc_di),
+	.rtc_do				(rtc_do_mapped),
+	.rtc_wr				(rtc_wr),
+	.rtc_rd				(rtc_rd),
+
+	.uart_rx				(UART_RX),
+	.uart_tx				(UART_TX),
+	.uart_cts			(UART_CTS),
+
+	.ide_d				(WD),
+	.ide_rs_n			(WRESET_N),
+	.ide_a				(WA),
+	.ide_dir				(),
+	.ide_cs0_n			(WCS_N[0]),
+	.ide_cs1_n			(WCS_N[1]),
+	.ide_rd_n			(WRD_N),
+	.ide_wr_n			(WWR_N),
+	.ide_rdy				(1'b1),
+
+	.tape_in				(tape_in_r),
+	.tape_out			(TAPE_OUT),
+
+	.covox_en			(covox_en),
+	.psg_mix				(psg_mix),
+	.psg_type			(psg_type),
+	.vga_60hz			(kb_vga_60hz),
+	.pause				(kb_pause),
+	.nmi_button			(kb_nmi),
+
+	.loader_act			(loader_act),
+	.loader_a			(loader_addr),
+	.loader_d			(loader_data),
+	.loader_wr			(loader_wr),
+
+	.usb_uart_rx_data	(uart_rx_data),
+	.usb_uart_rx_idx	(uart_rx_idx),
+	.usb_uart_tx_data	(uart_tx_data),
+	.usb_uart_tx_wr	(uart_tx_wr),
+	.usb_uart_tx_mode	(uart_tx_mode),
+	.usb_uart_dll		(uart_dll),
+	.usb_uart_dlm		(uart_dlm),
+	.usb_uart_dll_wr	(uart_dll_wr),
+	.usb_uart_dlm_wr	(uart_dlm_wr),
+
+	.sdram_clk			(),
+	.sdram_ba			(SDR_BA),
+	.sdram_a				(SDR_A),
+	.sdram_dqm			(SDR_DQM),
+	.sdram_we_n			(SDR_WE_N),
+	.sdram_cas_n		(SDR_CAS_N),
+	.sdram_ras_n		(SDR_RAS_N),
+	.sdram_dq			(SDR_DQ),
+
+	.midi_reset_n		(),
+	.midi_tx				(MIDI_TX)
+);
+
+// ft control signals, mux between baseconf / mcu access
 wire ftcs_n, espcs_n, espcs_in, esp_ft_spi_dis, ftclk, ftdo, ftdi, ftint, vdac2_sel;
 wire mcu_ft_spi_on, mcu_ft_vga_on, mcu_ft_sck, mcu_ft_mosi, mcu_ft_cs_n;
 
-wire ft_video_active = vdac2_sel | mcu_ft_vga_on;
-assign espcs_in = 1;
+// MCU_SCK on a global buffer: the flip-flops of the SPI receiver on local routing had several ns of clock skew.
+// The SCK passed to the FT812 (FT_SPI_SCK) is taken before the BUFG, a BUFG drives clock pins only.
+wire mcu_sck_ibufg, mcu_sck;
+IBUFG ibufg_mcu_sck(.I(MCU_SCK), .O(mcu_sck_ibufg));
+BUFG bufg_mcu_sck(.I(mcu_sck_ibufg), .O(mcu_sck));
+
+// the ESP32 is not used by baseconf: its chip select stays high
+assign espcs_in = 1'b1;
+assign ESP32_SPI_CS_N = 1'b1;
 assign FT_SPI_CS_N = esp_ft_spi_dis ? 1'bZ : (mcu_ft_spi_on ? mcu_ft_cs_n : ftcs_n);
 assign FT_SPI_SCK = esp_ft_spi_dis ? 1'bZ : (mcu_ft_spi_on ? mcu_sck_ibufg : ftclk);
 assign ftdi = FT_SPI_MISO;
 assign FT_SPI_MOSI = esp_ft_spi_dis ? 1'bZ : (mcu_ft_spi_on ? mcu_ft_mosi : ftdo);
 assign ftint = FT_INT_N;
 
+// the video of the FT812 on HDMI: the core's (vdac2_sel) or the firmware's (FT_VGA_ON)
+wire ft_video_active = vdac2_sel | mcu_ft_vga_on;
 
-ODDR2 sdr_clock(.Q(SDR_CLK), .C0(clk_sys), .C1(~clk_sys), .CE(1'b1),
-    .D0(1'b0), .D1(1'b1), .R(1'b0), .S(1'b0));
+// FT_CLK: the pixel clock of the FT812 (its video is taken on its falling edge, hdmi_pll measures it)
+wire ft_clk_ibufg, ft_clk_int;
+IBUFG ibufg_ft_clk(.I(FT_CLK), .O(ft_clk_ibufg));
+BUFG bufg_ft_clk(.I(ft_clk_ibufg), .O(ft_clk_int));
+
+// hdmi
+wire [7:0] hdmi_freq;
+hdmi_top #(.SAMPLERATE(48000), .CLKRATE(28030303)) hdmi_top(
+	.clk				(ft_clk_int),
+	.clk_ref			(clk_bus),
+	.clk_ref_pll	(clk_bus_pll),
+	.clk_8			(clk_8mhz),
+	.reset			(areset || kb_reset || hw_btn[0]),
+
+	.vga_rgb			({osd_r[7:0], osd_g[7:0], osd_b[7:0]}),
+	.vga_hs			(video_hsync),
+	.vga_vs			(video_vsync),
+	.vga_de			(~video_blank),
+
+	.ft_rgb			({VGA_R[7:0], VGA_G[7:0], VGA_B[7:0]}),
+	.ft_hs			(VGA_HS),
+	.ft_vs			(VGA_VS),
+	.ft_de			(FT_DE),
+
+	.ft_sel			(ft_video_active),
+
+	.audio_en		(~dvi_only),
+	.audio_l			(audio_mix_l),
+	.audio_r			(audio_mix_r),
+
+	.tmds_p			(TMDS_P),
+	.tmds_n			(TMDS_N),
+
+	.freq				(hdmi_freq)
+);
+
+// ------- i2s DAC --------------
+kg_pcm5102 #(.DIV_BITS(2)) PCM5102(
+	.clk				(clk_bus),
+	.reset			(areset),
+	.left				(audio_mix_l),
+	.right			(audio_mix_r),
+	.din				(DAC_DAT),
+	.bck				(DAC_BCK),
+	.lrck				(DAC_WS)
+);
+
+// ------- PCM1808 ADC ---------
+wire signed [23:0] adc_l, adc_r;
+wire adc_clk_int = clk_bus;
+
+i2s_transceiver adc(
+	.reset_n			(~areset),
+	.mclk				(adc_clk_int),
+	.sclk				(ADC_BCK),
+	.ws				(ADC_LRCK),
+	.sd_tx			(),
+	.sd_rx			(ADC_DOUT),
+	.l_data_tx		(24'b0),
+	.r_data_tx		(24'b0),
+	.l_data_rx		(adc_l),
+	.r_data_rx		(adc_r)
+);
+
+// ------- ESP i2s receiver ----
+wire signed [15:0] esp_l, esp_r;
+i2s_rx i2s_rx(
+	.clk				(clk_bus),
+	.sclk				(ESP32_PCM_BCK),
+	.rst				(areset),
+	.lrclk			(ESP32_PCM_RLCK),
+	.sdata			(ESP32_PCM_DAT),
+	.left_chan		(esp_l),
+	.right_chan		(esp_r)
+);
+
+// ------- ADC_CLK output buf
+ODDR2 oddr_adc2(.Q(ADC_CLK), .C0(adc_clk_int), .C1(~adc_clk_int), .CE(1'b1), .D0(1'b1), .D1(1'b0), .R(1'b0), .S(1'b0));
+
+// ------- audio mix
+assign audio_mix_l = audio_out_l;
+assign audio_mix_r = audio_out_r;
+
 //---------- MCU ------------
-
 // burst transfers from the mcu (karabas-go-firmware docs/burst_protocol.md)
 wire mcu_burst_ready;
 assign MCU_IO[1] = mcu_burst_ready;
-// MCU_IO[0] is input-only (burst chip select), so it has no FPGA driver.
+assign MCU_IO[0] = 1'bz;
+assign MCU_IO[5:2] = 4'bzzzz;
 
-// the tsconf configuration of kg_mcu: RTC (all registers below F0 sent, D too), USB UART with the
-// EVO RS232 registers, FT812 chip select passed through; no matrix, debug, file loader, image mounter
+// the configuration of kg_mcu: RTC (all registers below F0 sent, D too), USB UART with the EVO RS232 registers,
+// FT812 chip select passed through; no matrix, debug, file loader, image mounter.
+// Bursts at 1 MHz: the ROM loader of baseconf_sdram.v takes them through a short queue into the SDRAM
+// (docs/forge/docs/architecture.md, Memory and timing).
 kg_mcu #(
 	.BURST_MAX_MHZ(1),
 	.CS_FILTER(3),
@@ -376,147 +459,162 @@ kg_mcu #(
 	.ENABLE_FT(1),
 	.ENABLE_SD2(0)
 ) mcu(
-	.CLK(clk_bus),
-	.N_RESET(~areset),
-	
-	.MCU_MOSI(MCU_MOSI),
-	.MCU_MISO(MCU_MISO),
-	.MCU_SCK(mcu_sck),
-	.MCU_SS(MCU_CS_N),
-	
-	.MCU_SPI_FT_SS(MCU_IO[3]),
-	.MCU_SPI_SD2_SS(MCU_IO[2]),	
-	// Mini firmware: IO0 = burst chip select, IO1 = ready.
+	.CLK				(clk_bus),
+	.N_RESET			(~areset),
+
+	.MCU_MOSI		(MCU_MOSI),
+	.MCU_MISO		(MCU_MISO),
+	.MCU_SCK			(mcu_sck),
+	.MCU_SS			(MCU_CS_N),
+
+	.MCU_SPI_FT_SS	(MCU_IO[3]),
+	.MCU_SPI_SD2_SS(MCU_IO[2]),
 	.MCU_BURST_CS_N(MCU_IO[0]),
 	.MCU_BURST_READY(mcu_burst_ready),
-	
-	.MS_X(ms_x),
-	.MS_Y(ms_y),
-	.MS_Z(ms_z),
-	.MS_B(ms_b),
-	.MS_UPD(ms_upd),
-	
-	.KB_STATUS(hid_kb_status),
-	.KB_DAT0(hid_kb_dat0),
-	.KB_DAT1(hid_kb_dat1),
-	.KB_DAT2(hid_kb_dat2),
-	.KB_DAT3(hid_kb_dat3),
-	.KB_DAT4(hid_kb_dat4),
-	.KB_DAT5(hid_kb_dat5),
-	
-	.KB_SCANCODE(ps2_scancode),
+
+	.MS_X				(ms_x),
+	.MS_Y				(ms_y),
+	.MS_Z				(ms_z),
+	.MS_B				(ms_b),
+	.MS_UPD			(ms_upd),
+
+	.KB_STATUS		(hid_kb_status),
+	.KB_DAT0			(hid_kb_dat0),
+	.KB_DAT1			(hid_kb_dat1),
+	.KB_DAT2			(hid_kb_dat2),
+	.KB_DAT3			(hid_kb_dat3),
+	.KB_DAT4			(hid_kb_dat4),
+	.KB_DAT5			(hid_kb_dat5),
+
+	.KB_SCANCODE	(ps2_scancode),
 	.KB_SCANCODE_UPD(ps2_scancode_upd),
-	
-	.JOY_L(joy_l),
-	.JOY_R(joy_r),
-	
-	.BTNS(hw_btn),
-	
-	.RTC_A(rtc_addr),
-	.RTC_DI(rtc_di),
-	.RTC_DO(rtc_do),
-	.RTC_CS(1'b1),
-	.RTC_WR_N(~rtc_wr),
-	
-	.UART_RX_DATA(uart_rx_data),
-	.UART_RX_IDX(uart_rx_idx),	 
-	.UART_TX_DATA(uart_tx_data),
-	.UART_TX_WR(uart_tx_wr),
-	
-	.UART_TX_MODE(uart_tx_mode),
-	.UART_DLL(uart_dll),
-	.UART_DLM(uart_dlm),
-	.UART_DLL_WR(uart_dll_wr),
-	.UART_DLM_WR(uart_dlm_wr),
-	
+
+	.XT_SCANCODE	(),
+	.XT_SCANCODE_UPD(),
+
+	.JOY_L			(joy_l),
+	.JOY_R			(joy_r),
+
+	.BTNS				(hw_btn),
+
+	.RTC_A			(rtc_addr),
+	.RTC_DI			(rtc_di),
+	.RTC_DO			(rtc_do),
+	.RTC_CS			(1'b1),
+	.RTC_WR_N		(~rtc_wr),
+
+	.UART_RX_DATA	(uart_rx_data),
+	.UART_RX_IDX	(uart_rx_idx),
+	.UART_TX_DATA	(uart_tx_data),
+	.UART_TX_WR		(uart_tx_wr),
+
+	.UART_TX_MODE	(uart_tx_mode),
+	.UART_DLL		(uart_dll),
+	.UART_DLM		(uart_dlm),
+	.UART_DLL_WR	(uart_dll_wr),
+	.UART_DLM_WR	(uart_dlm_wr),
+
 	.ROMLOADER_ACTIVE(loader_act),
-	.ROMLOAD_ADDR(loader_addr),
-	.ROMLOAD_DATA(loader_data),
-	.ROMLOAD_WR(loader_wr),
-	
-	.SOFTSW_COMMAND(softsw_command),	
-	.OSD_COMMAND(osd_command),
-	
-	.FT_SPI_ON(mcu_ft_spi_on),
-	.FT_VGA_ON(mcu_ft_vga_on),
-	.FT_SCK(mcu_ft_sck),
-	.FT_MISO(FT_SPI_MISO),
-	.FT_MOSI(mcu_ft_mosi),
-	.FT_CS_N(mcu_ft_cs_n),
-	.FT_RESET(),
-	
-	.SD2_MISO(1'b1),
-	.MATRIX_CMD(24'd0),
-	.MATRIX_CMD_WR(1'b0),
-	.DEBUG_ADDR(16'd0),
-	.DEBUG_DATA(16'd0),
-	.IMG_Q_WR(1'b0),
-	.IMG_Q_DI(24'd0),
-	
-	.BUSY(mcu_busy)
+	.ROMLOAD_ADDR	(loader_addr),
+	.ROMLOAD_DATA	(loader_data),
+	.ROMLOAD_WR		(loader_wr),
+
+	.SOFTSW_COMMAND(softsw_command),
+	.OSD_COMMAND	(osd_command),
+
+	.FT_SPI_ON		(mcu_ft_spi_on),
+	.FT_VGA_ON		(mcu_ft_vga_on),
+	.FT_SCK			(mcu_ft_sck),
+	.FT_MISO			(FT_SPI_MISO),
+	.FT_MOSI			(mcu_ft_mosi),
+	.FT_CS_N			(mcu_ft_cs_n),
+	.FT_RESET		(),
+
+	.HWID				(hwid),
+	.DVI_ONLY		(dvi_only),
+
+	.SD2_MISO		(1'b1),
+	.MATRIX_CMD		(24'd0),
+	.MATRIX_CMD_WR	(1'b0),
+	.DEBUG_ADDR		(16'd0),
+	.DEBUG_DATA		(16'd0),
+	.IMG_Q_WR		(1'b0),
+	.IMG_Q_DI		(24'd0),
+	.PS2_COMMAND	(16'h0000),
+	.PS2_COMMAND_WR(1'b0),
+	.ESP_UART_RX_DATA(8'h00),
+	.ESP_UART_RX_WR(1'b0),
+	.FLASHBOOT_START(1'b0),
+	.FLASHBOOT_COREID(5'd0),
+	.PRN_DATA		(8'h00),
+	.PRN_WR			(1'b0),
+
+	.BUSY				(mcu_busy)
 );
 
 //---------- Keyboard parser ------------
 
+// the Win / Menu shortcuts of the firmware are taken out of the keys the core sees, until they are released
 wire [7:0] filtered_kb_status, filtered_scancode;
 wire [47:0] filtered_keys;
 wire filtered_scancode_upd;
 baseconf_keyboard_filter keyboard_filter(
-    .clk(clk_bus), .reset(areset), .status(hid_kb_status),
-    .keys({hid_kb_dat5,hid_kb_dat4,hid_kb_dat3,hid_kb_dat2,hid_kb_dat1,hid_kb_dat0}),
-    .scancode(ps2_scancode), .scancode_upd(ps2_scancode_upd),
-    .filtered_status(filtered_kb_status), .filtered_keys(filtered_keys),
-    .filtered_scancode(filtered_scancode), .filtered_upd(filtered_scancode_upd)
+	.clk				(clk_bus),
+	.reset			(areset),
+	.status			(hid_kb_status),
+	.keys				({hid_kb_dat5, hid_kb_dat4, hid_kb_dat3, hid_kb_dat2, hid_kb_dat1, hid_kb_dat0}),
+	.scancode		(ps2_scancode),
+	.scancode_upd	(ps2_scancode_upd),
+	.filtered_status(filtered_kb_status),
+	.filtered_keys	(filtered_keys),
+	.filtered_scancode(filtered_scancode),
+	.filtered_upd	(filtered_scancode_upd)
 );
 
 hid_parser hid_parser(
-	.CLK(clk_bus),
-	.RESET(areset),
+	.CLK				(clk_bus),
+	.RESET			(areset),
 
-	.KB_STATUS(filtered_kb_status),
-	.KB_DAT0(filtered_keys[7:0]),
-	.KB_DAT1(filtered_keys[15:8]),
-	.KB_DAT2(filtered_keys[23:16]),
-	.KB_DAT3(filtered_keys[31:24]),
-	.KB_DAT4(filtered_keys[39:32]),
-	.KB_DAT5(filtered_keys[47:40]),
-	
-	.KB_SCANCODE(filtered_scancode),
+	.KB_STATUS		(filtered_kb_status),
+	.KB_DAT0			(filtered_keys[7:0]),
+	.KB_DAT1			(filtered_keys[15:8]),
+	.KB_DAT2			(filtered_keys[23:16]),
+	.KB_DAT3			(filtered_keys[31:24]),
+	.KB_DAT4			(filtered_keys[39:32]),
+	.KB_DAT5			(filtered_keys[47:40]),
+
+	.KB_SCANCODE	(filtered_scancode),
 	.KB_SCANCODE_UPD(filtered_scancode_upd),
 
-	.JOY_TYPE_L(kb_joy_type_l),
-	.JOY_TYPE_R(kb_joy_type_r),
-	.JOY_L(joy_l),
-	.JOY_R(joy_r),
-	
-	.KB_TYPE(1'b1),
-	.A (keyboard_addr),	
-	
-	.JOY_DO(joy_bus),
-	.KB_DO(keyboard_data),
-	
-	.RTC_A(rtc_addr),
-	.RTC_WR(rtc_wr),
-	.RTC_RD(rtc_rd),
-	.RTC_DI(rtc_di),
-	.RTC_DO_IN(rtc_do),
-	.RTC_DO_OUT(rtc_do_mapped)
+	.JOY_TYPE_L		(kb_joy_type_l),
+	.JOY_TYPE_R		(kb_joy_type_r),
+	.JOY_L			(joy_l),
+	.JOY_R			(joy_r),
+
+	.KB_TYPE			(1'b1),
+	.A 				(keyboard_addr),
+
+	.JOY_DO			(joy_bus),
+	.KB_DO			(keyboard_data),
+
+	.RTC_A			(rtc_addr),
+	.RTC_WR			(rtc_wr),
+	.RTC_RD			(rtc_rd),
+	.RTC_DI			(rtc_di),
+	.RTC_DO_IN		(rtc_do),
+	.RTC_DO_OUT		(rtc_do_mapped)
 );
 
 //---------- Soft switches ------------
 
-wire covox_en;
-wire [1:0] psg_mix;
-wire psg_type;
-
-// OSD switches (core.json "osd", in this order): register n = regs[n*8 +: 8]
+// OSD switches (core_minig.json "osd", in this order): register n = regs[n*8 +: 8]
 wire [9*8-1:0] softsw;
 
 kg_soft_switches #(.N(9), .INIT(72'h000000000100000101)) soft_switches(
-	.clk(clk_bus),
-	.command(softsw_command),
-	.regs(softsw),
-	.upd()
+	.clk				(clk_bus),
+	.command			(softsw_command),
+	.regs				(softsw),
+	.upd				()
 );
 
 assign covox_en = softsw[0];
@@ -527,11 +625,10 @@ assign kb_joy_type_r = softsw[34:32];
 assign kb_vga_60hz = softsw[40];
 assign kb_pause = softsw[48];
 assign kb_nmi = softsw[56];
-// MCU hotkey matching only examines HID slot 0. Recognize F12 in every slot
-// so a held boot-selection key does not prevent reset. The HID matrix/filter
-// are deliberately reset only at power-up, preserving held keys across reset.
-wire hid_reset = hid_kb_dat0==8'h45 || hid_kb_dat1==8'h45 || hid_kb_dat2==8'h45 ||
-                 hid_kb_dat3==8'h45 || hid_kb_dat4==8'h45 || hid_kb_dat5==8'h45;
+// the hotkeys of the mcu look at HID slot 0 only: F12 in any slot resets, so a key held for the boot choice
+// of the BIOS does not stop it. The HID matrix and the filter are reset at power-up only: the held keys stay.
+wire hid_reset = hid_kb_dat0 == 8'h45 || hid_kb_dat1 == 8'h45 || hid_kb_dat2 == 8'h45 ||
+                 hid_kb_dat3 == 8'h45 || hid_kb_dat4 == 8'h45 || hid_kb_dat5 == 8'h45;
 assign kb_reset = softsw[64] || hid_reset;
 
 assign btn_reset_n = ~kb_reset && ~hw_btn[0] && ~mcu_busy;
@@ -544,18 +641,16 @@ wire [2:0] ms_b, cursor_b;
 wire ms_upd;
 
 kg_cursor #(.Z_W(4), .Z_NEG(1), .Z_ACC(1)) cursor(
-	.clk(clk_bus),
-	
-	.ms_x(ms_x),
-	.ms_y(ms_y),
-	.ms_z(ms_z),
-	.ms_b(ms_b),
-	.ms_upd(ms_upd),
-	
-	.x(cursor_x),
-	.y(cursor_y),
-	.z(cursor_z),
-	.b(cursor_b)
+	.clk				(clk_bus),
+	.ms_x				(ms_x),
+	.ms_y				(ms_y),
+	.ms_z				(ms_z),
+	.ms_b				(ms_b),
+	.ms_upd			(ms_upd),
+	.x					(cursor_x),
+	.y					(cursor_y),
+	.z					(cursor_z),
+	.b					(cursor_b)
 );
 
 always @* begin
@@ -568,42 +663,17 @@ always @* begin
 	endcase
 end
 
-kg_pcm5102 #(.DIV_BITS(2)) PCM5102(
-    .clk(clk_bus), .reset(areset), .left(audio_out_l), .right(audio_out_r),
-    .din(DAC_DAT), .bck(DAC_BCK), .lrck(DAC_WS));
-assign ESP32_SPI_CS_N = 1'b1;
-
 //--------- OSD --------------
 
-kg_osd_overlay #(.H_OFFSET(120)) overlay(
-	.clk(clk_bus),
-	.rgb_i({video_r[7:0], video_g[7:0], video_b[7:0]}),
-	.rgb_o({osd_r[7:0], osd_g[7:0], osd_b[7:0]}),
-	.hsync_i(video_hsync),
-	.vsync_i(video_vsync),
-	.v_offset(kb_vga_60hz ? 11'd34 : 11'd64),
-	.osd_command(osd_command)
+// the vertical offset follows the raster: 34 lines at 60 Hz, 64 at 50 Hz (all 26 rows on the screen)
+kg_osd_overlay #(.H_OFFSET(120), .V_OFFSET_IN(1)) overlay(
+	.clk				(clk_bus),
+	.rgb_i			({video_r[7:0], video_g[7:0], video_b[7:0]}),
+	.rgb_o			({osd_r[7:0], osd_g[7:0], osd_b[7:0]}),
+	.hsync_i			(video_hsync),
+	.vsync_i			(video_vsync),
+	.v_offset		(kb_vga_60hz ? 11'd34 : 11'd64),
+	.osd_command	(osd_command)
 );
-
-wire mcu_sck_ibufg, mcu_sck;
-IBUFG ibufg_mcu_sck(.I(MCU_SCK), .O(mcu_sck_ibufg));
-BUFG bufg_mcu_sck(.I(mcu_sck_ibufg), .O(mcu_sck));
-
-// Unused ADC interface: no clock drive or contention with an external master.
-assign ADC_CLK = 1'b0;
-assign ADC_BCK = 1'bZ;
-assign ADC_LRCK = 1'bZ;
-ODDR2 u_ft_clk(.Q(FT_CLK_OUT), .C0(clk_8mhz), .C1(~clk_8mhz), .CE(1'b1),
-    .D0(1'b1), .D1(1'b0), .R(1'b0), .S(1'b0));
-wire ft_clk_ibufg, ft_clk_int;
-IBUFG ibufg_ft_clk(.I(FT_CLK), .O(ft_clk_ibufg));
-BUFG bufg_ft_clk(.I(ft_clk_ibufg), .O(ft_clk_int));
-hdmi_top #(.SAMPLERATE(48000), .CLKRATE(28030303)) hdmi_top(
-    .clk(ft_clk_int), .clk_ref(clk_bus), .clk_ref_pll(pll_clk[2]), .clk_8(clk_8mhz),
-    .reset(areset || kb_reset || hw_btn[0]),
-    .vga_rgb({osd_r,osd_g,osd_b}), .vga_hs(video_hsync), .vga_vs(video_vsync), .vga_de(~video_blank),
-    .ft_rgb({VGA_R,VGA_G,VGA_B}), .ft_hs(VGA_HS), .ft_vs(VGA_VS), .ft_de(FT_DE),
-    .ft_sel(ft_video_active), .audio_en(1'b1), .audio_l(audio_out_l), .audio_r(audio_out_r),
-    .tmds_p(TMDS_P), .tmds_n(TMDS_N), .freq());
 
 endmodule

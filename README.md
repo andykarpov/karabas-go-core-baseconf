@@ -88,6 +88,7 @@ make go          # baseconf.kg1; mini, minig for the others; make for all three
 make go-report   # LUTs, slices, timing
 ```
 
-The steps and options are those of the karabas-forge flow that made build 26102806, so the same
-sources give the same bitstream. The Mini boards also need `make <board>-coremode` (the timing in the
+`make_core.py` is a link to the sibling repo karabas-go-tools (cloned next to this one). Build 26102806
+of karabas-forge is commit `50177ec`; the sources have changed since ([docs/sources.md](docs/sources.md)).
+The Mini boards also need `make <board>-coremode` (the timing in the
 mode of the core of HDMI).

@@ -31,6 +31,10 @@ module video_vga_double(
 
 	input  wire        scanin_start,
 	input  wire [ 5:0] pix_in,
+`ifndef HW_ID1 // Mini, Mini G: blanking for HDMI
+    input wire blank_in,
+    output reg blank_out = 1'b1,
+`endif
 
 	input  wire        scanout_start,
 	output reg  [ 5:0] pix_out
@@ -97,13 +101,26 @@ pg0 pg1
 		end
 	end
 
+`ifndef HW_ID1 // Mini, Mini G: blanking for HDMI
+	reg read_valid = 1'b0;
+    always @(posedge clk) read_valid <= ptr_out[9:8]!=2'b11;
+`endif
 	//read data
 	always @(posedge clk)
 	begin
+`ifdef HW_ID1
 		if( ptr_out[9:8]!=2'b11 )
 			pix_out <= data_out[5:0];
+`else // Mini, Mini G: blanking for HDMI
+		if( read_valid )
+			begin pix_out <= data_out[5:0]; blank_out <= data_out[6]; end
+`endif
 		else
+`ifdef HW_ID1
 			pix_out <= 6'd0;
+`else // Mini, Mini G: blanking for HDMI
+			begin pix_out <= 6'd0; blank_out <= 1'b1; end
+`endif
 	end
 
 
@@ -113,7 +130,11 @@ pg0 pg1
 	mem1536 line_buf( .clk(clk),
 
 	                  .wraddr({ptr_in[9:8], pages, ptr_in[7:0]}),
+`ifdef HW_ID1
 	                  .wrdata({2'b00,pix_in}),
+`else // Mini, Mini G: blanking for HDMI
+	                  .wrdata({1'b0,blank_in,pix_in}),
+`endif
 	                  .wr_stb(wr_stb),
 
 	                  .rdaddr({ptr_out[9:8], (~pages), ptr_out[7:0]}),

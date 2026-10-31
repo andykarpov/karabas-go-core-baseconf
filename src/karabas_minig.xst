@@ -25,6 +25,7 @@ run
 -dsp_utilization_ratio 100
 -lc Auto
 -reduce_control_sets Auto
+-define { HW_ID2 HW_ID3 }
 -fsm_extract YES -fsm_encoding Auto
 -safe_implementation No
 -fsm_style LUT
