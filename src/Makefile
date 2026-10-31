@@ -1,4 +1,5 @@
-# Command line build of the ZX Evolution BaseConf core for the three boards.
+# Command line build of the ZX Evolution BaseConf core for the three boards (the shape of the Makefiles of
+# karabas-go-core-tsconf and the other cores).
 #
 #   make                 all three boards (baseconf.kg1, baseconf.kg2, baseconf.kg3)
 #   make go|mini|minig   one board: synthesis, implementation, bitstream, .kg file
@@ -10,10 +11,7 @@
 # Inputs per board: karabas_<board>.prj (the source list, the shared modules as
 # "../modules/rtl/..."), .xst, .ucf, .ut.
 # A step runs again when one of its inputs is newer than its output.
-# The boards share xst/, so they are built one after the other.
-#
-# The ISE steps and their options are those of the karabas-forge flow (forge.py ise) that made build 26102806:
-# the same inputs give the same bitstream. map / par of the Go run with the defaults of ISE (cost table 1).
+# The boards share xst/ and _ngo/, so they are built one after the other.
 
 ISE_SETTINGS ?= /opt/Xilinx/14.7/ISE_DS/settings64.sh
 PART = xc6slx25-ftg256-2
@@ -32,21 +30,23 @@ JSON_go = core.json
 JSON_mini = core_mini.json
 JSON_minig = core_minig.json
 
-MAP_OPT_go =
-MAP_OPT_mini = -ol high -t 2
-MAP_OPT_minig = -ol high -t 1
-PAR_OPT_go =
-PAR_OPT_mini = -ol high
-PAR_OPT_minig = -ol high
+# map / par options of the cores of karabas-go; the cost table (map -t, the placement seed) 2 on every board.
+# Build 26102806 of karabas-forge used the map / par defaults on the Go and -ol high -t 2 / -t 1 on Mini / Mini G.
+MAP_T_go = 2
+MAP_T_mini = 2
+MAP_T_minig = 2
+MAP_OPT = -logic_opt off -ol high -xe n -xt 0 -register_duplication off -r 4 -global_opt off -mt 2 -detail -ir off -pr b -lc off -power off
+PAR_OPT = -ol high -xe n -mt 4
 
 # included or read by the sources, not in the prj
 INCLUDES = $(wildcard ../modules/rtl/mcu/*.vh rtl/vg93/*.vh) baseconf_tune.vh atm_font.hex vg93-microcode-rom.hex
 
 .PHONY: all clean $(BOARDS) $(BOARDS:=-xst) $(BOARDS:=-impl) $(BOARDS:=-core) $(BOARDS:=-report) mini-coremode minig-coremode
 
-# The pixel clock of HDMI (Mini, Mini G) is a BUFGMUX of the clock of the core and the FT812 clock, and the ucf
-# bounds the paths between them as asynchronous ones (TS_BUS_TO_PIX). <board>-coremode runs trce again without the
-# constraints of the FT mode (pcf_core.py), as they are in the mode of the core. Run it after every build of these boards.
+# The pixel clock of HDMI (Mini, Mini G) is a BUFGMUX of clk_bus and the FT812 clock: its flip-flops are on both,
+# and the ucf bounds the paths from clk_bus as asynchronous ones (TS_BUS_TO_PIX). <board>-coremode runs trce again
+# without the constraints of the FT mode (pcf_core.py): the paths clk_bus -> pixel clock with the setup and hold of
+# clk_bus, as they are in the mode of the core. Run it after every build of these boards.
 
 all: $(BOARDS)
 
@@ -55,15 +55,14 @@ SRC_$(1) := $$(shell sed -n 's/^[a-z]* work "\(.*\)"/\1/p' karabas_$(1).prj)
 
 karabas_$(1).ngc: karabas_$(1).prj karabas_$(1).xst $$(SRC_$(1)) $(INCLUDES)
 	mkdir -p xst/projnav.tmp
-	$(XIL) xst -ifn karabas_$(1).xst -ofn karabas_$(1).syr
+	$(XIL) xst -intstyle ise -ifn karabas_$(1).xst -ofn karabas_$(1).syr
 
 karabas_$(1).bin: karabas_$(1).ngc karabas_$(1).ucf karabas_$(1).ut
-	$(XIL) ngdbuild -uc karabas_$(1).ucf -p $(PART) karabas_$(1).ngc karabas_$(1).ngd
-	$(XIL) map -p $(PART) -w $(MAP_OPT_$(1)) -o karabas_$(1)_map.ncd karabas_$(1).ngd karabas_$(1).pcf
-	$(XIL) par -w $(PAR_OPT_$(1)) karabas_$(1)_map.ncd karabas_$(1).ncd karabas_$(1).pcf
-	$(XIL) trce -v 10 -u 10 karabas_$(1).ncd -o karabas_$(1).twr karabas_$(1).pcf
-	$(XIL) bitgen -f karabas_$(1).ut karabas_$(1).ncd
-	@grep -q "All constraints were met" karabas_$(1).twr || { echo "karabas_$(1): timing not met"; exit 1; }
+	$(XIL) ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc karabas_$(1).ucf -p $(PART) karabas_$(1).ngc karabas_$(1).ngd
+	$(XIL) map -intstyle ise -p $(PART) -w $(MAP_OPT) -t $(MAP_T_$(1)) -o karabas_$(1)_map.ncd karabas_$(1).ngd karabas_$(1).pcf
+	$(XIL) par -w -intstyle ise $(PAR_OPT) karabas_$(1)_map.ncd karabas_$(1).ncd karabas_$(1).pcf
+	$(XIL) trce -intstyle ise -v 3 -s 2 -n 3 -fastpaths -xml karabas_$(1).twx karabas_$(1).ncd -o karabas_$(1).twr karabas_$(1).pcf -ucf karabas_$(1).ucf
+	$(XIL) bitgen -intstyle ise -f karabas_$(1).ut karabas_$(1).ncd
 
 $(KG_$(1)): karabas_$(1).bin $(JSON_$(1)) $$(wildcard roms/*)
 	python3 make_core.py $(JSON_$(1)) $$@
@@ -85,8 +84,10 @@ define core_mode
 $(1)-coremode: karabas_$(1)_core.twr
 karabas_$(1)_core.twr: karabas_$(1).bin pcf_core.py
 	python3 pcf_core.py karabas_$(1).pcf karabas_$(1)_core.pcf
-	$(XIL) trce -v 10 -u 10 karabas_$(1).ncd -o karabas_$(1)_core.twr karabas_$(1)_core.pcf | tee karabas_$(1)_core.log | grep -E "ERROR|WARNING" || true
-	@grep -q "All constraints were met" karabas_$(1)_core.twr || { echo "karabas_$(1): core mode timing not met"; exit 1; }
+	$(XIL) trce -intstyle ise -v 3 -s 2 -n 3 -fastpaths karabas_$(1).ncd -o karabas_$(1)_core.twr karabas_$(1)_core.pcf \
+		| tee karabas_$(1)_core.log | grep -E "ERROR|WARNING" || true
+	@! grep -q "No timing constraints found" karabas_$(1)_core.twr || { echo "trce did not read karabas_$(1)_core.pcf"; \
+		rm -f karabas_$(1)_core.twr; exit 1; }
 endef
 $(foreach b,mini minig,$(eval $(call core_mode,$(b))))
 

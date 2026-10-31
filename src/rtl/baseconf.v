@@ -212,7 +212,11 @@ module baseconf
     assign VGA_B = {4{vblu}};
     assign VGA_HS = vhsync;
     assign VGA_VS = vvsync;
+`ifdef HW_ID1
     assign VGA_BLANK = 1'b0;
+`else // Mini, Mini G
+
+`endif
     assign ftcs_n=1'b1, espcs_n=1'b1, esp_ft_spi_dis=1'b0;
     assign ftclk=1'b0, ftdo=1'b1, vdac2_sel=1'b0;
     assign uart_tx=1'b1, uart_cts=1'b1;
@@ -758,6 +762,9 @@ baseconf_sram ram(.clk(fclk), .rst_n(rst_n), .addr(daddr),
 		.vhsync(vhsync),
 		.vvsync(vvsync),
 		.vcsync(vcsync),
+`ifndef HW_ID1 // Mini, Mini G
+        .vblank_out(VGA_BLANK),
+`endif
 
 		.zxborder(border),
 
@@ -1039,6 +1046,7 @@ assign keyboard_addr = a[15:8];
 
     // Keep the Firefly-derived physical drive path, including its own #FF latch.
     // #FF read decode must be a level: vg_wrFF is only a write strobe.
+`ifdef HW_ID1
     hrdy_fdc fdc(.clk(fclk), .clk_8(clk8), .reset(!rst_n), .turbo_fdc(1'b0),
         .a(a), .d(d), .m1_n(m1_n), .wr_n(wr_n), .rd_n(rd_n), .iorq_n(iorq_n),
         .cs_n(vg_cs_n), .csff_n(!(shadow && a[7:0]==8'hff && !iorq_n)),
@@ -1047,6 +1055,12 @@ assign keyboard_addr = a[15:8];
         .FDC_WG(fdc_wg), .FDC_WR_DATA(fdc_wr_data), .FDC_STEP(fdc_step),
         .FDC_DIR(fdc_dir), .FDC_MOTOR(fdc_motor), .FDC_DS(fdc_ds));
     assign fdc_oe = !fdc_oe_n;
+`else // Mini, Mini G
+    // Mini boards have no physical drive interface. Leave the I/O bus undriven
+    // by an absent FDC and report inactive IRQ/DRQ to the port decoder.
+    // (the fdc_* ports are not there with HW_ID2)
+    assign fdc_oe = 1'b0, fdc_oe_n = 1'b1, fdc_data = 8'h00;
+`endif
     reg [2:0] sound_div = 0;
     always @(posedge fclk) sound_div <= sound_div + 1'b1;
     wire [7:0] s0a,s0b,s0c,s1a,s1b,s1c;
@@ -1091,6 +1105,12 @@ assign keyboard_addr = a[15:8];
         .covox_a(8'd0), .covox_b(8'd0), .covox_c(8'd0), .covox_d(8'd0),
         .covox_fb(covox_en ? covox : 8'd0), .saa_l(8'd0), .saa_r(8'd0),
         .gs_l(gs_l), .gs_r(gs_r), .fm_l(fm0), .fm_r(fm1), .fm_ena(fm_ena),
+`ifdef HW_ID2
+        .adc_l(adc_in_l), .adc_r(adc_in_r),
+`endif
+`ifdef HW_ID3
+        .esp_l(esp_in_l), .esp_r(esp_in_r),
+`endif
         .opl3_l(16'd0), .opl3_r(16'd0), .audio_l(audio_out_l), .audio_r(audio_out_r));
 
 endmodule

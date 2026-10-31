@@ -19,8 +19,10 @@
 --                                                                                 #             # #             # 
 -- https://github.com/andykarpov/karabas-go                                        ############### ############### 
 --
--- FPGA BaseConf core for Karabas-Go
+-- ZX Evolution BaseConf core for Karabas-Go
 --
+-- The port of the ZX-Evo Base Configuration (c) NedoPC: Sergei Lemeshev (lordamot), 2026.
+-- The board wrapper is that of the TS-Conf core:
 -- @author Andy Karpov <andy.karpov@gmail.com>
 -- @author Oleh Starychenko <solegstar@gmail.com>
 -- Ukraine, 2023
@@ -491,6 +493,14 @@ kg_mcu #(
 	.DEBUG_DATA(16'd0),
 	.IMG_Q_WR(1'b0),
 	.IMG_Q_DI(24'd0),
+	.PS2_COMMAND(16'h0000),
+	.PS2_COMMAND_WR(1'b0),
+	.ESP_UART_RX_DATA(8'h00),
+	.ESP_UART_RX_WR(1'b0),
+	.FLASHBOOT_START(1'b0),
+	.FLASHBOOT_COREID(5'd0),
+	.PRN_DATA(8'h00),
+	.PRN_WR(1'b0),
 	
 	.BUSY(mcu_busy)
 );
@@ -622,7 +632,8 @@ assign DAC_MUTE = 1'b1; // soft mute, 0 = mute, 1 = unmute
 
 //--------- OSD --------------
 
-kg_osd_overlay #(.H_OFFSET(120)) overlay(
+// the vertical offset follows the raster: 34 lines at 60 Hz, 64 at 50 Hz (all 26 rows on the screen)
+kg_osd_overlay #(.H_OFFSET(120), .V_OFFSET_IN(1)) overlay(
 	.clk(clk_bus),
 	.rgb_i({video_r[7:0], video_g[7:0], video_b[7:0]}),
 	.rgb_o({osd_r[7:0], osd_g[7:0], osd_b[7:0]}),

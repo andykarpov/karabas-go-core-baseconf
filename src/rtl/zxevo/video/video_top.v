@@ -39,6 +39,9 @@ module video_top(
 	output wire        vhsync,
 	output wire        vvsync,
 	output wire        vcsync,
+`ifndef HW_ID1 // Mini, Mini G: blanking for HDMI
+    output reg vblank_out = 1'b1,
+`endif
 
 
 	// aux video inputs
@@ -161,6 +164,10 @@ module video_top(
 
 	wire [5:0] color;
 	wire [5:0] vga_color;
+`ifndef HW_ID1 // Mini, Mini G: blanking for HDMI
+    wire vga_blank;
+    always @(posedge clk) vblank_out <= vga_on ? vga_blank : (hblank | vblank);
+`endif
 
 
 	wire [2:0] typos;
@@ -420,6 +427,9 @@ module video_top(
 		.scanin_start (scanin_start ),
 
 		.pix_in(color),
+`ifndef HW_ID1 // Mini, Mini G: blanking for HDMI
+        .blank_in(hblank | vblank), .blank_out(vga_blank),
+`endif
 
 		.pix_out(vga_color)
 	);

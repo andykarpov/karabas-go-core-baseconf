@@ -84,6 +84,7 @@ make go          # baseconf.kg1; mini, minig — остальные платы; 
 make go-report   # LUT, слайсы, timing
 ```
 
-Шаги и опции те же, что в процессе karabas-forge, которым сделана сборка 26102806, поэтому из тех же
-исходников получается тот же битстрим. Для плат Mini нужен ещё `make <плата>-coremode` (timing в режиме
+`make_core.py` — ссылка на соседний репозиторий karabas-go-tools (склонируйте его рядом). Сборка 26102806
+из karabas-forge — коммит `50177ec`; с тех пор исходники изменились ([docs/sources.md](docs/sources.md)).
+Для плат Mini нужен ещё `make <плата>-coremode` (timing в режиме
 HDMI от ядра).
