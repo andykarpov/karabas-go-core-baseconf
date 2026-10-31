@@ -1,0 +1,2 @@
+PASS keyboard_filter: all nine shortcuts/six slots, both Meta keys, release order, typematic, normal keys, extended breaks and Pause
+/var/www/own/karabas-forge/tests/tb_keyboard_filter.v:67: $finish called at 53010000 (1ps)

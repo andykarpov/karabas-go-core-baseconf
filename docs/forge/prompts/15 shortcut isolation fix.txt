@@ -1,0 +1,11 @@
+User prompt:
+confirmed - several resets while holding 0 - and I have ERS starting now. Does it need some fix?
+
+User steering:
+GS Sounds ok now, btw
+
+Work record:
+Record recovered ERS startup and physical GS audio acceptance. Fix reserved Win/Menu shortcut leakage in both Spectrum matrix and PS/2 keybuffer without changing GS/audio/OSD behavior. Test release ordering and normal keyboard input, build candidate 26102803 and preserve saved board settings on transfer.
+
+Outcome:
+Candidate 26102803 filters all reserved Win/Menu shortcuts in matrix and PS/2 paths, including release ordering. Full regressions, structural check, 2500 ms stock ERS/4096 KB simulation and ISE declared constraints pass. Packaged and copied to SD1 with saved 60 Hz/Covox-off settings; readback and unchanged other root files verified, cleanly ejected, live firmware lists 26102803. GS/audio/storage/OSD implementation inputs match accepted 26102802. Physical shortcut behavior remains to be checked by user. Documentation, skill and evidence updated.

@@ -1,0 +1,21 @@
+User prompt:
+lets extend core osd / setup a bit more
+my problem is that I am using standard sega gamepad connected to the left or right joystick port - and currently have no option to use all the buttons from it
+lets add option "SEGA" for both left and right joystick config in OSD - which shoud effectively map all the buttons from joystick into EVO core:
+- joy's up down left right - map as Q A O P buttons
+- joy's A B C map as Z X C buttons
+- joy's X Y Z map as S D F buttons
+- joy's START map as 0 button
+- joy's MODE map as 9 button
+
+this will allow to use such gamepad through redefine keys in games
+
+User steering:
+*document this option and mapping in our dos also
+
+Work record:
+Add SEGA as mode 6 to both joystick selectors, retaining existing saved option numbers. Map the twelve controls into the Spectrum keyboard matrix through the existing MCU joystick reports. Test each key on each port, combined presses/releases, mode changes, keyboard coexistence and mixed port modes. Document selection, exact mapping and existing firmware joystick shortcut combinations under docs/. Build and install 26102804 with saved settings preserved.
+
+Outcome:
+Added SEGA option 6 for both joystick selectors with the exact requested twelve-key mapping. All key/port/release/chord/coexistence tests and existing regressions pass, stock BIOS reaches ERS/4096 KB, ISE reports zero declared timing errors. Independent package parsing verifies both menu options and ROM/FPGA payloads. Copied 26102804 to SD1 preserving current settings; readback and unchanged other root files verified; clean eject completed. User guide docs/joysticks.md contains selection instructions, full mapping and existing firmware START shortcut restrictions. Physical SEGA pad/redefine-keys acceptance remains pending.
+Live firmware confirms build 26102804 after clean eject.

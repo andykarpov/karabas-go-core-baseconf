@@ -1,0 +1,3 @@
+GS timing contention=0: serviced=0 zero-wait=74
+FATAL: /var/www/own/karabas-forge/tests/tb_gs_timing.v:59: GS missed sample interrupts relative to zero-wait reference
+       Time: 2212696872  Scope: tb_gs_timing.phase

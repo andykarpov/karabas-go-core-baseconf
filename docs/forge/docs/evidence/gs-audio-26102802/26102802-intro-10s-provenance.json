@@ -1,0 +1,7 @@
+{
+  "source": "build/gs-audio/bram-verified",
+  "seconds": 10,
+  "description": "Exact-length playback excerpt after stock memory/warm-reset and byte-for-byte upload checks; no claim that the longer source run finished.",
+  "source_run_finished": false,
+  "wav_sha256": "b06c41e55d7ddb2433f053c23579a39d9434b8dc4196b47e07da6ed4709b3641"
+}

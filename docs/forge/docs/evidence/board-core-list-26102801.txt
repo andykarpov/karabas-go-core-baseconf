@@ -1,0 +1,10 @@
++KARABAS:zxnext.kg1;zxnext;ZX Spectrum Next;24032519
++KARABAS:boot.kg1;boot;Boot Menu;24040213
++KARABAS:nes.kg1;nes;NES;24092423
++KARABAS:pcxt.kg1;pcxt;PC XT;24090915
++KARABAS:profi.kg1;profi;Karabas Pro +;24061813
++KARABAS:radio86rk.kg1;rk86;Radio86rk;24090100
++KARABAS:test.kg1;test;Test Core;24030514
++KARABAS:tsconf.kg1;tsconf;TS-Conf +;24092215
++KARABAS:baseconf.kg1;baseconf;ZX Evolution BaseConf;26102801
+OK

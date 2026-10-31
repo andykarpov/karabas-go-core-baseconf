@@ -1,0 +1,287 @@
+# Karabas-Mini rev.C pinout
+
+# Clocks
+NET "CLK_50MHZ"        LOC="T8" | IOSTANDARD = LVTTL;
+
+VCCAUX = 3.3;
+
+# Misc
+NET "TAPE_IN"      LOC="N14"   | IOSTANDARD = LVCMOS33 | PULLUP;
+NET "TAPE_OUT"     LOC="M13"   | IOSTANDARD = LVCMOS33;
+NET "AUDIO_L"      LOC="D14"   | IOSTANDARD = LVCMOS33;
+NET "AUDIO_R"      LOC="C16"   | IOSTANDARD = LVCMOS33;
+
+# UART
+NET "ESP_RESET_N"      LOC="K6"  | IOSTANDARD = LVCMOS33;
+NET "ESP_BOOT_N"      LOC="K5"  | IOSTANDARD = LVCMOS33;
+NET "UART_RX"      LOC="J4"  | IOSTANDARD = LVCMOS33 | PULLUP;
+NET "UART_TX"      LOC="J6"  | IOSTANDARD = LVCMOS33 | PULLUP;
+NET "UART_CTS"      LOC="L5"  | IOSTANDARD = LVCMOS33;
+
+# CF card / Extender port
+NET "WA<0>"            LOC="R7"    | IOSTANDARD = LVCMOS33; # UBUS_13
+NET "WA<1>"            LOC="P7"    | IOSTANDARD = LVCMOS33; # UBUS_15
+NET "WA<2>"            LOC="P8"    | IOSTANDARD = LVCMOS33; # UBUS_17
+NET "WCS_N<0>"         LOC="L10"   | IOSTANDARD = LVCMOS33; # UBUS_1
+NET "WCS_N<1>"         LOC="M9"    | IOSTANDARD = LVCMOS33; # UBUS_0
+NET "WRD_N"            LOC="M11"   | IOSTANDARD = LVCMOS33; # UBUS_2
+NET "WWR_N"            LOC="M10"   | IOSTANDARD = LVCMOS33; # UBUS_3
+NET "WRESET_N"         LOC="N8"    | IOSTANDARD = LVCMOS33; # UBUS_19
+NET "WD<0>"            LOC="N6"    | IOSTANDARD = LVCMOS33; # UBUS_12
+NET "WD<1>"            LOC="M5"    | IOSTANDARD = LVCMOS33; # UBUS_14
+NET "WD<2>"            LOC="N5"    | IOSTANDARD = LVCMOS33; # UBUS_18
+NET "WD<3>"            LOC="L12"   | IOSTANDARD = LVCMOS33; # UBUS_11
+NET "WD<4>"            LOC="T12"   | IOSTANDARD = LVCMOS33; # UBUS_7
+NET "WD<5>"            LOC="P11"   | IOSTANDARD = LVCMOS33; # UBUS_4 
+NET "WD<6>"            LOC="P9"    | IOSTANDARD = LVCMOS33; # UBUS_8
+NET "WD<7>"            LOC="T13"   | IOSTANDARD = LVCMOS33; # UBUS_23
+NET "WD<8>"            LOC="P6"    | IOSTANDARD = LVCMOS33; # UBUS_16
+NET "WD<9>"            LOC="M4"    | IOSTANDARD = LVCMOS33; # UBUS_20
+NET "WD<10>"           LOC="T5"    | IOSTANDARD = LVCMOS33; # UBUS_22
+NET "WD<11>"           LOC="M12"   | IOSTANDARD = LVCMOS33; # UBUS_9
+NET "WD<12>"           LOC="R12"   | IOSTANDARD = LVCMOS33; # UBUS_5
+NET "WD<13>"           LOC="N9"    | IOSTANDARD = LVCMOS33; # UBUS_6
+NET "WD<14>"           LOC="T9"    | IOSTANDARD = LVCMOS33; # UBUS_10
+NET "WD<15>"           LOC="R9"    | IOSTANDARD = LVCMOS33; # UBUS_21
+
+# SRAM
+NET "MA<0>"            LOC="L14"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MA<1>"            LOC="L13"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MA<2>"            LOC="K12"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MA<3>"            LOC="K11"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MA<4>"            LOC="J14"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MA<5>"            LOC="G14"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MA<6>"            LOC="J13"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MA<7>"            LOC="H13"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MA<8>"            LOC="J12"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MA<9>"            LOC="J11"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MA<10>"            LOC="H11"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MA<11>"            LOC="F13"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MA<12>"            LOC="G11"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MA<13>"            LOC="E13"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MA<14>"            LOC="F16"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MA<15>"            LOC="K14"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MA<16>"            LOC="K15"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MA<17>"            LOC="K16"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MA<18>"            LOC="L16"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MA<19>"            LOC="G12"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MA<20>"            LOC="M14"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MD<0>"            LOC="J16"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MD<1>"            LOC="H16"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MD<2>"            LOC="H15"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MD<3>"            LOC="H14"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MD<4>"            LOC="F15"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MD<5>"            LOC="F14"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MD<6>"            LOC="E16"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MD<7>"            LOC="E15"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MD<8>"            LOC="T15"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MD<9>"            LOC="T14"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MD<10>"            LOC="R16"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MD<11>"            LOC="R15"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MD<12>"            LOC="P16"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MD<13>"            LOC="P15"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MD<14>"            LOC="N16"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MD<15>"            LOC="M16"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MWR_N<0>"            LOC="G16"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MWR_N<1>"            LOC="R14"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MRD_N<0>"            LOC="D16"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "MRD_N<1>"            LOC="M15"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+
+# SDRAM
+NET "SDR_BA<0>"            LOC="M1"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_BA<1>"            LOC="N4"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_A<0>"            LOC="N3"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_A<1>"            LOC="P2"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_A<2>"            LOC="P1"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_A<3>"            LOC="P4"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_A<4>"            LOC="B1"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_A<5>"            LOC="C2"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_A<6>"            LOC="C1"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_A<7>"            LOC="F4"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_A<8>"            LOC="E4"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_A<9>"            LOC="D1"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_A<10>"            LOC="N1"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_A<11>"            LOC="D3"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_A<12>"            LOC="E3"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_CLK"            LOC="E1"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_DQM<0>"            LOC="L3"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_DQM<1>"            LOC="E2"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_WE_N"            LOC="L1"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_CAS_N"            LOC="M3"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_RAS_N"            LOC="M2"    | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_DQ<0>"            LOC="H2"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_DQ<1>"            LOC="H1"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_DQ<2>"            LOC="H4"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_DQ<3>"            LOC="J3"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_DQ<4>"            LOC="J1"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_DQ<5>"            LOC="K3"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_DQ<6>"            LOC="K2"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_DQ<7>"            LOC="K1"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_DQ<8>"            LOC="F2"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_DQ<9>"            LOC="F1"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_DQ<10>"            LOC="F3"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_DQ<11>"            LOC="G5"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_DQ<12>"            LOC="H5"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_DQ<13>"            LOC="G3"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_DQ<14>"            LOC="G1"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+NET "SDR_DQ<15>"            LOC="H3"    | IOSTANDARD = LVCMOS33  | DRIVE = 4 | SLEW = "FAST" | NODELAY;
+
+# SD
+NET "SD_CS_N"       LOC="L4"   | IOSTANDARD = LVCMOS33 | PULLUP;
+NET "SD_DI"       LOC="L7"   | IOSTANDARD = LVCMOS33;
+NET "SD_DO"       LOC="M7"   | IOSTANDARD = LVCMOS33 | PULLUP;
+NET "SD_CLK"       LOC="L8"   | IOSTANDARD = LVCMOS33;
+NET "SD_DET_N"       LOC="M6"   | IOSTANDARD = LVCMOS33 | PULLUP;
+
+# FT812
+NET "FT_SPI_CS_N"       LOC="F12"   | IOSTANDARD = LVCMOS33 | PULLUP;
+NET "FT_SPI_SCK"       LOC="E11"   | IOSTANDARD = LVCMOS33;
+NET "FT_SPI_MISO"       LOC="E12"   | IOSTANDARD = LVCMOS33;
+NET "FT_SPI_MOSI"       LOC="B15"   | IOSTANDARD = LVCMOS33;
+NET "FT_INT_N"       LOC="D12"   | IOSTANDARD = LVCMOS33;
+NET "FT_CLK"       LOC="A3"   | IOSTANDARD = LVCMOS33;
+NET "FT_AUDIO"       LOC="D11"   | IOSTANDARD = LVCMOS33;
+NET "FT_DE"       LOC="E8"   | IOSTANDARD = LVCMOS33;
+NET "FT_RESET"       LOC="C15"   | IOSTANDARD = LVCMOS33;
+NET "FT_DISP"       LOC="F5"   | IOSTANDARD = LVCMOS33;
+NET "FT_CLK_OUT"    LOC="E7"   | IOSTANDARD = LVCMOS33;
+
+# VGA
+NET "VGA_R<0>"      LOC="B16"  | IOSTANDARD = LVCMOS33;
+NET "VGA_R<1>"      LOC="E10"  | IOSTANDARD = LVCMOS33;
+NET "VGA_R<2>"      LOC="C10"  | IOSTANDARD = LVCMOS33;
+NET "VGA_R<3>"      LOC="B10"  | IOSTANDARD = LVCMOS33;
+NET "VGA_R<4>"      LOC="A10"  | IOSTANDARD = LVCMOS33;
+NET "VGA_R<5>"      LOC="D9"   | IOSTANDARD = LVCMOS33;
+NET "VGA_R<6>"      LOC="C9"   | IOSTANDARD = LVCMOS33;
+NET "VGA_R<7>"      LOC="A9"   | IOSTANDARD = LVCMOS33;
+
+NET "VGA_G<0>"      LOC="C8"   | IOSTANDARD = LVCMOS33;
+NET "VGA_G<1>"      LOC="B8"   | IOSTANDARD = LVCMOS33;
+NET "VGA_G<2>"      LOC="A8"   | IOSTANDARD = LVCMOS33;
+NET "VGA_G<3>"      LOC="D8"   | IOSTANDARD = LVCMOS33;
+NET "VGA_G<4>"      LOC="C7"   | IOSTANDARD = LVCMOS33;
+NET "VGA_G<5>"      LOC="A7"   | IOSTANDARD = LVCMOS33;
+NET "VGA_G<6>"      LOC="C6"   | IOSTANDARD = LVCMOS33;
+NET "VGA_G<7>"      LOC="B6"   | IOSTANDARD = LVCMOS33;
+
+NET "VGA_B<0>"      LOC="A6"   | IOSTANDARD = LVCMOS33;
+NET "VGA_B<1>"      LOC="C5"   | IOSTANDARD = LVCMOS33;
+NET "VGA_B<2>"      LOC="B5"   | IOSTANDARD = LVCMOS33;
+NET "VGA_B<3>"      LOC="A5"   | IOSTANDARD = LVCMOS33;
+NET "VGA_B<4>"      LOC="D5"   | IOSTANDARD = LVCMOS33;
+NET "VGA_B<5>"      LOC="E6"   | IOSTANDARD = LVCMOS33;
+NET "VGA_B<6>"      LOC="A4"   | IOSTANDARD = LVCMOS33;
+NET "VGA_B<7>"      LOC="C4"   | IOSTANDARD = LVCMOS33;
+
+NET "VGA_HS"        LOC="F10"  | IOSTANDARD = LVCMOS33;
+NET "VGA_VS"        LOC="F9"   | IOSTANDARD = LVCMOS33;
+
+# MCU SPI (renamed due to actual state of the SPI pinout on the PICO side)
+NET "MCU_SCK"       LOC="C3"   | IOSTANDARD = LVCMOS33;
+NET "MCU_MOSI"      LOC="B3"   | IOSTANDARD = LVCMOS33;
+NET "MCU_MISO"      LOC="B2"   | IOSTANDARD = LVCMOS33;
+NET "MCU_CS_N"      LOC="A2"   | IOSTANDARD = LVCMOS33 | PULLUP;
+NET "MCU_IO<0>"     LOC="G6"   | IOSTANDARD = LVCMOS33 | PULLUP; # burst cs_n: idle high while the mcu does not drive it
+NET "MCU_IO<1>"     LOC="F6"   | IOSTANDARD = LVCMOS33;
+NET "MCU_IO<2>"     LOC="F7"   | IOSTANDARD = LVCMOS33; # SD2
+NET "MCU_IO<3>"     LOC="D6"   | IOSTANDARD = LVCMOS33; # FT
+#NET "MCU_IO<4>"     LOC="E7"   | IOSTANDARD = LVCMOS33; # relocated to FT_CLK_OUT!
+
+# TMDS
+NET "TMDS_P<0>"       LOC="C13"   | IOSTANDARD = TMDS_33; # HDMI_D0P
+NET "TMDS_P<1>"       LOC="B12"   | IOSTANDARD = TMDS_33; # HDMI_D1P
+NET "TMDS_P<2>"       LOC="C11"   | IOSTANDARD = TMDS_33; # HDMI_D2P
+NET "TMDS_P<3>"       LOC="B14"   | IOSTANDARD = TMDS_33; # HDMI_CKP
+
+NET "TMDS_N<0>"       LOC="A13"   | IOSTANDARD = TMDS_33; # HDMI_D0N
+NET "TMDS_N<1>"       LOC="A12"   | IOSTANDARD = TMDS_33; # HDMI_D1N
+NET "TMDS_N<2>"       LOC="A11"   | IOSTANDARD = TMDS_33; # HDMI_D2N
+NET "TMDS_N<3>"       LOC="A14"   | IOSTANDARD = TMDS_33; # HDMI_CKN
+
+# ADC
+NET "ADC_CLK"       LOC="T6"   | IOSTANDARD = LVCMOS33;
+NET "ADC_DOUT"      LOC="R5"   | IOSTANDARD = LVCMOS33;
+NET "ADC_BCK"       LOC="T4"   | IOSTANDARD = LVCMOS33;
+NET "ADC_LRCK"      LOC="T7"   | IOSTANDARD = LVCMOS33;
+
+# MIDI
+NET "MIDI_TX"       LOC="P5"   | IOSTANDARD = LVCMOS33;
+NET "MIDI_RESET_N"    LOC="R2"   | IOSTANDARD = LVCMOS33;
+NET "MIDI_CLK"      LOC="R1"   | IOSTANDARD = LVCMOS33;
+
+# SPI FLASH
+NET "FLASH_CS_N"    LOC="T3"   | IOSTANDARD = LVCMOS33; # /CONF_CS
+NET "FLASH_DO"      LOC="P10"  | IOSTANDARD = LVCMOS33; # CONF_IO1
+NET "FLASH_DI"      LOC="T10"  | IOSTANDARD = LVCMOS33; # CONF_IO0
+NET "FLASH_SCK"     LOC="R11"  | IOSTANDARD = LVCMOS33; # CONF_CLK
+NET "FLASH_WP_N"    LOC="N12"  | IOSTANDARD = LVCMOS33; # CONF_IO2
+NET "FLASH_HOLD_N"  LOC="P12"  | IOSTANDARD = LVCMOS33; # CONF_IO3
+
+# MCU_SCK and FT_CLK are not on clock pins of the Mini
+NET "MCU_SCK" CLOCK_DEDICATED_ROUTE = FALSE;
+NET "FT_CLK" CLOCK_DEDICATED_ROUTE = FALSE;
+
+# ------------------------------------------------------------------------------------------------------------
+# BaseConf B4: main system 28.0303 MHz, FDC 7.974 MHz, SDRAM 84.0909 MHz inverted (TSConf clock domain).
+NET "CLK_50MHZ" TNM_NET = "CLK_50MHZ";
+TIMESPEC "TS_CLK_50MHZ" = PERIOD "CLK_50MHZ" 20 ns HIGH 50%;
+NET "clk_bus" TNM_NET = "TG_CLK_BUS";
+NET "pll_clk<1>" TNM_NET = "TG_CLK_8";
+NET "MCU_SCK" TNM_NET = "TG_CLK_MCU";
+TIMESPEC "TS_CLK_MCU" = PERIOD "TG_CLK_MCU" 16 MHz;
+# SPI mode 0: MOSI changes on falling SCK; sample on rising SCK.
+# 31.25 ns half-cycle leaves 15.25 ns for MCU/PCB skew around a 16 ns window.
+NET "MCU_MOSI" OFFSET = IN 16 ns VALID 32 ns BEFORE "MCU_SCK" RISING;
+# Reply changes after falling SCK; reserve 6.25 ns for PCB/MCU setup.
+NET "MCU_MISO" OFFSET = OUT 25 ns AFTER "MCU_SCK" FALLING;
+TIMESPEC "TS_MCU_TO_BUS" = FROM "TG_CLK_MCU" TO "TG_CLK_BUS" 31.25 ns DATAPATHONLY;
+TIMESPEC "TS_BUS_TO_MCU" = FROM "TG_CLK_BUS" TO "TG_CLK_MCU" 31.25 ns DATAPATHONLY;
+TIMESPEC "TS_BUS_TO_CLK8" = FROM "TG_CLK_BUS" TO "TG_CLK_8" 35 ns DATAPATHONLY;
+TIMESPEC "TS_CLK8_TO_BUS" = FROM "TG_CLK_8" TO "TG_CLK_BUS" 35 ns DATAPATHONLY;
+TIMEGRP "TG_SRAM_IN" = PADS("MD<*>");
+TIMEGRP "TG_SRAM_OUT" = "TG_SRAM_IN" PADS("MA<*>") PADS("MRD_N<*>") PADS("MWR_N<*>");
+TIMESPEC "TS_SRAM_OUT" = FROM FFS TO "TG_SRAM_OUT" 12 ns DATAPATHONLY;
+TIMESPEC "TS_SRAM_IN" = FROM "TG_SRAM_IN" TO FFS 12 ns DATAPATHONLY;
+# Pad datapath budgets, not complete source-synchronous board constraints.
+# DQ captures on the rising edge after CAS+2 (half a cycle later than TSConf).
+# 4 ns input allowance fits the ILOGIC path; a 3 ns trial was below the device
+# component-delay floor. Forwarded-clock/PCB setup and hold still need review.
+TIMEGRP "TG_SDR_IN" = PADS("SDR_DQ<*>");
+TIMEGRP "TG_SDR_OUT" = "TG_SDR_IN" PADS("SDR_A<*>") PADS("SDR_BA<*>") PADS("SDR_DQM<*>") PADS("SDR_WE_N") PADS("SDR_RAS_N") PADS("SDR_CAS_N");
+TIMESPEC "TS_SDR_OUT" = FROM FFS TO "TG_SDR_OUT" 8 ns DATAPATHONLY;
+TIMESPEC "TS_SDR_IN" = FROM "TG_SDR_IN" TO FFS 4 ns DATAPATHONLY;
+# ---- Mini, Mini G: FT812 and HDMI -------------------------------------------------------------------------------
+# FT_CLK: the pixel clock of the FT812 (its video goes to HDMI with ft_sel = vdac2_sel), up to 80 MHz. The FT812
+# makes it from FT_CLK_OUT (clk_8) with its own PLL: the phase is not known.
+NET "FT_CLK" TNM_NET = "TG_CLK_FT";
+TIMESPEC "TS_CLK_FT" = PERIOD "TG_CLK_FT" 80 MHz HIGH 50%;
+# The pixel clock of HDMI (hdmi_pll, the BUFGMUX clkpllin): clk_bus in the mode of the core (I0, derived from
+# CLK_50MHZ); in the FT mode the FT812 frequency, made by DCM_CLKGEN from clk_8 (I1; programmed by hdmi_pll after it
+# measured FT_CLK; the CLKFX of DCM_CLKGEN is not phase aligned with its input). DCM_SP makes the 5x serial clock. The 5x clock
+# is within the CLKFX limit of the -2 part (3.0 ns, 333 MHz) up to 64 MHz: the FT modes of 72 and 80 MHz are beyond
+# it (and were never programmed before, see hdmi_pll.v). This PERIOD analyses the FT mode at 64 MHz. ngdbuild also
+# derives one from clk_8 and the static CLKFX_MULTIPLY (32 MHz), which relates the FT pixel clock to the clocks of
+# the PLL; for the paths from clk_bus TS_BUS_TO_PIX below replaces it.
+NET "hdmi_top/hdmi_pll/clkgen" TNM_NET = "TG_CLKGEN";
+TIMESPEC "TS_CLKGEN" = PERIOD "TG_CLKGEN" 64 MHz HIGH 50%;
+NET "hdmi_top/p_clk_int" TNM_NET = "TG_CLK_PIX"; # the output of the BUFGMUX clkpllin
+# clk_bus -> the pixel clock (from registers on the falling clk_bus in hdmi_top): the data paths bounded by one
+# clk_bus period. In the FT mode only synchronisers in
+# hdmi_top take clk_bus registers (ft_sel, audio_en, the reset of hdmi_tx, the audio sample toggle, a sample held
+# for 1 / SAMPLERATE); the video of the core is not used there. In the mode of the core both are the same clock (the
+# BUFG of clk_bus and BUFGMUX I0 from one PLL output): `make <board>-coremode` analyses the routed design without the
+# PERIODs of the FT mode and this bound, so these paths get the setup and hold of clk_bus.
+TIMESPEC "TS_BUS_TO_PIX" = FROM "TG_CLK_BUS" TO "TG_CLK_PIX" 35.7 ns DATAPATHONLY;
+# FT812 video: taken at the falling FT_CLK, then into the pixel clock through kg_async_fifo (the pixel clock has the
+# frequency of FT_CLK, both from clk_8, and an unknown phase): its Gray pointers and its memory cross, bounded by
+# one FT_CLK period (a pointer is taken one clock later, a word read two clocks after its write at the earliest).
+# The reset of its write side (tx_reset_a, from clk_bus and the DCM) is released on FT_CLK through two flip-flops.
+TIMESPEC "TS_FT_TO_PIX" = FROM "TG_CLK_FT" TO "TG_CLK_PIX" 12.5 ns DATAPATHONLY;
+TIMESPEC "TS_PIX_TO_FT" = FROM "TG_CLK_PIX" TO "TG_CLK_FT" 12.5 ns DATAPATHONLY;
+TIMESPEC "TS_BUS_TO_FT" = FROM "TG_CLK_BUS" TO "TG_CLK_FT" 12.5 ns DATAPATHONLY;
+# hdmi_pll measures FT_CLK on clk_bus (freq_counter: a counter bit through two flip-flops).
+TIMESPEC "TS_FT_TO_BUS" = FROM "TG_CLK_FT" TO "TG_CLK_BUS" 12.5 ns DATAPATHONLY;
+# The select of the BUFGMUXes of hdmi_pll (mux_sel = vdac2_sel, a clk_bus register): a BUFGMUX switches without a
+# glitch at any time of S; its setup to the input clocks only decides at which of their edges.
+NET "hdmi_top/hdmi_pll/mux_sel" TIG;

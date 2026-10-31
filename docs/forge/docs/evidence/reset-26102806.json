@@ -1,0 +1,696 @@
+{
+  "build": "26102806",
+  "scope": "GO, Mini, Mini G reset/boot-selection improvements",
+  "hardware_tested": false,
+  "board_transfer_performed": false,
+  "ay_noise_fixed": false,
+  "source_audit": [
+    {
+      "board": "go",
+      "current_source_reproduces_manifest": true,
+      "inputs": 128,
+      "manifest_sha256": "3ae3933a562ccfeeac2d912ada8a81f8f79535f2bb475a8bdac9e1df1f8ab121"
+    },
+    {
+      "board": "mini",
+      "current_source_reproduces_manifest": true,
+      "inputs": 143,
+      "manifest_sha256": "4f5c071208eeb15c5510f65a4bc25219ad118c97eeb5693784b518e5af84f5f7"
+    },
+    {
+      "board": "minig",
+      "current_source_reproduces_manifest": true,
+      "inputs": 142,
+      "manifest_sha256": "0027551c89eedfd7e2292ca886ed5dce39a0647f72562c504e6d302bd43d82a9"
+    }
+  ],
+  "regressions": [
+    {
+      "board": "go",
+      "passed": true,
+      "checks": [
+        "test --suite all",
+        "lint"
+      ],
+      "not_applicable": "video-test is Mini-only; initial invocation returned that explicit error, no GO video failure"
+    },
+    {
+      "board": "mini",
+      "passed": true
+    },
+    {
+      "board": "minig",
+      "passed": true
+    }
+  ],
+  "boards": {
+    "go": {
+      "package": "baseconf.kg1",
+      "package_sha256": "29acb951ad6d74951a643bb59edcdfdedd6cf89c9b3f629eb6c47b173ab82648",
+      "manifest_sha256": "3ae3933a562ccfeeac2d912ada8a81f8f79535f2bb475a8bdac9e1df1f8ab121",
+      "resources": {
+        "slices": 3382,
+        "luts": 10177
+      },
+      "timing": {
+        "karabas_go.twr": {
+          "sha256": "13d4c2bf5dc5baf5f899e05c22cbe822196fd1a60f893935ec0639fa4b3f98a0",
+          "errors": 0
+        }
+      },
+      "reports": {
+        "ise-completed.json": {
+          "manifest_sha256": "3ae3933a562ccfeeac2d912ada8a81f8f79535f2bb475a8bdac9e1df1f8ab121",
+          "bitstream_sha256": "fd24e0044e5c15aa808656fbedd1882a987983b606322f93048f030e27936aaf",
+          "toolchain": "docker.i74.de:5000/xilinx-ise@sha256:9a12826e3c0696e9b855a669a1e0f7a04fdd180126c735d62d325dae13b769bf"
+        },
+        "package-verified.json": {
+          "board": "go",
+          "build": "26102806",
+          "bytes": 1308416,
+          "package_sha256": "29acb951ad6d74951a643bb59edcdfdedd6cf89c9b3f629eb6c47b173ab82648",
+          "manifest_sha256": "3ae3933a562ccfeeac2d912ada8a81f8f79535f2bb475a8bdac9e1df1f8ab121",
+          "bitstream_and_roms_verified": true,
+          "osd_entries_verified": 9,
+          "joystick_selectors": {
+            "Joystick L": [
+              "Kempston",
+              "Sinclair1",
+              "Sinclair2",
+              "Cursor",
+              "QAOPM",
+              "QAOPS",
+              "SEGA"
+            ],
+            "Joystick R": [
+              "Kempston",
+              "Sinclair1",
+              "Sinclair2",
+              "Cursor",
+              "QAOPM",
+              "QAOPS",
+              "SEGA"
+            ]
+          }
+        },
+        "bios-reset-result.json": {
+          "board": "go",
+          "manifest_sha256": "3ae3933a562ccfeeac2d912ada8a81f8f79535f2bb475a8bdac9e1df1f8ab121",
+          "testbench_sha256": "bb9927386f9e1c4bb2e1d05a95ae39ad4814875aef9d817f6827e5465d40d8a2",
+          "rom_sha256": "f2e94dfcacf67a76a3999f56bd3740e69f65e2362d4783b5e7d248e650bed560",
+          "cases": [
+            {
+              "keys": "cs",
+              "passed": true,
+              "observation": "PASS BIOS reset case=1 pc=0000 rom=1e at 133359903000",
+              "log_sha256": "a23254d69117502d1842446f4f99cfce0c1639bfafef9d5fc36612494f42b448"
+            },
+            {
+              "keys": "ss",
+              "passed": true,
+              "observation": "PASS BIOS reset case=2 pc=0000 rom=1c at 133364184000",
+              "log_sha256": "67a471a139e4dc323b9aa6631088fb429a0028d839d93f4a2bf509f82b936d10"
+            },
+            {
+              "keys": "d",
+              "passed": true,
+              "observation": "PASS BIOS reset case=3 pc=5ff8 rom=05 at 135168819000",
+              "log_sha256": "90496e74e940eaf13e983c6c597ccf9aeb0bb2d8b8928cfc86175cfa194804e6"
+            },
+            {
+              "keys": "c",
+              "passed": true,
+              "observation": "PASS BIOS reset case=4 pc=612c rom=05 at 486930183000",
+              "log_sha256": "6e204e22ec6b2935e18c020fc6719dc131b39d5b08bdbe8fb74cbc255a4670a2"
+            },
+            {
+              "keys": "h",
+              "passed": true,
+              "observation": "PASS BIOS reset case=5 pc=6216 rom=05 at 486955584000",
+              "log_sha256": "f944cd57e269016fec9a8b19c969b7cade8a15690664efbf38e4ebe76eb69c01"
+            },
+            {
+              "keys": "s",
+              "passed": true,
+              "observation": "PASS BIOS reset case=6 pc=6026 rom=05 at 486909633000",
+              "log_sha256": "7934f89a7dd620d57281bad2e96882dd2f869068690e1c63e37ec79288df4bd6"
+            },
+            {
+              "keys": "0",
+              "passed": true,
+              "observation": "PASS BIOS reset case=7 pc=0264 rom=1f at 133077491000",
+              "log_sha256": "57e810ec1dd1d205a860c5555b9f75becab10ac9c1eb61f53c31690e9200ccbb"
+            },
+            {
+              "keys": "a+b",
+              "passed": true,
+              "observation": "PASS BIOS reset case=8 pc=61c4 rom=05 at 204098561000",
+              "log_sha256": "b338d0a220ec48d7294b6e6e999fd1bca0416a948cd163a52343a83ebb061bf0"
+            },
+            {
+              "keys": "a+b+c",
+              "passed": true,
+              "observation": "PASS BIOS reset case=9 pc=61c4 rom=05 at 204040623000",
+              "log_sha256": "66df0ce4a22c1826a8a1aaa84eeeb0742f53f71c7f89c74bd90b2d524995b962"
+            },
+            {
+              "keys": "cs+ss",
+              "passed": true,
+              "observation": "PASS BIOS reset case=10 pc=61c4 rom=05 at 204287786000",
+              "log_sha256": "6150f12a5a69a83a1b265cda27e5a04f15479edb71a3434bcb51b8f1c66ab21e"
+            }
+          ],
+          "scope": "Actual stock ROM dispatch after MCU/HID F12 reset; no hardware or complete BASIC/diagnostic UI acceptance"
+        },
+        "bios-result.json": {
+          "simulator": "verilator",
+          "milliseconds": 2500,
+          "menu_verified": true,
+          "manifest_sha256": "3ae3933a562ccfeeac2d912ada8a81f8f79535f2bb475a8bdac9e1df1f8ab121",
+          "testbench_sha256": "bb9927386f9e1c4bb2e1d05a95ae39ad4814875aef9d817f6827e5465d40d8a2",
+          "artifacts_sha256": {
+            "roms/baseconf.rom": "f2e94dfcacf67a76a3999f56bd3740e69f65e2362d4783b5e7d248e650bed560",
+            "roms/gs105b.rom": "9948ec9617365fb1913b0c56e00d5f6b6a36084875cca16debae270a4c6e6adf",
+            "tb_bios.log": "796f200e70fde43ec5c8ef85c91786ada28ddf66ce8e384ab4f77494d9dcbb79",
+            "bios-trace.log": "24af663b49fdfcdba4652dfb035435fde27f802ff1bbd85bf97404eec45343a6",
+            "bios-sram-hi.hex": "3ec42f9299b50386e42baf2b1b1c163ca87e5580c68d4cc50e8b3807add4a9b8",
+            "bios-sram-lo.hex": "2dd1889863eaaf1e952ea00efd180d7bd813fa826007a8d2f5e371f14d41e710"
+          }
+        },
+        "ay-result.json": {
+          "board": "go",
+          "passed": true,
+          "simulator": "verilator",
+          "manifest_sha256": "3ae3933a562ccfeeac2d912ada8a81f8f79535f2bb475a8bdac9e1df1f8ab121",
+          "testbench_sha256": "3dcb5e242fc226acf4f686bd54ec585d198669e7dfd541b6046a086be297a2e6",
+          "cases": [
+            {
+              "speed": "7mhz",
+              "type": "ay",
+              "log": "ay-7mhz-ay.log",
+              "sha256": "29862de0c00871c1ccef28ac9357a670189ec5d5ad35e6e2134bdab35a5c5938"
+            },
+            {
+              "speed": "7mhz",
+              "type": "ym",
+              "log": "ay-7mhz-ym.log",
+              "sha256": "7917a739c1e0abb98239b8eac1347ca6765b8ef63a5ac69dfcf0699c4105029c"
+            },
+            {
+              "speed": "14mhz",
+              "type": "ay",
+              "log": "ay-14mhz-ay.log",
+              "sha256": "7f00d685e6d6ae996cdb62acf25d387e7913e6e4dec5bf1eae1c8591aaf9a203"
+            },
+            {
+              "speed": "14mhz",
+              "type": "ym",
+              "log": "ay-14mhz-ym.log",
+              "sha256": "5b14525558c33276899e4693c5c273988b985b4612cc2e8866f364de60ba7a26"
+            },
+            {
+              "speed": "3_5mhz",
+              "type": "ay",
+              "log": "ay-3_5mhz-ay.log",
+              "sha256": "64e7b75b7938d1888b09055165f6ad33c14a92562839860fd3f5ace681758817"
+            },
+            {
+              "speed": "3_5mhz",
+              "type": "ym",
+              "log": "ay-3_5mhz-ym.log",
+              "sha256": "a3286ba61d05588b50717d56f755fe05e21d622de34429ea7227c0992377d818"
+            }
+          ],
+          "limits": "Two-state functional test; no routed timing, analog capture, envelope/music acceptance or hardware noise reproduction."
+        }
+      },
+      "simulation_logs_sha256": {
+        "tb_sram.log": "e8379415b61dd09759b36b1051f4656d898557d4b448c7be62a71ba466e5569b",
+        "tb_bios.log": "796f200e70fde43ec5c8ef85c91786ada28ddf66ce8e384ab4f77494d9dcbb79",
+        "tb_gs_nominal.vvp.compile.log": "2d80efd65a358dccfcc2cc82dcb6485e7d167da6c406d73adee70d086e4be97e",
+        "tb_osd.vvp.compile.log": "2d80efd65a358dccfcc2cc82dcb6485e7d167da6c406d73adee70d086e4be97e",
+        "tb_boot_7mhz.log": "e79d258c6a5c03bea4ba260687baa0a567753ef775eb2de16aacf183ec9df02c",
+        "tb_osd.log": "b64ab7aeb9ad72fe3170885f5eccc08821b9438b45afdcd2260d3b43b7ea7156",
+        "tb_hid.log": "ba0302476ad23105e89bce7055bbbf9a4e4329e3ca5708c2b43707bf03ff5eae",
+        "tb_hid.vvp.compile.log": "2d80efd65a358dccfcc2cc82dcb6485e7d167da6c406d73adee70d086e4be97e",
+        "tb_keyboard_filter.vvp.compile.log": "2d80efd65a358dccfcc2cc82dcb6485e7d167da6c406d73adee70d086e4be97e",
+        "tb_board.log": "e09bc9f2f1947f6cba488cbeb81f3778f26d589fa9b346125afa386f204ffd8a",
+        "tb_keyboard_filter.log": "f865d1aba9c45bbc628edba68bb3d93cfbe93b0fd27a37400584c1746da227c7",
+        "tb_gs_nominal.log": "bb4888d8fc507c603a73408da02906a02d7264d388f96cea76723f63f7f12f11",
+        "tb_boot_14mhz.log": "03a3526ea0dad8ef458e962eb5b977c3f54322f027096dee24d3ae52f312ac06",
+        "tb_boot_3_5mhz.log": "7d78ff98567196f9a4698a7b5939f93dc843710fba6b22aaf23d02b13e7f8ff8",
+        "tb_gs_routed.log": "bb4888d8fc507c603a73408da02906a02d7264d388f96cea76723f63f7f12f11",
+        "tb_boot.vvp.compile.log": "b25a9d69aef794af05b246cfcc6d038a5a1aa743c0b9920f4557f2ebbbaf3a85",
+        "tb_storage.vvp.compile.log": "065783b18f663307f2c2071da8a57811359cba251c8f7ac4ba0b9aabc63f8319",
+        "tb_sram.vvp.compile.log": "8f14e81adc34ae097974a72bb054670d692261473ca7d6c58fabc753e9232d4c",
+        "tb_board.vvp.compile.log": "b25a9d69aef794af05b246cfcc6d038a5a1aa743c0b9920f4557f2ebbbaf3a85",
+        "tb_gs_routed.vvp.compile.log": "2d80efd65a358dccfcc2cc82dcb6485e7d167da6c406d73adee70d086e4be97e",
+        "tb_storage.log": "64bcebcdf446bdb8d7a08b3088390a2e6db7edc2c02e97d557558dfd1d5b3614"
+      }
+    },
+    "mini": {
+      "package": "baseconf.kg2",
+      "package_sha256": "5df365662ded0b7940681a76e99a7dbabd813c442aee6761cca1b69968df677d",
+      "manifest_sha256": "4f5c071208eeb15c5510f65a4bc25219ad118c97eeb5693784b518e5af84f5f7",
+      "resources": {
+        "slices": 3683,
+        "luts": 11831
+      },
+      "timing": {
+        "karabas_mini.twr": {
+          "sha256": "ee422af60426347b941af77d659f1e72baabbd409ac4c44527a0abdad645ad50",
+          "errors": 0
+        },
+        "karabas_mini_core.twr": {
+          "sha256": "88c8d68e40ddcc797b33424788726a7cd3557a3faf75bc600380aa52c00b22b9",
+          "errors": 0
+        }
+      },
+      "reports": {
+        "ise-completed.json": {
+          "manifest_sha256": "4f5c071208eeb15c5510f65a4bc25219ad118c97eeb5693784b518e5af84f5f7",
+          "bitstream_sha256": "97330f4e37e8edee8e7f069f0f9505eb49a791fd68bff09c724407525aefbcab",
+          "toolchain": "docker.i74.de:5000/xilinx-ise@sha256:9a12826e3c0696e9b855a669a1e0f7a04fdd180126c735d62d325dae13b769bf"
+        },
+        "package-verified.json": {
+          "board": "mini",
+          "build": "26102806",
+          "bytes": 1307084,
+          "package_sha256": "5df365662ded0b7940681a76e99a7dbabd813c442aee6761cca1b69968df677d",
+          "manifest_sha256": "4f5c071208eeb15c5510f65a4bc25219ad118c97eeb5693784b518e5af84f5f7",
+          "bitstream_and_roms_verified": true,
+          "osd_entries_verified": 9,
+          "joystick_selectors": {
+            "Joystick L": [
+              "Kempston",
+              "Sinclair1",
+              "Sinclair2",
+              "Cursor",
+              "QAOPM",
+              "QAOPS",
+              "SEGA"
+            ],
+            "Joystick R": [
+              "Kempston",
+              "Sinclair1",
+              "Sinclair2",
+              "Cursor",
+              "QAOPM",
+              "QAOPS",
+              "SEGA"
+            ]
+          }
+        },
+        "bios-reset-result.json": {
+          "board": "mini",
+          "manifest_sha256": "4f5c071208eeb15c5510f65a4bc25219ad118c97eeb5693784b518e5af84f5f7",
+          "testbench_sha256": "8e4362e3d1a363b570cf7d53170c7b184b618f16d0db4e24ae9b50f0019144c3",
+          "rom_sha256": "f2e94dfcacf67a76a3999f56bd3740e69f65e2362d4783b5e7d248e650bed560",
+          "cases": [
+            {
+              "keys": "cs",
+              "passed": true,
+              "observation": "PASS BIOS reset case=1 pc=0000 rom=1e at 133359903000",
+              "log_sha256": "4e6924434cc5b1eb4f5ad03e31ed8855f9b7033e805ad2fb82ae1525c64426f4"
+            },
+            {
+              "keys": "ss",
+              "passed": true,
+              "observation": "PASS BIOS reset case=2 pc=0000 rom=1c at 133364184000",
+              "log_sha256": "d513fc6887e3d0b33b73c270a717b4979a11d423811b29402d914c175d28efed"
+            },
+            {
+              "keys": "d",
+              "passed": true,
+              "observation": "PASS BIOS reset case=3 pc=5ff8 rom=05 at 135168819000",
+              "log_sha256": "e13be4902db4cb419800155f40299a503a629094e327f8d789ea773dfa7129c2"
+            },
+            {
+              "keys": "c",
+              "passed": true,
+              "observation": "PASS BIOS reset case=4 pc=612c rom=05 at 486930183000",
+              "log_sha256": "80d235ed0ef50705696cd1baea268765dc39357b51a29ac9e329c1784be0caa9"
+            },
+            {
+              "keys": "h",
+              "passed": true,
+              "observation": "PASS BIOS reset case=5 pc=6216 rom=05 at 486955584000",
+              "log_sha256": "56be216ddb72c6103456e959446c01fddeff404bba97a6f5a0a4ae582c765a70"
+            },
+            {
+              "keys": "s",
+              "passed": true,
+              "observation": "PASS BIOS reset case=6 pc=6026 rom=05 at 486909633000",
+              "log_sha256": "9a7ac28125ef5874c19628d630f79213785de9f11e891872c34253e87352efd3"
+            },
+            {
+              "keys": "0",
+              "passed": true,
+              "observation": "PASS BIOS reset case=7 pc=0264 rom=1f at 133077491000",
+              "log_sha256": "21ef219bfad1581059b4378ba0b47fc80d20bfd36bbd2f75ec9b8fa327f08981"
+            },
+            {
+              "keys": "a+b",
+              "passed": true,
+              "observation": "PASS BIOS reset case=8 pc=61c4 rom=05 at 204098561000",
+              "log_sha256": "251ac0c1e1c1652c8559e6ea4e70d12904b1de88eb13e802c473954e059ec58b"
+            },
+            {
+              "keys": "a+b+c",
+              "passed": true,
+              "observation": "PASS BIOS reset case=9 pc=61c4 rom=05 at 204040623000",
+              "log_sha256": "b6aa9cbfa638a1f0009f9d018e9ee5cbd28ca6ef8e7d27e491d3006b885bb1d9"
+            },
+            {
+              "keys": "cs+ss",
+              "passed": true,
+              "observation": "PASS BIOS reset case=10 pc=61c4 rom=05 at 204287786000",
+              "log_sha256": "8d83997308aa6777e7cebe15b32853c0094f10e9516252ffeda9976e8ffd312d"
+            }
+          ],
+          "scope": "Actual stock ROM dispatch after MCU/HID F12 reset; no hardware or complete BASIC/diagnostic UI acceptance"
+        },
+        "bios-result.json": {
+          "simulator": "verilator",
+          "milliseconds": 2500,
+          "menu_verified": true,
+          "manifest_sha256": "4f5c071208eeb15c5510f65a4bc25219ad118c97eeb5693784b518e5af84f5f7",
+          "testbench_sha256": "8e4362e3d1a363b570cf7d53170c7b184b618f16d0db4e24ae9b50f0019144c3",
+          "artifacts_sha256": {
+            "roms/baseconf.rom": "f2e94dfcacf67a76a3999f56bd3740e69f65e2362d4783b5e7d248e650bed560",
+            "roms/gs105b.rom": "9948ec9617365fb1913b0c56e00d5f6b6a36084875cca16debae270a4c6e6adf",
+            "tb_bios.log": "e13be5cc5a8bad60030548566c7eac701a6276daa4570ba1443fdc154bc4016c",
+            "bios-trace.log": "24af663b49fdfcdba4652dfb035435fde27f802ff1bbd85bf97404eec45343a6",
+            "bios-sram-hi.hex": "3ec42f9299b50386e42baf2b1b1c163ca87e5580c68d4cc50e8b3807add4a9b8",
+            "bios-sram-lo.hex": "2dd1889863eaaf1e952ea00efd180d7bd813fa826007a8d2f5e371f14d41e710"
+          }
+        },
+        "ay-result.json": {
+          "board": "mini",
+          "passed": true,
+          "simulator": "verilator",
+          "manifest_sha256": "4f5c071208eeb15c5510f65a4bc25219ad118c97eeb5693784b518e5af84f5f7",
+          "testbench_sha256": "3dcb5e242fc226acf4f686bd54ec585d198669e7dfd541b6046a086be297a2e6",
+          "cases": [
+            {
+              "speed": "7mhz",
+              "type": "ay",
+              "log": "ay-7mhz-ay.log",
+              "sha256": "8f86034ebde91000da113cb6c10b8e88d48684483914329f5b8d895aa8db3994"
+            },
+            {
+              "speed": "7mhz",
+              "type": "ym",
+              "log": "ay-7mhz-ym.log",
+              "sha256": "a38ef860645643dc6ee7dd011c0d80c96bee3b8c309001efab2c4945b3d7a7ff"
+            },
+            {
+              "speed": "14mhz",
+              "type": "ay",
+              "log": "ay-14mhz-ay.log",
+              "sha256": "ebdd037e97957679d22e853d993bd2f3d350095940516dfa009013eda47f84eb"
+            },
+            {
+              "speed": "14mhz",
+              "type": "ym",
+              "log": "ay-14mhz-ym.log",
+              "sha256": "3ed328bfb776c7152836da4e06ec8a96d6183b363eeb90676ec4d1e467819c7c"
+            },
+            {
+              "speed": "3_5mhz",
+              "type": "ay",
+              "log": "ay-3_5mhz-ay.log",
+              "sha256": "5f054127622edb9b2471cf9107e0df64b72d7e43ecf61718443f11794102b65d"
+            },
+            {
+              "speed": "3_5mhz",
+              "type": "ym",
+              "log": "ay-3_5mhz-ym.log",
+              "sha256": "4fc4bda286d15ec2fda797e020ad42072f289287a46b52664aa6ec94d8202fa4"
+            }
+          ],
+          "limits": "Two-state functional test; no routed timing, analog capture, envelope/music acceptance or hardware noise reproduction."
+        },
+        "video-result.json": {
+          "passed": true,
+          "board": "mini",
+          "manifest_sha256": "4f5c071208eeb15c5510f65a4bc25219ad118c97eeb5693784b518e5af84f5f7",
+          "testbench_sha256": "1cfac414d6e1f5f8dde5d9fc1a664eb5b58f11ae7850a1cd5ef899ca924d1903",
+          "log_sha256": "243e14c26372e9ed76eb026aa00e0d4c55a8342ca62011586ab908f9e2ddf096"
+        },
+        "hdmi-test/result.json": {
+          "passed": true,
+          "board": "mini",
+          "audio_rate": 44100,
+          "manifest_sha256": "4f5c071208eeb15c5510f65a4bc25219ad118c97eeb5693784b518e5af84f5f7",
+          "testbench_sha256": "137065ab0120d4ffae2ebcd4728dd81ecc1503175f51cd1e84ceb458bddfdd27",
+          "log_sha256": "eefbe13ad0c47f820fec0a2de94d7e6f7801617b1fcde113a177918ec4c7571e",
+          "coverage": "Real HDMI transport and vendor clock models; core/FT40/FT64/core; pixels and stereo samples at TX input; no electrical capture"
+        }
+      },
+      "simulation_logs_sha256": {
+        "tb_sram.log": "e8379415b61dd09759b36b1051f4656d898557d4b448c7be62a71ba466e5569b",
+        "tb_bios.log": "e13be5cc5a8bad60030548566c7eac701a6276daa4570ba1443fdc154bc4016c",
+        "tb_gs_nominal.vvp.compile.log": "e9365e9959112ffb8b47302e5d348775a32bdef289b9a2721e38f7fb7cf33e36",
+        "tb_osd.vvp.compile.log": "e9365e9959112ffb8b47302e5d348775a32bdef289b9a2721e38f7fb7cf33e36",
+        "tb_osd.log": "b64ab7aeb9ad72fe3170885f5eccc08821b9438b45afdcd2260d3b43b7ea7156",
+        "tb_hid.log": "ba0302476ad23105e89bce7055bbbf9a4e4329e3ca5708c2b43707bf03ff5eae",
+        "tb_hid.vvp.compile.log": "e9365e9959112ffb8b47302e5d348775a32bdef289b9a2721e38f7fb7cf33e36",
+        "tb_keyboard_filter.vvp.compile.log": "e9365e9959112ffb8b47302e5d348775a32bdef289b9a2721e38f7fb7cf33e36",
+        "tb_board.log": "eeaa7e5a04b9106dc61606e654ebc594fd68739031bf2c9dcace323d45acb033",
+        "tb_keyboard_filter.log": "f865d1aba9c45bbc628edba68bb3d93cfbe93b0fd27a37400584c1746da227c7",
+        "tb_gs_nominal.log": "bb4888d8fc507c603a73408da02906a02d7264d388f96cea76723f63f7f12f11",
+        "tb_gs_routed.log": "bb4888d8fc507c603a73408da02906a02d7264d388f96cea76723f63f7f12f11",
+        "tb_storage.vvp.compile.log": "065783b18f663307f2c2071da8a57811359cba251c8f7ac4ba0b9aabc63f8319",
+        "tb_sram.vvp.compile.log": "8f14e81adc34ae097974a72bb054670d692261473ca7d6c58fabc753e9232d4c",
+        "tb_board.vvp.compile.log": "7ca5ac5ebfbd0b693e0c6fc6bdbda3015ae024a0d9d3b9758d08cafbe47ef9bf",
+        "tb_gs_routed.vvp.compile.log": "e9365e9959112ffb8b47302e5d348775a32bdef289b9a2721e38f7fb7cf33e36",
+        "tb_storage.log": "64bcebcdf446bdb8d7a08b3088390a2e6db7edc2c02e97d557558dfd1d5b3614"
+      }
+    },
+    "minig": {
+      "package": "baseconf.kg3",
+      "package_sha256": "05fbf2fedd6b378149b706b2c619cb13e028306a0108911c8b962511f6863d7b",
+      "manifest_sha256": "0027551c89eedfd7e2292ca886ed5dce39a0647f72562c504e6d302bd43d82a9",
+      "resources": {
+        "slices": 3637,
+        "luts": 11695
+      },
+      "timing": {
+        "karabas_minig.twr": {
+          "sha256": "6b5251c88e153e3157b3187fb022767ca313ae065b318a8784ca8e01890b7ad4",
+          "errors": 0
+        },
+        "karabas_minig_core.twr": {
+          "sha256": "93432c511bfde63d9f9535032c830bbad6ba98f19237493b813a25946e64a7df",
+          "errors": 0
+        }
+      },
+      "reports": {
+        "ise-completed.json": {
+          "manifest_sha256": "0027551c89eedfd7e2292ca886ed5dce39a0647f72562c504e6d302bd43d82a9",
+          "bitstream_sha256": "efcf1f683f3dbecd41983013a13a59a7833592e9a42835e4fcdd7022a7c08bd2",
+          "toolchain": "docker.i74.de:5000/xilinx-ise@sha256:9a12826e3c0696e9b855a669a1e0f7a04fdd180126c735d62d325dae13b769bf"
+        },
+        "package-verified.json": {
+          "board": "minig",
+          "build": "26102806",
+          "bytes": 1310068,
+          "package_sha256": "05fbf2fedd6b378149b706b2c619cb13e028306a0108911c8b962511f6863d7b",
+          "manifest_sha256": "0027551c89eedfd7e2292ca886ed5dce39a0647f72562c504e6d302bd43d82a9",
+          "bitstream_and_roms_verified": true,
+          "osd_entries_verified": 9,
+          "joystick_selectors": {
+            "Joystick L": [
+              "Kempston",
+              "Sinclair1",
+              "Sinclair2",
+              "Cursor",
+              "QAOPM",
+              "QAOPS",
+              "SEGA"
+            ],
+            "Joystick R": [
+              "Kempston",
+              "Sinclair1",
+              "Sinclair2",
+              "Cursor",
+              "QAOPM",
+              "QAOPS",
+              "SEGA"
+            ]
+          }
+        },
+        "bios-reset-result.json": {
+          "board": "minig",
+          "manifest_sha256": "0027551c89eedfd7e2292ca886ed5dce39a0647f72562c504e6d302bd43d82a9",
+          "testbench_sha256": "8f990bd67d09e4e651c40526c2871d3bd3d805232f5d80feac4db61c3c93cf4c",
+          "rom_sha256": "f2e94dfcacf67a76a3999f56bd3740e69f65e2362d4783b5e7d248e650bed560",
+          "cases": [
+            {
+              "keys": "cs",
+              "passed": true,
+              "observation": "PASS BIOS reset case=1 pc=0000 rom=1e at 133359903000",
+              "log_sha256": "cb43aa03d02a9042b0c4d78d4394087664a52c97855f023fec4ae2a28a120c02"
+            },
+            {
+              "keys": "ss",
+              "passed": true,
+              "observation": "PASS BIOS reset case=2 pc=0000 rom=1c at 133364184000",
+              "log_sha256": "f47daaa115b5612a3abd7549ddfd7b60d45984c275a9b9baf946d7dd33cc3be5"
+            },
+            {
+              "keys": "d",
+              "passed": true,
+              "observation": "PASS BIOS reset case=3 pc=5ff8 rom=05 at 135168819000",
+              "log_sha256": "b95cfd04b608135be5ca291cc6c310779cb11f0ea7fa78aa2b275f2ee2d76da8"
+            },
+            {
+              "keys": "c",
+              "passed": true,
+              "observation": "PASS BIOS reset case=4 pc=612c rom=05 at 486930183000",
+              "log_sha256": "2eac5165e442de1a30f3c40662de79921dd78d5b111402012a822bba33bcfbf3"
+            },
+            {
+              "keys": "h",
+              "passed": true,
+              "observation": "PASS BIOS reset case=5 pc=6216 rom=05 at 486955584000",
+              "log_sha256": "8d99b639dbef863dbed764be0f51a1a12258fa536f84217171d484b3d29138b7"
+            },
+            {
+              "keys": "s",
+              "passed": true,
+              "observation": "PASS BIOS reset case=6 pc=6026 rom=05 at 486909633000",
+              "log_sha256": "90880f4dc379708ecd83034c17d038ad44c80bb7e138541a4692d0f20f38122f"
+            },
+            {
+              "keys": "0",
+              "passed": true,
+              "observation": "PASS BIOS reset case=7 pc=0264 rom=1f at 133077491000",
+              "log_sha256": "9d548c88419c24699c8cefc5c4d7da952cd8151cb8da511863bc914915c5e3a8"
+            },
+            {
+              "keys": "a+b",
+              "passed": true,
+              "observation": "PASS BIOS reset case=8 pc=61c4 rom=05 at 204098561000",
+              "log_sha256": "98a74010fe2c0277ed22b9b91fed9899662733e86ba357ce6f387397ea5a9052"
+            },
+            {
+              "keys": "a+b+c",
+              "passed": true,
+              "observation": "PASS BIOS reset case=9 pc=61c4 rom=05 at 204040623000",
+              "log_sha256": "e0da0be21fc94edf5e08b2ddbe50a37e855328f7121e6f677d17ab25832afb9c"
+            },
+            {
+              "keys": "cs+ss",
+              "passed": true,
+              "observation": "PASS BIOS reset case=10 pc=61c4 rom=05 at 204287786000",
+              "log_sha256": "2f7078db889d13aa3f2424587be2cadaa4a22e3f3ad44d0a57f4de9df6a35251"
+            }
+          ],
+          "scope": "Actual stock ROM dispatch after MCU/HID F12 reset; no hardware or complete BASIC/diagnostic UI acceptance"
+        },
+        "bios-result.json": {
+          "simulator": "verilator",
+          "milliseconds": 2500,
+          "menu_verified": true,
+          "manifest_sha256": "0027551c89eedfd7e2292ca886ed5dce39a0647f72562c504e6d302bd43d82a9",
+          "testbench_sha256": "8f990bd67d09e4e651c40526c2871d3bd3d805232f5d80feac4db61c3c93cf4c",
+          "artifacts_sha256": {
+            "roms/baseconf.rom": "f2e94dfcacf67a76a3999f56bd3740e69f65e2362d4783b5e7d248e650bed560",
+            "roms/gs105b.rom": "9948ec9617365fb1913b0c56e00d5f6b6a36084875cca16debae270a4c6e6adf",
+            "tb_bios.log": "0389832ebb7170868dbcc65024e92b21494a775a0838419318499162d5149f50",
+            "bios-trace.log": "24af663b49fdfcdba4652dfb035435fde27f802ff1bbd85bf97404eec45343a6",
+            "bios-sram-hi.hex": "3ec42f9299b50386e42baf2b1b1c163ca87e5580c68d4cc50e8b3807add4a9b8",
+            "bios-sram-lo.hex": "2dd1889863eaaf1e952ea00efd180d7bd813fa826007a8d2f5e371f14d41e710"
+          }
+        },
+        "ay-result.json": {
+          "board": "minig",
+          "passed": true,
+          "simulator": "verilator",
+          "manifest_sha256": "0027551c89eedfd7e2292ca886ed5dce39a0647f72562c504e6d302bd43d82a9",
+          "testbench_sha256": "3dcb5e242fc226acf4f686bd54ec585d198669e7dfd541b6046a086be297a2e6",
+          "cases": [
+            {
+              "speed": "7mhz",
+              "type": "ay",
+              "log": "ay-7mhz-ay.log",
+              "sha256": "443ddcf4155da3980e4fee614cfa9443f0c0adbc523ac3be596e34bb02adbe4f"
+            },
+            {
+              "speed": "7mhz",
+              "type": "ym",
+              "log": "ay-7mhz-ym.log",
+              "sha256": "410f1cd205f06d524a562e2a78b087a84cbc4597f435d613e44caacc7b8bba21"
+            },
+            {
+              "speed": "14mhz",
+              "type": "ay",
+              "log": "ay-14mhz-ay.log",
+              "sha256": "9239af68983757f5d05991288ec89b1398216a26578f5190766a2e855912dc1b"
+            },
+            {
+              "speed": "14mhz",
+              "type": "ym",
+              "log": "ay-14mhz-ym.log",
+              "sha256": "e9942522397bee763d720974c011439b943f16376021ccb677381c155ebeaa31"
+            },
+            {
+              "speed": "3_5mhz",
+              "type": "ay",
+              "log": "ay-3_5mhz-ay.log",
+              "sha256": "e310ad693bd634af078e3ef531d3e30be9c4f88a08bd7d65cdc6a2343397f77a"
+            },
+            {
+              "speed": "3_5mhz",
+              "type": "ym",
+              "log": "ay-3_5mhz-ym.log",
+              "sha256": "39ef2226f66615cc99929bdf6de828fb91b2fe475ce80d1299682db3c971409b"
+            }
+          ],
+          "limits": "Two-state functional test; no routed timing, analog capture, envelope/music acceptance or hardware noise reproduction."
+        },
+        "video-result.json": {
+          "passed": true,
+          "board": "minig",
+          "manifest_sha256": "0027551c89eedfd7e2292ca886ed5dce39a0647f72562c504e6d302bd43d82a9",
+          "testbench_sha256": "1cfac414d6e1f5f8dde5d9fc1a664eb5b58f11ae7850a1cd5ef899ca924d1903",
+          "log_sha256": "b6e2c2ac75ac122f35534ea07a0304e18836438b7d0e177114a70ebd207a4a00"
+        },
+        "hdmi-test/result.json": {
+          "passed": true,
+          "board": "minig",
+          "audio_rate": 48000,
+          "manifest_sha256": "0027551c89eedfd7e2292ca886ed5dce39a0647f72562c504e6d302bd43d82a9",
+          "testbench_sha256": "137065ab0120d4ffae2ebcd4728dd81ecc1503175f51cd1e84ceb458bddfdd27",
+          "log_sha256": "81ba52cc0310b037e935c0f34e65edc8a66ea96a70772a588dade29cde08ed1a",
+          "coverage": "Real HDMI transport and vendor clock models; core/FT40/FT64/core; pixels and stereo samples at TX input; no electrical capture"
+        }
+      },
+      "simulation_logs_sha256": {
+        "tb_sram.log": "e8379415b61dd09759b36b1051f4656d898557d4b448c7be62a71ba466e5569b",
+        "tb_bios.log": "0389832ebb7170868dbcc65024e92b21494a775a0838419318499162d5149f50",
+        "tb_gs_nominal.vvp.compile.log": "9a17f5b366cf35150df8a8d5525fdd9a812e1c70b4f101c370c5961efa59d8bc",
+        "tb_osd.vvp.compile.log": "9a17f5b366cf35150df8a8d5525fdd9a812e1c70b4f101c370c5961efa59d8bc",
+        "tb_osd.log": "b64ab7aeb9ad72fe3170885f5eccc08821b9438b45afdcd2260d3b43b7ea7156",
+        "tb_hid.log": "ba0302476ad23105e89bce7055bbbf9a4e4329e3ca5708c2b43707bf03ff5eae",
+        "tb_hid.vvp.compile.log": "9a17f5b366cf35150df8a8d5525fdd9a812e1c70b4f101c370c5961efa59d8bc",
+        "tb_keyboard_filter.vvp.compile.log": "9a17f5b366cf35150df8a8d5525fdd9a812e1c70b4f101c370c5961efa59d8bc",
+        "tb_board.log": "e25e012671000ff30b867ff60f40b782e9fbac7917bb6cd2c5c0b2b4ce9142da",
+        "tb_keyboard_filter.log": "f865d1aba9c45bbc628edba68bb3d93cfbe93b0fd27a37400584c1746da227c7",
+        "tb_gs_nominal.log": "bb4888d8fc507c603a73408da02906a02d7264d388f96cea76723f63f7f12f11",
+        "tb_gs_routed.log": "bb4888d8fc507c603a73408da02906a02d7264d388f96cea76723f63f7f12f11",
+        "tb_storage.vvp.compile.log": "065783b18f663307f2c2071da8a57811359cba251c8f7ac4ba0b9aabc63f8319",
+        "tb_sram.vvp.compile.log": "8f14e81adc34ae097974a72bb054670d692261473ca7d6c58fabc753e9232d4c",
+        "tb_board.vvp.compile.log": "c1317ff2fe02dcbe5edf84da7a00b4fdd99644d085ce1861cb2e7014e8e82c3c",
+        "tb_gs_routed.vvp.compile.log": "9a17f5b366cf35150df8a8d5525fdd9a812e1c70b4f101c370c5961efa59d8bc",
+        "tb_storage.log": "64bcebcdf446bdb8d7a08b3088390a2e6db7edc2c02e97d557558dfd1d5b3614"
+      }
+    }
+  },
+  "archives_sha256": {
+    "sources.tar.gz": "52151ead204d913647aaa33097162df05ee1054cfe1fb645ae3ccdb63730037b",
+    "implementation-inputs.tar.gz": "e35dadfe59bcdd11f25d9df7875686ca24abf371f1e66b930129513b9c5380c0"
+  }
+}

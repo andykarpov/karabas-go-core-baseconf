@@ -1,0 +1,635 @@
+`timescale 1ns / 1ps
+`default_nettype none
+
+/*-------------------------------------------------------------------------------------------------------------------
+-- 
+-- 
+-- #       #######                                                 #                                               
+-- #                                                               #                                               
+-- #                                                               #                                               
+-- ############### ############### ############### ############### ############### ############### ############### 
+-- #             #               # #                             # #             #               # #               
+-- #             # ############### #               ############### #             # ############### ############### 
+-- #             # #             # #               #             # #             # #             #               # 
+-- #             # ############### #               ############### ############### ############### ############### 
+--                                                                                                                 
+--         ####### ####### ####### #######                                         ############### ############### 
+--                                                                                 #               #             # 
+--                                                                                 #   ########### #             # 
+--                                                                                 #             # #             # 
+-- https://github.com/andykarpov/karabas-go                                        ############### ############### 
+--
+-- FPGA BaseConf core for Karabas-Go
+--
+-- @author Andy Karpov <andy.karpov@gmail.com>
+-- @author Oleh Starychenko <solegstar@gmail.com>
+-- Ukraine, 2023
+------------------------------------------------------------------------------------------------------------------*/
+
+module karabas_go_top (
+   //---------------------------
+   input wire CLK_50MHZ,
+
+	//---------------------------
+	inout wire UART_RX,
+	inout wire UART_TX,
+	inout wire UART_CTS,
+	inout wire ESP_RESET_N,
+	inout wire ESP_BOOT_N,
+	
+   //---------------------------
+   output wire [20:0] MA,
+   inout wire [15:0] MD,
+   output wire [1:0] MWR_N,
+   output wire [1:0] MRD_N,
+
+   //---------------------------
+	output wire [1:0] SDR_BA,
+	output wire [12:0] SDR_A,
+	output wire SDR_CLK,
+	output wire [1:0] SDR_DQM,
+	output wire SDR_WE_N,
+	output wire SDR_CAS_N,
+	output wire SDR_RAS_N,
+	inout wire [15:0] SDR_DQ,
+
+   //---------------------------
+   output wire SD_CS_N,
+   output wire SD_CLK,
+   inout wire SD_DI,
+   inout wire SD_DO,
+	input wire SD_DET_N,
+
+   //---------------------------
+   output wire [7:0] VGA_R,
+   output wire [7:0] VGA_G,
+   output wire [7:0] VGA_B,
+   output wire VGA_HS,
+   output wire VGA_VS,
+	output wire V_CLK,
+	
+	//---------------------------
+	output wire FT_SPI_CS_N,
+	output wire FT_SPI_SCK,
+	input wire FT_SPI_MISO,
+	output wire FT_SPI_MOSI,
+	input wire FT_INT_N,
+	input wire FT_CLK,
+	output wire FT_OE_N,
+
+	//---------------------------
+	output wire [2:0] WA,
+	output wire [1:0] WCS_N,
+	output wire WRD_N,
+	output wire WWR_N,
+	output wire WRESET_N,
+	inout wire [15:0] WD,
+	
+	//---------------------------
+	input wire FDC_INDEX,
+	output wire [1:0] FDC_DRIVE,
+	output wire FDC_MOTOR,
+	output wire FDC_DIR,
+	output wire FDC_STEP,
+	output wire FDC_WDATA,
+	output wire FDC_WGATE,
+	input wire FDC_TR00,
+	input wire FDC_WPRT,
+	input wire FDC_RDATA,
+	output wire FDC_SIDE_N,
+
+   //---------------------------	
+	output wire TAPE_OUT,
+	input wire TAPE_IN,
+	output wire BEEPER,
+	
+	//---------------------------
+	output wire DAC_LRCK,
+   output wire DAC_DAT,
+   output wire DAC_BCK,
+   output wire DAC_MUTE,
+	
+	//---------------------------
+	input wire MCU_CS_N,
+	input wire MCU_SCK,
+	inout wire MCU_MOSI,
+	output wire MCU_MISO,
+	input wire MCU_SPI_FT_CS_N,
+	input wire MCU_SPI_SD2_CS_N,	
+	inout wire [1:0] MCU_SPI_IO,
+	
+	//---------------------------
+	output wire MIDI_TX,
+	output wire MIDI_CLK,
+	output wire MIDI_RESET_N,
+	
+	//---------------------------
+	output wire FLASH_CS_N,
+	input wire  FLASH_DO,
+	output wire FLASH_DI,
+	output wire FLASH_SCK,
+	output wire FLASH_WP_N,
+	output wire FLASH_HOLD_N	
+   );
+
+	assign ESP_RESET_N = 1'bZ;
+	assign ESP_BOOT_N = 1'bZ;	
+	assign FLASH_CS_N = 1'b1;
+	assign FLASH_DI = 1'b1;
+	assign FLASH_SCK = 1'b0;
+	assign FLASH_WP_N = 1'b1;
+	assign FLASH_HOLD_N = 1'b1;
+	
+	assign BEEPER = audio_beeper;
+	
+	wire clk_sys;
+	wire clk_8mhz;
+	wire clk_bus;
+	wire clk_12mhz;
+   wire locked;
+	wire areset;
+	// VCO 50 * 37 / 2 = 925 MHz, phase 0: clk_sys 84.09 MHz (/11), clk_8 7.97 MHz (/116), clk_bus 28.03 MHz (/33,
+	// every third edge of clk_sys), MIDI 12.01 MHz (/77). clk_bus was a BUFGCE of clk_sys with ce_28m. Its BUFG is
+	// here, as on the Mini (where its PLL output also drives the BUFGMUXes of HDMI): the same net names in the ucf.
+	wire [5:0] pll_clk;
+	kg_pll #(
+		.DIVCLK_DIVIDE(2), .CLKFBOUT_MULT(37),
+		.CLKOUT0_DIVIDE(11), .CLKOUT1_DIVIDE(116), .CLKOUT2_DIVIDE(33), .CLKOUT3_DIVIDE(77),
+		.BUFG_MASK(6'b001011)
+	) pll (
+		.clk_in(CLK_50MHZ),
+		.rst(1'b0),
+		.clk_out(pll_clk),
+		.locked(locked)
+	);
+	assign clk_sys = pll_clk[0];
+	assign clk_8mhz = pll_clk[1];
+	BUFG bufg_clk_bus(.I(pll_clk[2]), .O(clk_bus));
+	assign clk_12mhz = pll_clk[3];
+
+	// midi clk
+	ODDR2 u_midi_clk (
+		.Q(MIDI_CLK),
+		.C0(clk_12mhz),
+		.C1(~clk_12mhz),
+		.CE(1'b1),
+		.D0(1'b1),
+		.D1(1'b0),
+		.R(1'b0),
+		.S(1'b0)
+	);
+	
+	assign areset = ~locked;
+	
+	// clk_sys enables of the edges of clk_bus: ce_28m for the SRAM controller, v_clk for the V_CLK pin
+	wire ce_28m, v_clk;
+	bus_ce bus_ce(.clk_sys(clk_sys), .clk_bus(clk_bus), .ce(ce_28m), .v_clk(v_clk));
+	
+	reg tape_in_r;
+	always @(posedge clk_bus)
+	begin
+		tape_in_r <= TAPE_IN;
+	end 
+	
+	wire [7:0] video_r;
+	wire [7:0] video_g;
+	wire [7:0] video_b;
+	wire [7:0] osd_r;
+	wire [7:0] osd_g;
+	wire [7:0] osd_b;
+	wire video_hsync;
+	wire video_vsync;
+	wire btn_reset_n;
+	wire audio_beeper;
+	wire [15:0] audio_out_l;
+	wire [15:0] audio_out_r;
+	wire [12:0] joy_l;
+	wire [12:0] joy_r;
+	wire [2:0] mouse_addr;
+	reg [7:0] mouse_data;
+	wire [15:8] keyboard_addr;
+	wire [5:0] keyboard_data;
+	wire [7:0] keyboard_scancode;
+	wire [7:0] rtc_addr;
+	wire [7:0] rtc_di;
+	wire [7:0] rtc_do;
+	wire rtc_wr, rtc_rd;
+	wire [7:0] uart_rx_data;
+	wire [7:0] uart_rx_idx;
+	wire [7:0] uart_tx_data;
+	wire uart_tx_wr;
+	wire [7:0] uart_dlm;
+	wire [7:0] uart_dll;
+	wire uart_dll_wr, uart_dlm_wr, uart_tx_mode;
+	wire [7:0] hid_kb_status;
+	wire [7:0] hid_kb_dat0;
+	wire [7:0] hid_kb_dat1;
+	wire [7:0] hid_kb_dat2;
+	wire [7:0] hid_kb_dat3;
+	wire [7:0] hid_kb_dat4;
+	wire [7:0] hid_kb_dat5;
+	wire [7:0] ps2_scancode;
+	wire ps2_scancode_upd;
+	assign keyboard_scancode = ps2_scancode;
+	wire loader_act;
+	wire [31:0] loader_addr;
+	wire [7:0] loader_data;
+	wire loader_wr;
+	wire [15:0] softsw_command;
+	wire [15:0] osd_command;
+	wire [2:0] kb_joy_type_l;
+	wire [2:0] kb_joy_type_r;
+	wire kb_vga_60hz;
+	wire [7:0] joy_bus;
+	wire kb_pause;
+	wire kb_reset;
+	wire kb_nmi;
+	wire mcu_busy;
+	wire f1;
+	wire [1:0] hw_btn;
+
+	baseconf machine (
+     .clk(clk_sys),
+	  .clk8(clk_8mhz),
+	  .ce(ce_28m),
+	  .resetbtn_n(btn_reset_n),	
+		.resetgsbtn_n(1'b1),
+	  .locked(locked),
+	  .clk_bus(clk_bus),
+	  .f1_out(f1),
+	  
+	  .sram_addr(MA),
+	  .sram_data(MD),
+     .sram_we_n(MWR_N),
+     .sram_rd_n(MRD_N),
+	  
+     .VGA_R(video_r),
+     .VGA_G(video_g),
+     .VGA_B(video_b),
+     .VGA_HS(video_hsync),
+     .VGA_VS(video_vsync),	  
+     
+	  .beep(audio_beeper),
+	  .audio_out_l(audio_out_l),
+	  .audio_out_r(audio_out_r),
+
+	  .sdcs_n(SD_CS_N),
+     .sdclk(SD_CLK),
+     .sddo(SD_DI),
+     .sddi(SD_DO),
+	  
+	  .ftcs_n(ftcs_n),
+	  .espcs_n(espcs_n),
+	  .espcs_in(espcs_in),
+	  .esp_ft_spi_dis(esp_ft_spi_dis),		  
+	  .ftclk(ftclk),
+	  .ftdo(ftdo),
+	  .ftdi(ftdi),
+	  .ftint(ftint),
+	  .vdac2_sel(vdac2_sel),
+	  
+	  .joy_data (joy_bus),
+
+	  .mouse_addr(mouse_addr),
+	  .mouse_data(mouse_data),
+		
+	  .keyboard_addr(keyboard_addr),
+	  .keyboard_data(keyboard_data[4:0]),
+	  .keyboard_scancode(keyboard_scancode),
+		
+	  .rtc_addr(rtc_addr),
+	  .rtc_di(rtc_di),
+	  .rtc_do(rtc_do_mapped),
+	  .rtc_wr(rtc_wr),
+	  .rtc_rd(rtc_rd),
+	  
+	  .uart_rx(UART_RX),
+	  .uart_tx(UART_TX),
+	  .uart_cts(UART_CTS),
+	  
+	  .ide_d(WD),
+	  .ide_rs_n(WRESET_N),
+	  .ide_a(WA),
+	  .ide_dir(),
+	  .ide_cs0_n(WCS_N[0]),
+	  .ide_cs1_n(WCS_N[1]),
+	  .ide_rd_n(WRD_N),
+	  .ide_wr_n(WWR_N),
+	  .ide_rdy(1'b1),
+	  
+	  .tape_in(tape_in_r),
+	  .tape_out(TAPE_OUT),
+	  
+	  .covox_en(covox_en),
+	  .psg_mix(psg_mix),
+	  .psg_type(psg_type),
+	  .vga_60hz(kb_vga_60hz),
+      .pause(kb_pause), .nmi_button(kb_nmi),
+	  
+	  .fdc_side(FDC_SIDE_N),
+	  .fdc_rdata(FDC_RDATA),
+	  .fdc_wprt(FDC_WPRT),
+	  .fdc_tr00(FDC_TR00),
+	  .fdc_index(FDC_INDEX),
+	  .fdc_wg(FDC_WGATE),
+	  .fdc_wr_data(FDC_WDATA),
+	  .fdc_step(FDC_STEP),
+	  .fdc_dir(FDC_DIR),
+	  .fdc_motor(FDC_MOTOR),
+	  .fdc_ds(FDC_DRIVE),
+	  
+	  .loader_act(loader_act),
+	  .loader_a(loader_addr),
+	  .loader_d(loader_data),
+	  .loader_wr(loader_wr),
+	  
+	  .usb_uart_rx_data(uart_rx_data),
+	  .usb_uart_rx_idx(uart_rx_idx),	 
+	  .usb_uart_tx_data(uart_tx_data),
+	  .usb_uart_tx_wr(uart_tx_wr),
+	  .usb_uart_tx_mode(uart_tx_mode),
+	  .usb_uart_dll(uart_dll),
+	  .usb_uart_dlm(uart_dlm),
+	  .usb_uart_dll_wr(uart_dll_wr),
+	  .usb_uart_dlm_wr(uart_dlm_wr),
+
+		.sdram_clk(),
+      .sdram_ba(SDR_BA),
+      .sdram_a(SDR_A),
+      .sdram_dqm(SDR_DQM),
+      .sdram_we_n(SDR_WE_N),
+      .sdram_cas_n(SDR_CAS_N),
+      .sdram_ras_n(SDR_RAS_N),
+      .sdram_dq(SDR_DQ),
+		
+		.midi_reset_n(MIDI_RESET_N),
+		.midi_tx(MIDI_TX)
+	  
+	 );
+	 
+wire [7:0] rtc_do_mapped;
+	 
+wire ftcs_n, espcs_n, espcs_in, esp_ft_spi_dis, ftclk, ftdo, ftdi, ftint, vdac2_sel;
+wire mcu_ft_spi_on, mcu_ft_vga_on, mcu_ft_sck, mcu_ft_mosi, mcu_ft_cs_n;
+
+wire ft_video_active = vdac2_sel | mcu_ft_vga_on;
+// FT812 and FPGA share the DAC bus. Release it whenever the MCU enables FT video.
+assign VGA_R[7:0] = (ft_video_active ? 8'bZZZZZZZZ : osd_r[7:0]);
+assign VGA_G[7:0] = (ft_video_active ? 8'bZZZZZZZZ : osd_g[7:0]);
+assign VGA_B[7:0] = (ft_video_active ? 8'bZZZZZZZZ : osd_b[7:0]);
+assign VGA_HS = (ft_video_active ? 1'bZ : video_hsync);
+assign VGA_VS = (ft_video_active ? 1'bZ : video_vsync);
+assign V_CLK = (ft_video_active ? FT_CLK : v_clk);
+
+assign espcs_in = 1;
+assign FT_SPI_CS_N = esp_ft_spi_dis ? 1'bZ : (mcu_ft_spi_on ? mcu_ft_cs_n : ftcs_n);
+assign FT_SPI_SCK = esp_ft_spi_dis ? 1'bZ : (mcu_ft_spi_on ? mcu_ft_sck : ftclk);
+assign ftdi = FT_SPI_MISO;
+assign FT_SPI_MOSI = esp_ft_spi_dis ? 1'bZ : (mcu_ft_spi_on ? mcu_ft_mosi : ftdo);
+assign FT_OE_N = esp_ft_spi_dis ? 1'b0 : (mcu_ft_vga_on ? 1'b0 : ~vdac2_sel);
+assign ftint = FT_INT_N;
+
+
+ODDR2 sdr_clock(.Q(SDR_CLK), .C0(clk_sys), .C1(~clk_sys), .CE(1'b1),
+    .D0(1'b0), .D1(1'b1), .R(1'b0), .S(1'b0));
+//---------- MCU ------------
+
+// burst transfers from the mcu (karabas-go-firmware docs/burst_protocol.md)
+wire mcu_burst_ready;
+assign MCU_SPI_IO[0] = mcu_burst_ready;
+// MCU_SPI_IO[1] is input-only (burst chip select), so it has no FPGA driver.
+
+// the tsconf configuration of kg_mcu: RTC (all registers below F0 sent, D too), USB UART with the
+// EVO RS232 registers, FT812 chip select passed through; no matrix, debug, file loader, image mounter
+kg_mcu #(
+	.BURST_MAX_MHZ(1),
+	.CS_FILTER(3),
+	.ENABLE_RTC(1),
+	.RTC_SKIP_0D(0),
+	.RTC_SEND_LIMIT(8'hF0),
+	.ENABLE_UART(1),
+	.ENABLE_MATRIX(0),
+	.ENABLE_DEBUG(0),
+	.ENABLE_IMG(0),
+	.ENABLE_FILE(0),
+	.ENABLE_FT(1),
+	.ENABLE_SD2(0)
+) mcu(
+	.CLK(clk_bus),
+	.N_RESET(~areset),
+	
+	.MCU_MOSI(MCU_MOSI),
+	.MCU_MISO(MCU_MISO),
+	.MCU_SCK(MCU_SCK),
+	.MCU_SS(MCU_CS_N),
+	
+	.MCU_SPI_FT_SS(MCU_SPI_FT_CS_N),
+	.MCU_SPI_SD2_SS(MCU_SPI_SD2_CS_N),	
+	// burst transfers: firmware IO0 (GPIO14) = MCU_SPI_IO[1] (M11), IO1 (GPIO2) = MCU_SPI_IO[0] (N9)
+	.MCU_BURST_CS_N(MCU_SPI_IO[1]),
+	.MCU_BURST_READY(mcu_burst_ready),
+	
+	.MS_X(ms_x),
+	.MS_Y(ms_y),
+	.MS_Z(ms_z),
+	.MS_B(ms_b),
+	.MS_UPD(ms_upd),
+	
+	.KB_STATUS(hid_kb_status),
+	.KB_DAT0(hid_kb_dat0),
+	.KB_DAT1(hid_kb_dat1),
+	.KB_DAT2(hid_kb_dat2),
+	.KB_DAT3(hid_kb_dat3),
+	.KB_DAT4(hid_kb_dat4),
+	.KB_DAT5(hid_kb_dat5),
+	
+	.KB_SCANCODE(ps2_scancode),
+	.KB_SCANCODE_UPD(ps2_scancode_upd),
+	
+	.JOY_L(joy_l),
+	.JOY_R(joy_r),
+	
+	.BTNS(hw_btn),
+	
+	.RTC_A(rtc_addr),
+	.RTC_DI(rtc_di),
+	.RTC_DO(rtc_do),
+	.RTC_CS(1'b1),
+	.RTC_WR_N(~rtc_wr),
+	
+	.UART_RX_DATA(uart_rx_data),
+	.UART_RX_IDX(uart_rx_idx),	 
+	.UART_TX_DATA(uart_tx_data),
+	.UART_TX_WR(uart_tx_wr),
+	
+	.UART_TX_MODE(uart_tx_mode),
+	.UART_DLL(uart_dll),
+	.UART_DLM(uart_dlm),
+	.UART_DLL_WR(uart_dll_wr),
+	.UART_DLM_WR(uart_dlm_wr),
+	
+	.ROMLOADER_ACTIVE(loader_act),
+	.ROMLOAD_ADDR(loader_addr),
+	.ROMLOAD_DATA(loader_data),
+	.ROMLOAD_WR(loader_wr),
+	
+	.SOFTSW_COMMAND(softsw_command),	
+	.OSD_COMMAND(osd_command),
+	
+	.FT_SPI_ON(mcu_ft_spi_on),
+	.FT_VGA_ON(mcu_ft_vga_on),
+	.FT_SCK(mcu_ft_sck),
+	.FT_MISO(FT_SPI_MISO),
+	.FT_MOSI(mcu_ft_mosi),
+	.FT_CS_N(mcu_ft_cs_n),
+	.FT_RESET(),
+	
+	.SD2_MISO(1'b1),
+	.MATRIX_CMD(24'd0),
+	.MATRIX_CMD_WR(1'b0),
+	.DEBUG_ADDR(16'd0),
+	.DEBUG_DATA(16'd0),
+	.IMG_Q_WR(1'b0),
+	.IMG_Q_DI(24'd0),
+	
+	.BUSY(mcu_busy)
+);
+
+//---------- Keyboard parser ------------
+
+wire [7:0] filtered_kb_status, filtered_scancode;
+wire [47:0] filtered_keys;
+wire filtered_scancode_upd;
+baseconf_keyboard_filter keyboard_filter(
+    .clk(clk_bus), .reset(areset), .status(hid_kb_status),
+    .keys({hid_kb_dat5,hid_kb_dat4,hid_kb_dat3,hid_kb_dat2,hid_kb_dat1,hid_kb_dat0}),
+    .scancode(ps2_scancode), .scancode_upd(ps2_scancode_upd),
+    .filtered_status(filtered_kb_status), .filtered_keys(filtered_keys),
+    .filtered_scancode(filtered_scancode), .filtered_upd(filtered_scancode_upd)
+);
+
+hid_parser hid_parser(
+	.CLK(clk_bus),
+	.RESET(areset),
+
+	.KB_STATUS(filtered_kb_status),
+	.KB_DAT0(filtered_keys[7:0]),
+	.KB_DAT1(filtered_keys[15:8]),
+	.KB_DAT2(filtered_keys[23:16]),
+	.KB_DAT3(filtered_keys[31:24]),
+	.KB_DAT4(filtered_keys[39:32]),
+	.KB_DAT5(filtered_keys[47:40]),
+	
+	.KB_SCANCODE(filtered_scancode),
+	.KB_SCANCODE_UPD(filtered_scancode_upd),
+
+	.JOY_TYPE_L(kb_joy_type_l),
+	.JOY_TYPE_R(kb_joy_type_r),
+	.JOY_L(joy_l),
+	.JOY_R(joy_r),
+	
+	.KB_TYPE(1'b1),
+	.A (keyboard_addr),	
+	
+	.JOY_DO(joy_bus),
+	.KB_DO(keyboard_data),
+	
+	.RTC_A(rtc_addr),
+	.RTC_WR(rtc_wr),
+	.RTC_RD(rtc_rd),
+	.RTC_DI(rtc_di),
+	.RTC_DO_IN(rtc_do),
+	.RTC_DO_OUT(rtc_do_mapped)
+);
+
+//---------- Soft switches ------------
+
+wire covox_en;
+wire [1:0] psg_mix;
+wire psg_type;
+
+// OSD switches (core.json "osd", in this order): register n = regs[n*8 +: 8]
+wire [9*8-1:0] softsw;
+
+kg_soft_switches #(.N(9), .INIT(72'h000000000100000101)) soft_switches(
+	.clk(clk_bus),
+	.command(softsw_command),
+	.regs(softsw),
+	.upd()
+);
+
+assign covox_en = softsw[0];
+assign psg_mix = softsw[9:8];
+assign psg_type = softsw[16];
+assign kb_joy_type_l = softsw[26:24];
+assign kb_joy_type_r = softsw[34:32];
+assign kb_vga_60hz = softsw[40];
+assign kb_pause = softsw[48];
+assign kb_nmi = softsw[56];
+// MCU hotkey matching only examines HID slot 0. Recognize F12 in every slot
+// so a held boot-selection key does not prevent reset. The HID matrix/filter
+// are deliberately reset only at power-up, preserving held keys across reset.
+wire hid_reset = hid_kb_dat0==8'h45 || hid_kb_dat1==8'h45 || hid_kb_dat2==8'h45 ||
+                 hid_kb_dat3==8'h45 || hid_kb_dat4==8'h45 || hid_kb_dat5==8'h45;
+assign kb_reset = softsw[64] || hid_reset;
+
+assign btn_reset_n = ~kb_reset && ~hw_btn[0] && ~mcu_busy;
+
+//---------- Mouse / cursor ------------
+
+wire [7:0] ms_x, ms_y, cursor_x, cursor_y;
+wire [3:0] ms_z, cursor_z;
+wire [2:0] ms_b, cursor_b;
+wire ms_upd;
+
+kg_cursor #(.Z_W(4), .Z_NEG(1), .Z_ACC(1)) cursor(
+	.clk(clk_bus),
+	
+	.ms_x(ms_x),
+	.ms_y(ms_y),
+	.ms_z(ms_z),
+	.ms_b(ms_b),
+	.ms_upd(ms_upd),
+	
+	.x(cursor_x),
+	.y(cursor_y),
+	.z(cursor_z),
+	.b(cursor_b)
+);
+
+always @* begin
+	case (mouse_addr)
+		3'b010: mouse_data <= {cursor_z[3:0], 1'b1, ~cursor_b[2:0]};
+		3'b011: mouse_data <= cursor_x;
+		3'b110: mouse_data <= {cursor_z[3:0], 1'b1, ~cursor_b[2:0]};
+		3'b111: mouse_data <= cursor_y;
+		default: mouse_data <= 8'hFF;
+	endcase
+end
+
+//---------- DAC ------------
+
+kg_pcm5102 #(.DIV_BITS(1)) PCM5102(
+	.clk(clk_bus),
+	.reset(areset),
+	.left(audio_out_l),
+	.right(audio_out_r),
+	.din(DAC_DAT),
+	.bck(DAC_BCK),
+	.lrck(DAC_LRCK)
+);
+assign DAC_MUTE = 1'b1; // soft mute, 0 = mute, 1 = unmute
+
+//--------- OSD --------------
+
+kg_osd_overlay #(.H_OFFSET(120)) overlay(
+	.clk(clk_bus),
+	.rgb_i({video_r[7:0], video_g[7:0], video_b[7:0]}),
+	.rgb_o({osd_r[7:0], osd_g[7:0], osd_b[7:0]}),
+	.hsync_i(video_hsync),
+	.vsync_i(video_vsync),
+	.v_offset(kb_vga_60hz ? 11'd34 : 11'd64),
+	.osd_command(osd_command)
+);
+
+endmodule

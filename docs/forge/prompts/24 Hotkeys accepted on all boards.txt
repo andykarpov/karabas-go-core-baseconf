@@ -1,0 +1,8 @@
+User feedback, 2026-10-28:
+“hotkeys work”
+“work on all boards also - mark it done”
+
+Marked the current hotkey/EVO reset-selection task done and accepted on GO,
+Mini and Mini G. Updated current docs and recorded feedback in
+docs/evidence/hotkey-acceptance-26102806.json. No new build or hardware
+transfer; separate AY noise investigation remains open.

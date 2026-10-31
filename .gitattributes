@@ -1,0 +1,8 @@
+# keep the bytes (and the SHA-256 in the records) of the archived forge evidence and resources
+docs/forge/docs/evidence/** -text
+docs/forge/tests/** -text
+*.bin binary
+*.kg1 binary
+*.kg2 binary
+*.kg3 binary
+*.rom binary

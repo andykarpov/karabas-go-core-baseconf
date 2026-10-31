@@ -1,0 +1,8 @@
+nominal: GS timing contention=0: serviced=74 zero-wait=74
+GS timing contention=1: serviced=75 zero-wait=75
+PASS gs timing: fixed 14MHz enables=56000 T2-waits=13231, IRQ periods=149 reference=149, stereo=-9576/504
+/var/www/own/karabas-forge/tests/tb_gs_timing.v:74: $finish called at 4210552872 (1ps)
+routed: GS timing contention=0: serviced=74 zero-wait=74
+GS timing contention=1: serviced=75 zero-wait=75
+PASS gs timing: fixed 14MHz enables=56000 T2-waits=13231, IRQ periods=149 reference=149, stereo=-9576/504
+/var/www/own/karabas-forge/tests/tb_gs_timing.v:74: $finish called at 4210552872 (1ps)

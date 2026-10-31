@@ -1,0 +1,9 @@
+User prompt:
+continue
+
+Assistant work-step plan (2026-10-27):
+Continue stock BaseConf BIOS compatibility validation using the unmodified ROM and actual board integration. Check RTC/EEPROM/keyboard behavior, trace startup, and fix demonstrated integration faults. Keep all generated simulation outputs under build/ and temporary files under tmp/. ISE remains absent; do not substitute simulation for a bitstream or board acceptance.
+
+Work record: Add pinned Verilator and a stock-ROM board harness. Initialize modeled power-on RAM with reproducible bits because BIOS checks resident-program CRCs before clearing it. Fix RTC access pulses (two CPU writes generated eight MCU events), backport xxBD configuration reads and 10BD/11BD breakpoint write decoding from the newer BaseConf variant, and restrict PSG reads to low byte FD. Extend CPU regressions and add a self-contained SRAM screen extractor plus its skill. Keep actual FPGA implementation and board acceptance pending.
+
+Further work: The stock BIOS reaches its menu and displays 4096 KB RAM in simulation. Add a visually reviewed ROM/screen signature and provenance output for repeatable menu checks. Verify Nemo/divIDE transfers and Firefly register access through the CPU at all three speeds. Initialize free-running FDC counters and fix the 8 MHz Firefly receiver to retain the write address when the 14 MHz CPU advances. Add a Yosys/GHDL Spartan-6 resource estimate, explicitly separate from ISE fit and timing.

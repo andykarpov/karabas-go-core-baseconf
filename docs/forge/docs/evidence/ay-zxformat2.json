@@ -1,0 +1,384 @@
+{
+  "date": "2026-10-28",
+  "hardware_fault_resolved": false,
+  "production_rtl_changed": false,
+  "release_packages_changed": false,
+  "inputs": {
+    "ZX-FORM2.TRD": {
+      "sha256": "484a0195fd6a34bca5098f78101ef7d67a663e28d41ab362d7e0f17a8c711a01",
+      "bytes": 655360
+    },
+    "kg3-baseconf-distorted.mp4": {
+      "sha256": "693cd770d8ddfa3e314484188bab76252862039d97ad979dc9f2c30d1d77ecdc",
+      "bytes": 16363684
+    },
+    "kg3-tsconf-plays.mp4": {
+      "sha256": "1ea4bd1a2e767b3ce5dd06b20bfa317b0f89bc941823b00568ce48ad31f8c3a1",
+      "bytes": 10102756
+    }
+  },
+  "capture": {
+    "disk_sha256": "484a0195fd6a34bca5098f78101ef7d67a663e28d41ab362d7e0f17a8c711a01",
+    "intro_sha256": "69ac4a27e4faf5fa3371889a7839160c169bc90d8af2368a39be774c1e1d47cc",
+    "ports_log_sha256": "0e431d4b3285bd547ccc45733a5df198cb81b08a1a1670d4a1a230a9c1de75e0",
+    "method": "Unchanged extracted intro; 48K SNA entry at 9C40; disk loader bypassed."
+  },
+  "recording_analysis": {
+    "method": "Visual contact sheets and log spectrograms; mono acoustic AAC recordings, not direct digital captures.",
+    "baseconf": "ERS displays 3.5 MHz; same X Design/ZX Format 2 intro; strong broadband spectral content during music.",
+    "tsconf": "Same intro on Mini G, stable tonal structure.",
+    "package_identity_and_osd_settings_known": false
+  },
+  "player": {
+    "select_port": "FFFD",
+    "data_port": "BEFD",
+    "instruction": "ED AB / OUTD",
+    "registers_written": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "envelope_writes": 0,
+    "noise_period_values": [
+      0
+    ],
+    "mixer_values": [
+      0,
+      24,
+      56
+    ],
+    "first_audible_channel_c_update_zero_based": 774,
+    "initial_music_noise": "A/B noise disabled and C muted for approximately first 15 seconds"
+  },
+  "cpu_intro": {
+    "passed": true,
+    "writes_compared": 660,
+    "cpu_speed_asserted_mhz": 3.5,
+    "speaker_covox_silent": true,
+    "gs_held_reset": true,
+    "testbench_sha256": "b53542f6a26591fb347976cd9175a3b0c6010aff86a87f4cfdbc42e7c5f25c5d",
+    "log_sha256": "eaacd17908bccf68e91986cfc70dca8b4348e9e70f5ec47f10cd1c20b0dbcd18",
+    "trace_sha256": "7689f17e12257ad40dfd640ae394f6b7dbf1664db197514cfd539a17aa3a7e65",
+    "limits": "First 30 updates only; diagnostic boot and direct RAM deposit; no disk loader, ERS state, full intro or physical hardware."
+  },
+  "ce_phase_replay": {
+    "writes": 27918,
+    "register_updates": 1269,
+    "samples_per_channel": 1115459,
+    "sample_rate": 44073,
+    "duration_seconds": 25.30935039593402,
+    "max_absolute_sample_difference": 16.0,
+    "difference_rms": 0.8541196134377523,
+    "signal_ac_rms": 2040.4865559375194,
+    "correlation_left": 0.9999999263804883,
+    "correlation_right": 0.9999999081903231,
+    "register_values": {
+      "0": [
+        0,
+        8,
+        12,
+        26,
+        30,
+        60,
+        64,
+        79,
+        83,
+        99,
+        103,
+        142,
+        146,
+        170,
+        174,
+        212,
+        216,
+        237,
+        241
+      ],
+      "1": [
+        0,
+        1
+      ],
+      "2": [
+        0,
+        7,
+        9,
+        10,
+        25,
+        27,
+        28,
+        78,
+        80,
+        81,
+        197,
+        199,
+        200,
+        211,
+        213,
+        214,
+        236,
+        238,
+        239
+      ],
+      "3": [
+        0,
+        1
+      ],
+      "4": [
+        0,
+        133,
+        142,
+        159,
+        168,
+        178,
+        200
+      ],
+      "5": [
+        0
+      ],
+      "6": [
+        0
+      ],
+      "7": [
+        0,
+        24,
+        56
+      ],
+      "8": [
+        0,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "9": [
+        0,
+        10,
+        11,
+        12,
+        13
+      ],
+      "10": [
+        0,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    "trace_sha256": "7689f17e12257ad40dfd640ae394f6b7dbf1664db197514cfd539a17aa3a7e65",
+    "pcm_sha256": "dbee4e968a695ce7945fc00856556bfa2c10ff9bb2f510f40cf93d0ed24268ed",
+    "testbench_sha256": "4f879d6c3f63c861f364dd55dd78b5a1daacec766d2a4b85002a7a6b193e8934",
+    "limits": "Same captured bus stimulus; source-identical PSG/mixer with actual decoder/CE differences. Not a full TSConf machine, routed timing, GS, other mixer inputs or physical-output test.",
+    "phase_comparison_passed": true
+  },
+  "replay_bus_model": {
+    "tstate_bus_clocks": 8,
+    "write_pulse_bus_clocks": 16,
+    "note": "Captured instruction timestamps, ideal finite write pulses; not cycle-exact reconstruction of every T80 bus edge."
+  },
+  "board_tests": {
+    "go": {
+      "board": "go",
+      "passed": true,
+      "simulator": "verilator",
+      "manifest_sha256": "3ae3933a562ccfeeac2d912ada8a81f8f79535f2bb475a8bdac9e1df1f8ab121",
+      "testbench_sha256": "70abda2366c3b89302eeeb43fa408846136c03c3d8a910cf2a9d59747b2cb7f0",
+      "cases": [
+        {
+          "speed": "7mhz",
+          "type": "ay",
+          "log": "ay-7mhz-ay.log",
+          "sha256": "3f4197a1eb30aec078e95ee2eb985db111afe66ebfd20974a0ff32159834c126"
+        },
+        {
+          "speed": "7mhz",
+          "type": "ym",
+          "log": "ay-7mhz-ym.log",
+          "sha256": "a2f856738baee64775b6a28f09350194a7eeceea9f397f78c0d84a4efa83280c"
+        },
+        {
+          "speed": "14mhz",
+          "type": "ay",
+          "log": "ay-14mhz-ay.log",
+          "sha256": "ec35b85b1321e1687d5010267c806662885c2ca57aa9c208bf901e811fa0a6aa"
+        },
+        {
+          "speed": "14mhz",
+          "type": "ym",
+          "log": "ay-14mhz-ym.log",
+          "sha256": "cc0ac20ffd67b8270b76e62c8557fad73d50a6e237c7d9ae276afadfb9cdc1cb"
+        },
+        {
+          "speed": "3_5mhz",
+          "type": "ay",
+          "log": "ay-3_5mhz-ay.log",
+          "sha256": "ddcdc1a7bdc3dc454481b6c9281f8a02cc75a1a15f4217715038a89db5298a98"
+        },
+        {
+          "speed": "3_5mhz",
+          "type": "ym",
+          "log": "ay-3_5mhz-ym.log",
+          "sha256": "f3f8915c2cc56d02b7e25c61db9d34f935cb7ad3407eac93f05fb8f6b926ff09"
+        }
+      ],
+      "limits": "Two-state functional test; no routed timing, analog capture, envelope/music acceptance or hardware noise reproduction.",
+      "production_manifest_matches_26102806": true
+    },
+    "mini": {
+      "board": "mini",
+      "passed": true,
+      "simulator": "verilator",
+      "manifest_sha256": "4f5c071208eeb15c5510f65a4bc25219ad118c97eeb5693784b518e5af84f5f7",
+      "testbench_sha256": "70abda2366c3b89302eeeb43fa408846136c03c3d8a910cf2a9d59747b2cb7f0",
+      "cases": [
+        {
+          "speed": "7mhz",
+          "type": "ay",
+          "log": "ay-7mhz-ay.log",
+          "sha256": "edb158a69af59495185a976929e8864e1fb400fdfce870439defbbe24235e98a"
+        },
+        {
+          "speed": "7mhz",
+          "type": "ym",
+          "log": "ay-7mhz-ym.log",
+          "sha256": "9d0f5386787674cb794959f221b4b9aeeedf72505fe6f865b329fa33a8022e99"
+        },
+        {
+          "speed": "14mhz",
+          "type": "ay",
+          "log": "ay-14mhz-ay.log",
+          "sha256": "7ad9f009cd5858c208e785af3a5129d0bc8add7aaed47b986a3cb923da904e23"
+        },
+        {
+          "speed": "14mhz",
+          "type": "ym",
+          "log": "ay-14mhz-ym.log",
+          "sha256": "d57c013756d65a4d82f9809ca206935c76a262fdcf992a9a7bf18cb036caa78f"
+        },
+        {
+          "speed": "3_5mhz",
+          "type": "ay",
+          "log": "ay-3_5mhz-ay.log",
+          "sha256": "0ef89036a6f7df2ef3383cd80ae37834128cc522b03c592522bebe43fe544967"
+        },
+        {
+          "speed": "3_5mhz",
+          "type": "ym",
+          "log": "ay-3_5mhz-ym.log",
+          "sha256": "77e082fd57ba6639ded32c74e857f2eebcccb875344adbdd4089b2276f0a6cdf"
+        }
+      ],
+      "limits": "Two-state functional test; no routed timing, analog capture, envelope/music acceptance or hardware noise reproduction.",
+      "production_manifest_matches_26102806": true
+    },
+    "minig": {
+      "board": "minig",
+      "passed": true,
+      "simulator": "verilator",
+      "manifest_sha256": "0027551c89eedfd7e2292ca886ed5dce39a0647f72562c504e6d302bd43d82a9",
+      "testbench_sha256": "70abda2366c3b89302eeeb43fa408846136c03c3d8a910cf2a9d59747b2cb7f0",
+      "cases": [
+        {
+          "speed": "7mhz",
+          "type": "ay",
+          "log": "ay-7mhz-ay.log",
+          "sha256": "4c7c84bf0a6e8dd39cd844eec7debef18f5971ac03a07ce478de27297fcd3b01"
+        },
+        {
+          "speed": "7mhz",
+          "type": "ym",
+          "log": "ay-7mhz-ym.log",
+          "sha256": "a045a362f57df2497a3ce5c08138b9a101398d4c1e691f8e6f1820d808d4e0e8"
+        },
+        {
+          "speed": "14mhz",
+          "type": "ay",
+          "log": "ay-14mhz-ay.log",
+          "sha256": "80a3d439e498b8033dbec535d5f07608d3e799b1d69d8d2fe9341e0fb89afc9a"
+        },
+        {
+          "speed": "14mhz",
+          "type": "ym",
+          "log": "ay-14mhz-ym.log",
+          "sha256": "f23a928d6ccda7522cb326cf95fe146c2722a7afaaa8726bef715b672ef8d5c7"
+        },
+        {
+          "speed": "3_5mhz",
+          "type": "ay",
+          "log": "ay-3_5mhz-ay.log",
+          "sha256": "68ea987f5591f4d3a6fdb332a1af6488dc2aaa96b81b95aacd9ee2eac494b8ed"
+        },
+        {
+          "speed": "3_5mhz",
+          "type": "ym",
+          "log": "ay-3_5mhz-ym.log",
+          "sha256": "1323a73da66baa97df91188d33dbf35f7d4aa0e622506d2c3073d4ebce6b12f9"
+        }
+      ],
+      "limits": "Two-state functional test; no routed timing, analog capture, envelope/music acceptance or hardware noise reproduction.",
+      "production_manifest_matches_26102806": true
+    }
+  },
+  "source_comparison": {
+    "identical_audio_files": 38,
+    "reference": "external/karabas-go-core-tsconf at edb2060c36164946622b71847e598ff01e6039f8"
+  },
+  "coverage_correction": "Previous AY slow35 wrote ignored EEF7 in shadow mode and remained at 7 MHz. Current AY tests leave shadow mode, write EFF7 and assert int_turbo. The older tb_boot speed setup has the same limitation; historical 3.5 MHz labels are not independent speed evidence.",
+  "artifacts": {
+    "trace.txt": {
+      "path": "build/ay-zxformat2/trace.txt",
+      "sha256": "7689f17e12257ad40dfd640ae394f6b7dbf1664db197514cfd539a17aa3a7e65"
+    },
+    "baseconf-replay.wav": {
+      "path": "build/ay-zxformat2/baseconf-replay.wav",
+      "sha256": "cf54a6bb083a95f5b6c7410e0da91a9369dbb04e3ab85220b373c5ae222fdb3e"
+    },
+    "tsconf-phase-replay.wav": {
+      "path": "build/ay-zxformat2/tsconf-phase-replay.wav",
+      "sha256": "3e546501cae7a6007faa871b557001c29d59a795ceb717daec0fef7d70d5b9a9"
+    },
+    "intro-checked.log": {
+      "path": "build/ay-zxformat2/intro-checked.log",
+      "sha256": "eaacd17908bccf68e91986cfc70dca8b4348e9e70f5ec47f10cd1c20b0dbcd18"
+    },
+    "fuse-intro/screen5s.png": {
+      "path": "build/ay-zxformat2/fuse-intro/screen5s.png",
+      "sha256": "49ae5f5b205fd09dce409f5da438679cbb22a40a17d1779b1a2b873e3d37625e"
+    },
+    "recordings/baseconf-spectrum.png": {
+      "path": "build/ay-zxformat2/recordings/baseconf-spectrum.png",
+      "sha256": "142d3b489efa6eeaa6f5e4ee8b368367075abba13bfd8971daa926e2e4bcee03"
+    },
+    "recordings/tsconf-spectrum.png": {
+      "path": "build/ay-zxformat2/recordings/tsconf-spectrum.png",
+      "sha256": "7b0f9c9bc522a86afaf5dec25687c25669d80250689b0bcc1858981598dd8e1f"
+    }
+  },
+  "exploratory_exclusions": [
+    "Initial full-TRD Fuse run remained in ROM menu and is not workload evidence.",
+    "Initial OUTD debugger parser used HL+1; corrected to HL before retained capture/replay.",
+    "Initial CPU intro harness retained permanent shadow and timed out after 26 updates; corrected normal-mode harness passes 30 updates."
+  ],
+  "limits": [
+    "No full ERS/loader boot or complete intro in BaseConf CPU simulation.",
+    "GS held reset in CPU test and all non-PSG inputs zero in replay.",
+    "Two-state functional simulation, no physical clock/electrical or routed-timing validation.",
+    "No confirmed cause or speculative production change."
+  ]
+}

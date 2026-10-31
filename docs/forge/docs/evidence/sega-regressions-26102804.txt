@@ -1,0 +1,30 @@
+PASS sram: 200 random words, byte masks, highest address, bus turnaround
+/var/www/own/karabas-forge/tests/tb_sram.v:37: $finish called at 346428000 (1ps)
+PASS storage: ROM/GS isolation, byte lanes, highest pages, arbitration, refresh, loader guard
+/var/www/own/karabas-forge/tests/tb_storage.v:66: $finish called at 381540000 (1ps)
+7mhz: PASS boot: ROM31, ATM RAM255/FFFF, CMOS single updates, BD config/breakpoints, Nemo/divIDE bytes, Firefly registers/system latch, branch/border
+/var/www/own/karabas-forge/tests/tb_boot.v:155: $finish called at 442721322 (1ps)
+14mhz: PASS boot: ROM31, ATM RAM255/FFFF, CMOS single updates, BD config/breakpoints, Nemo/divIDE bytes, Firefly registers/system latch, branch/border
+/var/www/own/karabas-forge/tests/tb_boot.v:155: $finish called at 379717506 (1ps)
+3_5mhz: PASS boot: ROM31, ATM RAM255/FFFF, CMOS single updates, BD config/breakpoints, Nemo/divIDE bytes, Firefly registers/system latch, branch/border
+/var/www/own/karabas-forge/tests/tb_boot.v:155: $finish called at 446146218 (1ps)
+nominal: GS timing contention=0: serviced=74 zero-wait=74
+GS timing contention=1: serviced=75 zero-wait=75
+PASS gs timing: fixed 14MHz enables=56000 T2-waits=0, IRQ periods=149 reference=149, stereo=-9576/504
+/var/www/own/karabas-forge/tests/tb_gs_timing.v:74: $finish called at 4210552872 (1ps)
+routed: GS timing contention=0: serviced=74 zero-wait=74
+GS timing contention=1: serviced=75 zero-wait=75
+PASS gs timing: fixed 14MHz enables=56000 T2-waits=0, IRQ periods=149 reference=149, stereo=-9576/504
+/var/www/own/karabas-forge/tests/tb_gs_timing.v:74: $finish called at 4210552872 (1ps)
+PASS keyboard_filter: all nine shortcuts/six slots, both Meta keys, release order, typematic, normal keys, extended breaks and Pause
+/var/www/own/karabas-forge/tests/tb_keyboard_filter.v:67: $finish called at 53010000 (1ps)
+PASS SEGA: all 12 controls on both ports, releases, chords, combined rows, live mode switch, dual-port merge, keyboard and Kempston coexistence
+PASS hid: MCU SPI 16MHz, PS2 make/break FIFO/reset, reserved shortcuts isolated, USB matrix, two OSD-selectable joysticks, mouse, OSD command
+/var/www/own/karabas-forge/tests/tb_hid.v:130: $finish called at 921002700 (1ps)
+PASS board: FT video ownership; Covox/OSD changes preserve GS reset; raster selects OSD position
+/var/www/own/karabas-forge/tests/tb_board.v:39: $finish called at 239148714 (1ps)
+OSD 50 Hz: all 26 character rows visible, VGA lines 128..543
+OSD 60 Hz: all 26 character rows visible, VGA lines 68..483
+OSD 50 Hz: all 26 character rows visible, VGA lines 128..543
+PASS osd: complete menu and footer inside both raster windows, including live switches
+/var/www/own/karabas-forge/tests/tb_osd.v:41: $finish called at 48618520000 (1ps)

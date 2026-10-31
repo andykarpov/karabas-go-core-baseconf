@@ -1,0 +1,17 @@
+{
+  "previous_build": "26102802",
+  "candidate": "26102803",
+  "changed_inputs": [
+    "core.json",
+    "karabas_go.prj",
+    "rtl/baseconf_keyboard_filter.v",
+    "rtl/karabas_go_top.v"
+  ],
+  "gs_audio_storage_overlay_sources_unchanged": true,
+  "filter_sha256": "0363bae8eefb7cf9f63ef26dc306438a3a1282aa1abd2317903ff4481ab1da45",
+  "physical_26102802_feedback": [
+    "OSD good!",
+    "ERS recovered with 0+reset",
+    "GS Sounds ok now, btw"
+  ]
+}

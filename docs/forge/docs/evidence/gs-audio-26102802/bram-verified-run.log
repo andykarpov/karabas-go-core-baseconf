@@ -1,0 +1,28 @@
+GS progress t=1000000000000 bus=afeb page= 8 recording=0 underruns=0
+GS progress t=2000000000000 bus=0029 page=15 recording=0 underruns=0
+GS progress t=3000000000000 bus=006d page=22 recording=0 underruns=0
+GS progress t=4000000000000 bus=0231 page=28 recording=0 underruns=0
+GS progress t=5000000000000 bus=0236 page=35 recording=0 underruns=0
+GS progress t=6000000000000 bus=0030 page=42 recording=0 underruns=0
+GS progress t=7000000000000 bus=a26e page=48 recording=0 underruns=0
+GS progress t=8000000000000 bus=0237 page=55 recording=0 underruns=0
+GS progress t=9000000000000 bus=9474 page=62 recording=0 underruns=0
+GS boot ready at 9238967181000 reference=0
+GS stock ROM reports 62 RAM pages
+GS module handle=1, uploading 57988 bytes
+GS MOD upload verified byte-for-byte; warm reset retained 62 pages
+GS playing at 9712405485000
+GS progress t=10000000000000 bus=43f9 page= 0 recording=1 underruns=0
+GS progress t=11000000000000 bus=2cda page= 2 recording=1 underruns=0
+GS progress t=12000000000000 bus=2cd0 page= 2 recording=1 underruns=0
+GS progress t=13000000000000 bus=4049 page= 2 recording=1 underruns=0
+GS progress t=14000000000000 bus=43fd page= 0 recording=1 underruns=0
+GS progress t=15000000000000 bus=0291 page= 0 recording=1 underruns=0
+GS progress t=16000000000000 bus=0041 page= 0 recording=1 underruns=0
+GS progress t=17000000000000 bus=43fd page= 0 recording=1 underruns=0
+GS progress t=18000000000000 bus=0274 page= 0 recording=1 underruns=0
+GS progress t=19000000000000 bus=1749 page= 2 recording=1 underruns=0
+GS progress t=20000000000000 bus=32df page= 2 recording=1 underruns=0
+GS progress t=21000000000000 bus=175d page= 2 recording=1 underruns=0
+GS progress t=22000000000000 bus=003e page= 2 recording=1 underruns=0
+GS progress t=23000000000000 bus=23e4 page= 2 recording=1 underruns=0

@@ -1,0 +1,29 @@
+{
+  "build": "26102802",
+  "previous_sd1_sha256": "6cf418b9b694fcab8cf5a18f6cfeea882c94d8c154a919aeb7a7673ab47fa49b",
+  "generic_package_sha256": "ca6a093b40adaadaadabf48e559d9f88bc9e0a1bf787c3a763e4a777c92c65f5",
+  "installed_package_sha256": "90c28ae5c35705d66b5c14f396de39fff5ec7889b3a82a3f16c48ff8d256001e",
+  "preserved_osd_bytes": [
+    0,
+    1,
+    0,
+    0,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+  ],
+  "date": "2026-10-28",
+  "usb": "2e8a:000a",
+  "serial": "D26610685F233021",
+  "filesystem_uuid": "3F19-B304",
+  "destination": "SD1:/baseconf.kg1",
+  "readback_verified": true,
+  "other_root_files_unchanged": true,
+  "clean_eject": true,
+  "physical_audio_osd_acceptance": "User confirmed OSD good and GS sounds OK; ERS recovered using 0+reset. Shortcut prevention follows in 26102803.",
+  "firmware_list_verified": true,
+  "firmware_list_evidence": "board-core-list-26102802.txt"
+}

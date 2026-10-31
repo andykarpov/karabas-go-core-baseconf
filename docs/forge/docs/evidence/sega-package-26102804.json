@@ -1,0 +1,27 @@
+{
+  "build": "26102804",
+  "package_sha256": "9da320b0c3fcf60679e95f8ce8ea533d4d953c49779e18b64ef58f183fb9bd00",
+  "bytes": 1308389,
+  "bitstream_and_roms_verified": true,
+  "osd_entries_verified": 10,
+  "joystick_selectors": {
+    "Joystick L": [
+      "Kempston",
+      "Sinclair1",
+      "Sinclair2",
+      "Cursor",
+      "QAOPM",
+      "QAOPS",
+      "SEGA"
+    ],
+    "Joystick R": [
+      "Kempston",
+      "Sinclair1",
+      "Sinclair2",
+      "Cursor",
+      "QAOPM",
+      "QAOPS",
+      "SEGA"
+    ]
+  }
+}

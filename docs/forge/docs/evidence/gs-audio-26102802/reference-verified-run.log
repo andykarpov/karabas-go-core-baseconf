@@ -1,0 +1,49 @@
+GS progress t=1000000000000 bus=0052 page= 8 recording=0 underruns=0
+GS progress t=2000000000000 bus=024a page=15 recording=0 underruns=0
+GS progress t=3000000000000 bus=0201 page=23 recording=0 underruns=0
+GS progress t=4000000000000 bus=a28e page=30 recording=0 underruns=0
+GS progress t=5000000000000 bus=bc34 page=37 recording=0 underruns=0
+GS progress t=6000000000000 bus=0211 page=44 recording=0 underruns=0
+GS progress t=7000000000000 bus=0209 page=51 recording=0 underruns=0
+GS progress t=8000000000000 bus=0024 page=58 recording=0 underruns=0
+GS boot ready at 8801795831000 reference=1
+GS stock ROM reports 62 RAM pages
+GS module handle=1, uploading 57988 bytes
+GS progress t=9000000000000 bus=0c3e page= 3 recording=0 underruns=0
+GS MOD upload verified byte-for-byte; warm reset retained 62 pages
+GS playing at 9261610970000
+GS progress t=10000000000000 bus=404d page= 0 recording=1 underruns=0
+GS progress t=11000000000000 bus=43fc page= 0 recording=1 underruns=0
+GS progress t=12000000000000 bus=1731 page= 2 recording=1 underruns=0
+GS progress t=13000000000000 bus=1723 page= 2 recording=1 underruns=0
+GS progress t=14000000000000 bus=43f7 page= 0 recording=1 underruns=0
+GS progress t=15000000000000 bus=28c1 page= 2 recording=1 underruns=0
+GS progress t=16000000000000 bus=0042 page= 2 recording=1 underruns=0
+GS progress t=17000000000000 bus=172f page= 2 recording=1 underruns=0
+GS progress t=18000000000000 bus=6433 page= 2 recording=1 underruns=0
+GS progress t=19000000000000 bus=0040 page= 0 recording=1 underruns=0
+GS progress t=20000000000000 bus=61b3 page= 2 recording=1 underruns=0
+GS progress t=21000000000000 bus=1760 page= 2 recording=1 underruns=0
+GS progress t=22000000000000 bus=65c4 page= 2 recording=1 underruns=0
+GS progress t=23000000000000 bus=1754 page= 2 recording=1 underruns=0
+GS progress t=24000000000000 bus=177c page= 2 recording=1 underruns=0
+GS progress t=25000000000000 bus=003b page= 3 recording=1 underruns=0
+GS progress t=26000000000000 bus=175b page= 3 recording=1 underruns=0
+GS progress t=27000000000000 bus=7222 page= 3 recording=1 underruns=0
+GS progress t=28000000000000 bus=003d page= 2 recording=1 underruns=0
+GS progress t=29000000000000 bus=c4c5 page= 2 recording=1 underruns=0
+GS progress t=30000000000000 bus=44c0 page= 0 recording=1 underruns=0
+GS progress t=31000000000000 bus=1701 page= 0 recording=1 underruns=0
+GS progress t=32000000000000 bus=0283 page= 0 recording=1 underruns=0
+GS progress t=33000000000000 bus=4695 page= 0 recording=1 underruns=0
+GS progress t=34000000000000 bus=1771 page= 0 recording=1 underruns=0
+GS progress t=35000000000000 bus=028b page= 0 recording=1 underruns=0
+GS progress t=36000000000000 bus=2b37 page= 2 recording=1 underruns=0
+GS progress t=37000000000000 bus=1724 page= 2 recording=1 underruns=0
+GS progress t=38000000000000 bus=3071 page= 2 recording=1 underruns=0
+GS progress t=39000000000000 bus=6f45 page= 2 recording=1 underruns=0
+PASS GS audio: seconds=30 underruns=0 IRQs=1124093 T2-waits=0 fetches=65436502
+- /var/www/own/karabas-forge/build/gs-audio/reference-verified/tb_gs_audio.v:119: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 39s; walltime 1236.148 s; speed 31.773 ms/s
+- Verilator: cpu 1235.694 s on 1 threads; alloced 156 MB

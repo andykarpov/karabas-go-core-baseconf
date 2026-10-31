@@ -1,0 +1,33 @@
+{
+  "build": "26102803",
+  "previous_sd1_sha256": "90c28ae5c35705d66b5c14f396de39fff5ec7889b3a82a3f16c48ff8d256001e",
+  "generic_package_sha256": "3aea0a298e46a9890068afc6672c72bfd39a8cb94aac2f4c82ab5b38b74928be",
+  "installed_package_sha256": "7bc04900b327609c72390e843a754636754a1a9b2766ee8904f537b5e6ce84b0",
+  "preserved_osd_bytes": [
+    0,
+    1,
+    0,
+    0,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+  ],
+  "payloads_verified": true,
+  "eeprom_bank_unchanged": 1,
+  "date": "2026-10-28",
+  "usb": "2e8a:000a",
+  "serial": "D26610685F233021",
+  "filesystem_uuid": "3F19-B304",
+  "destination": "SD1:/baseconf.kg1",
+  "readback_verified": true,
+  "other_root_files_unchanged": true,
+  "clean_eject": true,
+  "firmware_list_verified": true,
+  "firmware_list_evidence": "board-core-list-26102803.txt",
+  "physical_shortcut_acceptance": "User reports all works after requested shortcut/ERS check",
+  "physical_previous_build_acceptance": "26102802 OSD and GS audio confirmed; ERS restored by 0+reset",
+  "acceptance_evidence": "board-acceptance-26102803.json"
+}

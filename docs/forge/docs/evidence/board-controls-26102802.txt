@@ -1,0 +1,2 @@
+PASS board: FT video ownership; Covox/OSD changes preserve GS reset; raster selects OSD position
+/var/www/own/karabas-forge/tests/tb_board.v:39: $finish called at 239148714 (1ps)

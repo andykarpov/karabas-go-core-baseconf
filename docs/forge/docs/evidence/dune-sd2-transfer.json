@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-28",
+  "destination": "Karabas SD2 root",
+  "filesystem": "FAT32",
+  "filesystem_uuid": "8125-1A1C",
+  "files": [
+    {
+      "name": "dune.trd",
+      "size": 655360,
+      "sha256": "18edf2baf896eb5b65c3b387836fba0b1429c86fd72e872c0d46b95c1dd091a4"
+    },
+    {
+      "name": "DUNE.DAT",
+      "size": 3223552,
+      "sha256": "6ecf9d68552e789087dcaa0c56efd2cbd76f7ce8730b7138674b03a9e141f3f7"
+    }
+  ],
+  "byte_comparison_passed": true,
+  "existing_root_file_hashes_unchanged": true,
+  "cleanly_ejected": true,
+  "gameplay_tested": false,
+  "limitation": "Original AVR virtual-drive mount service is not implemented in this core."
+}

@@ -1,0 +1,17 @@
+User request, 2026-10-28:
+Apply to all cores: remove OSD GS Reset/hotkey; reset GS with the core.
+Repair EVO reset choices CS (BASIC 128), SS (BASIC 48), D, C, H, S, 0,
+and keyboard test selected by two or more keys plus Reset.
+
+Implementation 26102806:
+Remove the GS Reset entry/Menu+G binding; NMI/Reset become OSD registers 7/8.
+GS follows the main stretched reset. F12 is recognized in every raw HID slot,
+working around the inspected MCU firmware's first-slot-only hotkey matching.
+Keep held boot keys through core reset. Remove G from HID/PS2 reserved filtering.
+Stock ROM/resources and MCU firmware remain unchanged.
+
+Validation and packages are recorded in docs/reset-controls.md and
+ docs/evidence/reset-26102806.json. Build directories are build/reset-26102806
+and release directory build/releases/reset-26102806. Hardware acceptance remains
+pending; no board/media/MCU update was requested or performed. The earlier AY
+noise investigation remains unresolved and is not claimed fixed by this change.

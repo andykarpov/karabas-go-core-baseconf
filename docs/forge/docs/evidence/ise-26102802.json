@@ -1,0 +1,28 @@
+{
+  "build": "26102802",
+  "date": "2026-10-28",
+  "manifest_sha256": "b21c86ecc8538ce94a22948d1c21feb186104dea889788efdab4efb2125853a8",
+  "bitstream_sha256": "28bc56dae47af9e90d61b9a1f49f7d09e5d7ee28a17ff668149cba0b918baefa",
+  "toolchain": "docker.i74.de:5000/xilinx-ise@sha256:9a12826e3c0696e9b855a669a1e0f7a04fdd180126c735d62d325dae13b769bf",
+  "timing_errors": 0,
+  "slice_luts": 9905,
+  "slice_registers": 5807,
+  "occupied_slices": 3351,
+  "ramb16": 38,
+  "ramb8": 6,
+  "latches": 0,
+  "package_bytes": 1309971,
+  "hardware_status": "Copied to SD1 with Covox off and 60 Hz preserved; verified readback and other root files unchanged; cleanly ejected. Physical listening/display pending.",
+  "artifacts_sha256": {
+    "baseconf.kg1": "ca6a093b40adaadaadabf48e559d9f88bc9e0a1bf787c3a763e4a777c92c65f5",
+    "karabas_go.bin": "28bc56dae47af9e90d61b9a1f49f7d09e5d7ee28a17ff668149cba0b918baefa",
+    "karabas_go.twr": "a76eae5f9de1e278d7b5be37e9da0285d685d76edb2dcabf7558442c897b36bb",
+    "karabas_go_map.mrp": "08ee109ea0a1d73aaa36a124e619962055191c267ed3340ce3ac1df723c31663",
+    "manifest.json": "b21c86ecc8538ce94a22948d1c21feb186104dea889788efdab4efb2125853a8",
+    "ise-completed.json": "75cd7242ac879298474533b2616151d40a9add90b85536a27c3569fdfefaea8f",
+    "bios-result.json": "645b6f070189dfd90ca3ddc3cade6133db14cd6847ac8044032cfb3906e7b038"
+  },
+  "installed_package_sha256": "90c28ae5c35705d66b5c14f396de39fff5ec7889b3a82a3f16c48ff8d256001e",
+  "firmware_list_verified": true,
+  "firmware_list_evidence": "board-core-list-26102802.txt"
+}

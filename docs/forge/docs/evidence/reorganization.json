@@ -1,0 +1,248 @@
+{
+  "date": "2026-10-28",
+  "core_root": "forge/cores/zx-evo-base",
+  "move_verification": {
+    "files_verified": 13148,
+    "all_bytes_preserved": true
+  },
+  "preserved_history_and_sources": {
+    "files_verified": 538,
+    "all_bytes_preserved": true
+  },
+  "backup_and_full_inventory": "Forge root tmp/reorganization/maintained-before.tar.gz and inventory-before.json (local, ignored)",
+  "shared_dependencies_verified": true,
+  "resource_checksums_verified": true,
+  "tooling_unit_tests": {
+    "shared": 3,
+    "core": 3,
+    "passed": true
+  },
+  "b4_pin_audit": {
+    "signal_balls": 183,
+    "passed": true
+  },
+  "media_inspection_and_staging_passed": true,
+  "docker_ise_adapter": {
+    "xst_help_passed": true,
+    "hdmi_vendor_model_extraction_passed": true
+  },
+  "default_build_paths_refreshed": true,
+  "ignore_policy_verified": true,
+  "boards": [
+    {
+      "board": "go",
+      "manifest_unchanged": true,
+      "package_unchanged": true,
+      "checks": [
+        {
+          "command": [
+            "prepare"
+          ],
+          "exit_code": 0,
+          "seconds": 0.07
+        },
+        {
+          "command": [
+            "package"
+          ],
+          "exit_code": 0,
+          "seconds": 0.08
+        },
+        {
+          "command": [
+            "elaborate"
+          ],
+          "exit_code": 0,
+          "seconds": 1.7
+        },
+        {
+          "command": [
+            "test",
+            "--suite",
+            "all"
+          ],
+          "exit_code": 0,
+          "seconds": 51.71
+        },
+        {
+          "command": [
+            "lint"
+          ],
+          "exit_code": 0,
+          "seconds": 9.45
+        },
+        {
+          "command": [
+            "bios",
+            "--simulator",
+            "verilator",
+            "--milliseconds",
+            "2500",
+            "--trace",
+            "--require-menu"
+          ],
+          "exit_code": 0,
+          "seconds": 491.72
+        }
+      ],
+      "output_directory": "build/reorganization-check/go",
+      "manifest_sha256": "25ef859ad9725c25b0365e3733e5374ee32178e0fb89a6f37fa48575c0e35f01",
+      "package_sha256": "9da320b0c3fcf60679e95f8ce8ea533d4d953c49779e18b64ef58f183fb9bd00",
+      "bios_menu_verified": true
+    },
+    {
+      "board": "mini",
+      "manifest_unchanged": true,
+      "package_unchanged": true,
+      "checks": [
+        {
+          "command": [
+            "prepare"
+          ],
+          "exit_code": 0,
+          "seconds": 0.07
+        },
+        {
+          "command": [
+            "package"
+          ],
+          "exit_code": 0,
+          "seconds": 0.08
+        },
+        {
+          "command": [
+            "elaborate"
+          ],
+          "exit_code": 0,
+          "seconds": 1.65
+        },
+        {
+          "command": [
+            "test",
+            "--suite",
+            "all"
+          ],
+          "exit_code": 0,
+          "seconds": 45.4
+        },
+        {
+          "command": [
+            "lint"
+          ],
+          "exit_code": 0,
+          "seconds": 9.03
+        },
+        {
+          "command": [
+            "video-test"
+          ],
+          "exit_code": 0,
+          "seconds": 10.13
+        },
+        {
+          "command": [
+            "hdmi-test"
+          ],
+          "exit_code": 0,
+          "seconds": 149.45
+        },
+        {
+          "command": [
+            "bios",
+            "--simulator",
+            "verilator",
+            "--milliseconds",
+            "2500",
+            "--trace",
+            "--require-menu"
+          ],
+          "exit_code": 0,
+          "seconds": 474.58
+        }
+      ],
+      "output_directory": "build/reorganization-check/mini",
+      "manifest_sha256": "ceb3e9e9729b61e4fb373845a9cc060ef40060cacb39b9460e4c1f955e964a60",
+      "package_sha256": "2ca11544605ba65b8814d494eb2235dc0f076a75e580f78a9536996fb326a6c1",
+      "bios_menu_verified": true
+    },
+    {
+      "board": "minig",
+      "manifest_unchanged": true,
+      "package_unchanged": true,
+      "checks": [
+        {
+          "command": [
+            "prepare"
+          ],
+          "exit_code": 0,
+          "seconds": 0.08
+        },
+        {
+          "command": [
+            "package"
+          ],
+          "exit_code": 0,
+          "seconds": 0.08
+        },
+        {
+          "command": [
+            "elaborate"
+          ],
+          "exit_code": 0,
+          "seconds": 1.65
+        },
+        {
+          "command": [
+            "test",
+            "--suite",
+            "all"
+          ],
+          "exit_code": 0,
+          "seconds": 45.26
+        },
+        {
+          "command": [
+            "lint"
+          ],
+          "exit_code": 0,
+          "seconds": 9.14
+        },
+        {
+          "command": [
+            "video-test"
+          ],
+          "exit_code": 0,
+          "seconds": 10.13
+        },
+        {
+          "command": [
+            "hdmi-test"
+          ],
+          "exit_code": 0,
+          "seconds": 149.91
+        },
+        {
+          "command": [
+            "bios",
+            "--simulator",
+            "verilator",
+            "--milliseconds",
+            "2500",
+            "--trace",
+            "--require-menu"
+          ],
+          "exit_code": 0,
+          "seconds": 472.26
+        }
+      ],
+      "output_directory": "build/reorganization-check/minig",
+      "manifest_sha256": "841ad7e5d324c21823bc9fa23de571d047e3312575d5277bc5de08e13a84a5a2",
+      "package_sha256": "1d1876251de93d4adf02a69d290e3cd37b3d77cac58485e0b4847c40a09edc99",
+      "bios_menu_verified": true
+    }
+  ],
+  "implementation": "Preserved ISE bitstreams/provenance/timing reused only after exact generated-input equality; packages regenerated and compared byte-for-byte. ISE synthesis/place-and-route was not rerun.",
+  "hardware_access_performed": false,
+  "history_policy": "Original evidence, prompt history and release snapshots retain their original content and paths. See docs/workspace.md for path mapping.",
+  "maintained_document_links_verified": 238
+}

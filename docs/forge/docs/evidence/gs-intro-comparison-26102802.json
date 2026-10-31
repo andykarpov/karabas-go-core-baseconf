@@ -1,0 +1,124 @@
+{
+  "26102801-intro-10s": {
+    "alignment_lag_frames": 33,
+    "first_second_correlation": 0.9998185428515723,
+    "relative_rms_difference": {
+      "first_5_seconds": 0.019877502305163927,
+      "seconds_7_to_9": 1.339429067194546
+    },
+    "wav_sha256": "bf0b7112e94c6267567e610dd9191d5c80a741433c6b2255a4bae4f81513e2cb"
+  },
+  "26102802-intro-10s": {
+    "alignment_lag_frames": 4,
+    "first_second_correlation": 0.9996015070770309,
+    "relative_rms_difference": {
+      "first_5_seconds": 0.0301179802216546,
+      "seconds_7_to_9": 0.046662889955467676
+    },
+    "wav_sha256": "b06c41e55d7ddb2433f053c23579a39d9434b8dc4196b47e07da6ed4709b3641"
+  },
+  "old_telemetry": [
+    {
+      "playback_seconds": 0.229404833,
+      "underruns": 0
+    },
+    {
+      "playback_seconds": 1.229404833,
+      "underruns": 0
+    },
+    {
+      "playback_seconds": 2.229404833,
+      "underruns": 0
+    },
+    {
+      "playback_seconds": 3.229404833,
+      "underruns": 0
+    },
+    {
+      "playback_seconds": 4.229404833,
+      "underruns": 0
+    },
+    {
+      "playback_seconds": 5.229404833,
+      "underruns": 0
+    },
+    {
+      "playback_seconds": 6.229404833,
+      "underruns": 8
+    },
+    {
+      "playback_seconds": 7.229404833,
+      "underruns": 105
+    },
+    {
+      "playback_seconds": 8.229404833,
+      "underruns": 202
+    },
+    {
+      "playback_seconds": 9.229404833,
+      "underruns": 299
+    },
+    {
+      "playback_seconds": 10.229404833,
+      "underruns": 395
+    }
+  ],
+  "new_telemetry": [
+    {
+      "playback_seconds": 0.287594515,
+      "underruns": 0
+    },
+    {
+      "playback_seconds": 1.287594515,
+      "underruns": 0
+    },
+    {
+      "playback_seconds": 2.287594515,
+      "underruns": 0
+    },
+    {
+      "playback_seconds": 3.287594515,
+      "underruns": 0
+    },
+    {
+      "playback_seconds": 4.287594515,
+      "underruns": 0
+    },
+    {
+      "playback_seconds": 5.287594515,
+      "underruns": 0
+    },
+    {
+      "playback_seconds": 6.287594515,
+      "underruns": 0
+    },
+    {
+      "playback_seconds": 7.287594515,
+      "underruns": 0
+    },
+    {
+      "playback_seconds": 8.287594515,
+      "underruns": 0
+    },
+    {
+      "playback_seconds": 9.287594515,
+      "underruns": 0
+    },
+    {
+      "playback_seconds": 10.287594515,
+      "underruns": 0
+    },
+    {
+      "playback_seconds": 11.287594515,
+      "underruns": 0
+    },
+    {
+      "playback_seconds": 12.287594515,
+      "underruns": 0
+    },
+    {
+      "playback_seconds": 13.287594515,
+      "underruns": 0
+    }
+  ]
+}

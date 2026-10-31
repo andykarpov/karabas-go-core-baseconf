@@ -1,0 +1,9 @@
+User prompt:
+OSD good!
+karabas zx evo base now starts into gluk boot instead of ERS - this is an regression it seems
+
+Work record:
+Record physical OSD acceptance and investigate unexpected Gluk startup on 26102802. Compare packaged ROM/settings and implementation manifests, inspect stock reset-target selection and persistent RTC storage, and check the stock 0+reset recovery path before changing boot behavior.
+
+Findings:
+OSD accepted physically. ROM, RTC/HID/reset logic and EEPROM bank unchanged. Stock ROM selects reset target from CMOS ED bits 1:0. Menu+G reaches G matrix bit in targeted observation; ERS G cycles saved reset target. Provided MCU firmware forwards trigger hotkeys while OSD stays closed. This also existed previously; actual incident cause remains unconfirmed. Requested hold-0 reset recovery and whether Menu+G was used over ERS. No board mutation or new bitstream.

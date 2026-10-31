@@ -1,0 +1,7 @@
+User prompt:
+copy DUNE files (.trd and .dat) to be accessible for evo base conf on karabas
+
+Assistant work record (2026-10-28):
+Read project board-access/dune-media skills and the game's root-directory instructions. Validated/staged unchanged external/dune/dune.trd and external/dune/DUNE.DAT. Requested SD2 export over the connected Karabas serial interface; identified the 14.6 GiB FAT32 SD Card 2 (UUID 8125-1A1C). Unmounted the desktop auto-mount and inspected the card read-only at a project-local container mount. Neither destination existed. Copying both to the SD2 root with temporary names, byte comparisons and preservation checks for existing root files. No CF or SD1 writes are needed. The absent AVR virtual-drive mount service remains a separate launch limitation.
+
+Result: Both copies and SHA-256 checks passed. Existing root file hashes were unchanged. Clean UDisks eject succeeded. Evidence: docs/evidence/dune-sd2-transfer.json.

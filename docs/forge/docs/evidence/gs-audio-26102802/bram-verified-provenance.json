@@ -1,0 +1,16 @@
+{
+  "mode": "controller",
+  "seconds": 30,
+  "module": "external/retro-game-zxevo-dune/src/res/external.mod",
+  "module_sha256": "522ff91f941db4acc031ebaab0866c035e85c07966b0d50bd01f09c9ce1768ad",
+  "rom_sha256": "9948ec9617365fb1913b0c56e00d5f6b6a36084875cca16debae270a4c6e6adf",
+  "sources_sha256": {
+    "gs.v": "8ce35b8e12d5ca35d7fdd47170fb00f20671986d37f9a3962197230cda338c68",
+    "t80s.v": "03b17aa1976a8dde67956b90d79f154aa174f7297e62017c8ae2645010c11759",
+    "baseconf_storage.v": "35594d12e00546638af6a2ccf6d7d17d297b1b86febc54694db8add6133c2392",
+    "baseconf_sdram.v": "defcbeec75b4330d85b8c9a5f5ee0a718a24515119f5043d833d670eadd5b3d3",
+    "sdram_model.v": "832ac6c4aad19d5b41914b4dcfe1195d93203030eac0b75a8d01011222aba3e6",
+    "tb_gs_audio.v": "2fbf28ea59da3009aa4f8b58a54e82513c347d2ec6ba546547245709a5b24434"
+  },
+  "termination": "Intentionally stopped after verified ten-second playback excerpt was saved; the longer planned 30-second run did not finish."
+}

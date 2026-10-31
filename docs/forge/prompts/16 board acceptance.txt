@@ -1,0 +1,5 @@
+User prompt:
+all works
+
+Work record:
+Record user acceptance of installed build 26102803 following the requested shortcut/ERS startup check. The current GS, OSD and shortcut-fix iteration is accepted on the board. Update progress, plan, problems, validation, handover and evidence without changing RTL, package or board state. This does not establish unperformed CF/FDC, extended graphics or sustained gameplay tests.

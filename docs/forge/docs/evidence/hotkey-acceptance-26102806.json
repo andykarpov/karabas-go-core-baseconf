@@ -1,0 +1,17 @@
+{
+  "build_context": "26102806",
+  "date": "2026-10-28",
+  "source": "User feedback in this conversation",
+  "verbatim": [
+    "hotkeys work",
+    "work on all boards also - mark it done"
+  ],
+  "boards": [
+    "go",
+    "mini",
+    "minig"
+  ],
+  "status": "Hotkey and EVO reset-selection work accepted by the user on all boards; done",
+  "scope": "Current hotkey/reset-selection task; no per-key logs or package hashes supplied with this confirmation",
+  "scope_limit": "Does not resolve the separate AY noise report or other outstanding hardware acceptance items"
+}

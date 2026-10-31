@@ -1,0 +1,30 @@
+{
+  "baseline": "26102803",
+  "candidate": "26102804",
+  "changed_implementation_inputs": [
+    "core.json",
+    "upstream/tsconf/rtl/mcu/hid_parser.vhd"
+  ],
+  "gs_audio_storage_osd_geometry_shortcut_filter_unchanged": true,
+  "sega_option_index": 6,
+  "ports": [
+    "Joystick L",
+    "Joystick R"
+  ],
+  "mapping": {
+    "Up": "Q",
+    "Down": "A",
+    "Left": "O",
+    "Right": "P",
+    "A": "Z",
+    "B": "X",
+    "C": "C",
+    "X": "S",
+    "Y": "D",
+    "Z": "F",
+    "START": "0",
+    "MODE": "9"
+  },
+  "test": "MCU SPI into adapted HID parser: all keys on both ports, releases/chords/mode switches/keyboard coexistence",
+  "physical_sega_acceptance": "Pending"
+}

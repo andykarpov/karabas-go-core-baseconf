@@ -1,0 +1,6 @@
+          1801103000 core 28 MHz: 28 MHz, 4 frames, 72 samples (expected 72)
+          6801201000 FT 40 MHz: 40 MHz, 7 frames, 72 samples (expected 72)
+         11801264000 FT 64 MHz: 64 MHz, 12 frames, 72 samples (expected 72)
+         13801368000 core 28 MHz: 28 MHz, 3 frames, 48 samples (expected 48)
+tb_hdmi_top: 0 errors
+/var/www/own/karabas-forge/build/baseconf-minig/hdmi-test/tb_hdmi_top.v:208: $finish called at 13801367628 (1ps)

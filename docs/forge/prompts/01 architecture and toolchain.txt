@@ -1,0 +1,2 @@
+Assistant work-step record, 2026-10-27 (not a new user prompt).
+Inspect B4 and reference HDL. Fetch the pinned shared-module checkout via HTTPS and firmware source. Bootstrap project-local Icarus/GHDL. Preserve BaseConf pager/video, replace physical Z80/DRAM/AVR interfaces, retain all 4 MB SRAM, place 512 KB ROM above 2 MB GS in SDRAM. Prepare reproducible ISE inputs and tests without modifying reference HDL.

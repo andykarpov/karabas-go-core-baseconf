@@ -1,0 +1,5 @@
+OSD 50 Hz: all 26 character rows visible, VGA lines 128..543
+OSD 60 Hz: all 26 character rows visible, VGA lines 68..483
+OSD 50 Hz: all 26 character rows visible, VGA lines 128..543
+PASS osd: complete menu and footer inside both raster windows, including live switches
+/var/www/own/karabas-forge/tests/tb_osd.v:41: $finish called at 48618520000 (1ps)

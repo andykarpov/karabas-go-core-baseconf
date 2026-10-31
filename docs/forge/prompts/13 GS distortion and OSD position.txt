@@ -1,0 +1,25 @@
+User prompt:
+much better but some GS sounds are distorted still - can you check yourself somehow? I tried to disable covox - it does not help but dune started show "GS Check 1Mb error" till full karabas switch off switch on cycle. As for hearing - it seems GS starts to be slow during that distortions
+
+OSD menu seems to ignore 60Hz VSync setting - as it shows shifed bottom still (check ./osd.jpg)
+
+Work record:
+Investigate remaining GS slowdown/distortion and memory-check failure after OSD interaction; inspect osd.jpg and distinguish core raster timing from OSD placement. Check available board/capture interfaces, extend reproducible tests to actual GS/Dune workload or memory/reset behavior where practical, and retain separate simulation versus physical listening evidence.
+
+User steering:
+all media clues only in current repository
+
+other folders outside - other projects with their own states
+
+as for audio - I'll record mp4 for you after we done with current iteration
+
+distortion can be seen but use intro text screen music for that - to record your emulation
+
+Work update:
+Added tools/gs_audio.py and a project skill for full GS/T80/ROM intro playback and zero-wait comparison. Corrected host timing in the test harness and added byte-for-byte module upload verification. Candidate 26102802 moves low 64 KiB GS memory into FPGA block RAM, retaining the full 2 MB map, and selects OSD vertical origin by raster. Full memory marks, BIOS, fit/timing and OSD pixel tests pass; recording and physical acceptance are separate. The original physical memory-check error is not yet reproduced.
+
+User reply to "In the intro text-screen music, when does the distortion first become obvious?":
+I'll check after all other done and new core copied onto karabas
+
+Final work record:
+Actual intro RTL simulation reproduced old-core buffer underruns (299 at 9.23 seconds); candidate 26102802 recorded zero through 13.29 seconds. Saved matching ten-second old/new/reference WAVs. Controller 30-second runs were intentionally stopped after the excerpts; reference completed 30 seconds with zero underruns. Both controllers passed cold and F3 warm memory checks (62 usable pages) and exact MOD upload. Original physical 1Mb error not reproduced. Candidate 26102802 passes regressions, BIOS menu and ISE constraints; copied to SD1 preserving 60 Hz/Covox off, verified readback and unchanged other root files, cleanly ejected, confirmed in live firmware list. Physical listening/OSD and user MP4 remain pending. Updated tool skills, evidence and handover; all work stays inside this project.

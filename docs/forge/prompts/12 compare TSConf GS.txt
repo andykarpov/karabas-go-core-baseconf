@@ -1,0 +1,11 @@
+User prompt:
+TSConf has no troubles with GS - try to search for solutions there also
+
+Work record:
+Compared src/rtl/sound/gs_top.v, src/rtl/ram/sdram.vhd and rtl/tsconf.v in the pinned TSConf tree. TSConf keeps the GS CPU at 14 MHz but services SDRAM at 84 MHz with inverted clock and falling-edge data capture. Adapt the shared BaseConf memory path to that rate/capture strategy while retaining address isolation, initialization, autonomous refresh and safe waiting. Validate sample service against a zero-wait GS reference, including competing ROM reads; rebuild/timing-check before updating the board candidate.
+
+Result so far:
+TSConf clocks the GS CPU at 14 MHz and memory at 84 MHz. VSync has no connection to the GS divider. The old shared controller services only 41/74 or 29/75 reference sample interrupts; the revised memory service reaches 74/74 and 75/75. Routed I/O delays required a later rising-edge capture than TSConf uses. Added a delayed-read regression, one-shot loader pulse sampling, and retained address isolation/refresh. Candidate 26102801 is being implemented and stock-BIOS checked; actual music acceptance remains pending.
+
+Completion record:
+Built and packaged 26102801 with passing regressions, stock-BIOS 4096 KB menu and declared ISE timing. Backed up the installed 26102800 package, preserved its saved 60 Hz OSD byte, verified/replaced only SD1 baseconf.kg1, preserved other root file hashes, cleanly ejected and verified the firmware lists 26102801. Actual Dune audio listening remains for the user. Generic and installed package hashes are recorded separately in docs/evidence because firmware persists OSD settings in the package.

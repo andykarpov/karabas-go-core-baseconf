@@ -1,0 +1,6 @@
+User prompt:
+analyze karabase sources and karavase firmware sources under ./external
+can we build .kg2 .kg3 cores also? without having real device?
+
+Work record:
+Inspect the local Karabas hardware, TSConf, MCU firmware and core packager sources. Determine target identities, offline toolchain availability, required BaseConf adaptations and hardware-free validation limits. Save findings in docs/mini-port-feasibility.md and update progress, plan, problems and handover. This is a feasibility assessment; no Mini implementation, new core build or board transfer was performed. Existing GO build 26102804 remains unchanged.

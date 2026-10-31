@@ -1,0 +1,5 @@
+User prompt:
+Pic problems fixed by switching to 60HZ VSync in OSD. But GS is playing at kinda 2x slower than neded - is it tied to vsync somehow? that should not happen
+
+Work record:
+GS CE and interrupt divider derive only from the fixed bus clock, independently of the raster selector. Added a two-GS comparison bench using the real translated CPU and a four-channel IRQ workload. Original slow memory served 41 versus 74 reference interrupts without contention, and 29 versus 75 with ROM contention. The interrupt divider still generated 149 periods in both cases. Preserve this baseline in build/releases/26102800/gs-baseline.log.

@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-28",
+  "hardware_transfer": false,
+  "boards": {
+    "mini": {
+      "build": "26102805",
+      "extension": "kg2",
+      "package_sha256": "2ca11544605ba65b8814d494eb2235dc0f076a75e580f78a9536996fb326a6c1",
+      "bytes": 1308641,
+      "manifest_sha256": "ceb3e9e9729b61e4fb373845a9cc060ef40060cacb39b9460e4c1f955e964a60",
+      "slice_luts": 11844,
+      "slice_registers": 6884,
+      "occupied_slices": 3684,
+      "available_slices": 3758,
+      "ramb16": 37,
+      "ramb8": 6,
+      "timing_errors_normal": 0,
+      "timing_errors_core_mode": 0,
+      "bios_ers_4096kb": true,
+      "video_and_hdmi_passed": true,
+      "regressions_passed": true,
+      "hardware_tested": false
+    },
+    "minig": {
+      "build": "26102805",
+      "extension": "kg3",
+      "package_sha256": "1d1876251de93d4adf02a69d290e3cd37b3d77cac58485e0b4847c40a09edc99",
+      "bytes": 1306321,
+      "manifest_sha256": "841ad7e5d324c21823bc9fa23de571d047e3312575d5277bc5de08e13a84a5a2",
+      "slice_luts": 11768,
+      "slice_registers": 6914,
+      "occupied_slices": 3660,
+      "available_slices": 3758,
+      "ramb16": 37,
+      "ramb8": 6,
+      "timing_errors_normal": 0,
+      "timing_errors_core_mode": 0,
+      "bios_ers_4096kb": true,
+      "video_and_hdmi_passed": true,
+      "regressions_passed": true,
+      "hardware_tested": false
+    },
+    "go": {
+      "build": "26102804",
+      "extension": "kg1",
+      "package_sha256": "9da320b0c3fcf60679e95f8ce8ea533d4d953c49779e18b64ef58f183fb9bd00",
+      "bytes": 1308389,
+      "unchanged": true,
+      "implementation_inputs_identical": true
+    }
+  }
+}

@@ -1,0 +1,3 @@
+OBSERVED: Menu+G reaches the Spectrum G matrix bit
+PASS hid: MCU SPI 16MHz, PS2 make/break FIFO/reset, USB matrix, two OSD-selectable joysticks, mouse, OSD command
+/var/www/own/karabas-forge/tmp/tb_hid_hotkey_observation.v:66: $finish called at 57065100 (1ps)

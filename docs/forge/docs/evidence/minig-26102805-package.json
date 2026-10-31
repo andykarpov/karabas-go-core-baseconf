@@ -1,0 +1,29 @@
+{
+  "board": "minig",
+  "build": "26102805",
+  "bytes": 1306321,
+  "package_sha256": "1d1876251de93d4adf02a69d290e3cd37b3d77cac58485e0b4847c40a09edc99",
+  "manifest_sha256": "841ad7e5d324c21823bc9fa23de571d047e3312575d5277bc5de08e13a84a5a2",
+  "bitstream_and_roms_verified": true,
+  "osd_entries_verified": 10,
+  "joystick_selectors": {
+    "Joystick L": [
+      "Kempston",
+      "Sinclair1",
+      "Sinclair2",
+      "Cursor",
+      "QAOPM",
+      "QAOPS",
+      "SEGA"
+    ],
+    "Joystick R": [
+      "Kempston",
+      "Sinclair1",
+      "Sinclair2",
+      "Cursor",
+      "QAOPM",
+      "QAOPS",
+      "SEGA"
+    ]
+  }
+}

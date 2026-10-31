@@ -1,0 +1,38 @@
+{
+  "old_sd1_sha256": "89a267c18ae63ec32a17931a7af2f08342544675f9f366e03b09fe946d69535c",
+  "generic_package_sha256": "abef39ec1b2db0e662879ffb18d8c4eebd871d8cb770fa8f49b6b9674f571df9",
+  "installed_package_sha256": "b3f3ffc0cac1dc70ee7c6c7e490e3f26c323540e0a17da66bbb14c62e125639b",
+  "preserved_osd_bytes": [
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+  ],
+  "prior_package_changes": [
+    [
+      517,
+      0,
+      1
+    ]
+  ],
+  "date": "2026-10-28",
+  "build": "26102801",
+  "usb_vendor_product": "2e8a:000a",
+  "serial": "D26610685F233021",
+  "model": "SD_Card",
+  "filesystem": "FAT16",
+  "filesystem_uuid": "3F19-B304",
+  "destination": "SD1:/baseconf.kg1",
+  "readback_verified": true,
+  "existing_root_files_unchanged": true,
+  "clean_eject": true,
+  "firmware_listing": "board-core-list-26102801.txt",
+  "physical_audio_acceptance": "Pending user listening test",
+  "rollback": "build/board/baseconf-26102800-from-sd1.kg1"
+}

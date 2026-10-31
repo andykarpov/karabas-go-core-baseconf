@@ -1,0 +1,4 @@
+2026-10-28
+User requests more AY tests using ZX-FORM2.TRD and same-board Mini G BaseConf/TSConf recordings. BaseConf recording starts in ERS and has distorted sound; TSConf plays correctly. Actual supplied filename: kg3-baseconf-distorted.mp4.
+
+Analyze local recordings and TSConf reference, extract the actual intro/player, extend CPU tests, and preserve reproducible evidence. AY hardware fault remains open; hotkey acceptance is unrelated and remains done.

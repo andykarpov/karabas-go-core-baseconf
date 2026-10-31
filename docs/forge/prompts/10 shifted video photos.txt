@@ -1,0 +1,5 @@
+User prompt:
+check provided ./ers.jpg and ./dune.jpg - screen seems shifted bottom a lot - so partly displayed outside of visible area
+
+Work record:
+Inspected both supplied photos. They show the physical ERS menu with 4096 KB and a Dune screen, shifted down/cropped. Investigation was interrupted by the user's next update that choosing 60 Hz in OSD resolves it. No video RTL change was made.

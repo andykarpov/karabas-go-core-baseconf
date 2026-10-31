@@ -1,0 +1,10 @@
+{
+  "build": "26102803",
+  "date": "2026-10-28",
+  "source": "User feedback in this conversation",
+  "verbatim": "all works",
+  "context": "Following installed 26102803 and requested Win+G/ERS reset check; earlier GS and OSD feedback positive",
+  "status": "Current GS/OSD/shortcut iteration accepted on board",
+  "scope_limit": "Does not establish separate CF/FDC, exhaustive graphics/input or sustained gameplay acceptance",
+  "installed_package_sha256": "7bc04900b327609c72390e843a754636754a1a9b2766ee8904f537b5e6ce84b0"
+}

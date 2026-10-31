@@ -1,0 +1,27 @@
+{
+  "build": "26102803",
+  "date": "2026-10-28",
+  "manifest_sha256": "c52193e1e33f7f05c5bd87c70b1a2a04b3375540cadc4a2f72e7eec87fb033fe",
+  "bitstream_sha256": "b332ddf1e042615ad83f2c54f16067037a29e00501da0cf2d06635d1a41f827b",
+  "toolchain": "docker.i74.de:5000/xilinx-ise@sha256:9a12826e3c0696e9b855a669a1e0f7a04fdd180126c735d62d325dae13b769bf",
+  "timing_errors": 0,
+  "slice_luts": 10388,
+  "slice_registers": 6192,
+  "occupied_slices": 3411,
+  "ramb16": 38,
+  "ramb8": 6,
+  "latches": 0,
+  "package_bytes": 1308459,
+  "artifacts_sha256": {
+    "baseconf.kg1": "3aea0a298e46a9890068afc6672c72bfd39a8cb94aac2f4c82ab5b38b74928be",
+    "karabas_go.bin": "b332ddf1e042615ad83f2c54f16067037a29e00501da0cf2d06635d1a41f827b",
+    "karabas_go.twr": "49560be39a0aec7f708ae8937790c3760542aae03bcdfe594e44087aa1bba297",
+    "karabas_go_map.mrp": "441b7e96077ecf66ec3fce5f73bee6784465ee67534b0b049acb092e5d59c61f",
+    "manifest.json": "c52193e1e33f7f05c5bd87c70b1a2a04b3375540cadc4a2f72e7eec87fb033fe",
+    "ise-completed.json": "f44085f632b5e4d605539f532e162eda245748225f0239d462fcbb2047f88b9e",
+    "bios-result.json": "155e679f54952c0ae8f7f1ad42e5a2ea9a4cab7533a7b7dcd6f09a8bd1d97298"
+  },
+  "installed_package_sha256": "7bc04900b327609c72390e843a754636754a1a9b2766ee8904f537b5e6ce84b0",
+  "hardware_status": "Copied to SD1, readback and unchanged root files verified, cleanly ejected; firmware lists 26102803. User reports all works for current iteration.",
+  "acceptance_evidence": "board-acceptance-26102803.json"
+}

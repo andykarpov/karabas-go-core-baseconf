@@ -1,0 +1,23 @@
+{
+  "simulator": "verilator",
+  "milliseconds": 2500,
+  "menu_verified": true,
+  "manifest_sha256": "cc493a15e7a303e2a026cb9e245bd15700ede3f6326b46fd384adf30b4f3a02f",
+  "testbench_sha256": "c598804d98aa7d64b91a5bdfc207a14fab542700b12cda4e4c65e6f1ce514eba",
+  "artifacts_sha256": {
+    "roms/baseconf.rom": "f2e94dfcacf67a76a3999f56bd3740e69f65e2362d4783b5e7d248e650bed560",
+    "roms/gs105b.rom": "9948ec9617365fb1913b0c56e00d5f6b6a36084875cca16debae270a4c6e6adf",
+    "tb_bios.log": "8e3bd49e54e6536313fb00d911589540be0f375f2f0fbaa9caa5735a4c2a9d62",
+    "bios-trace.log": "12d2133b0a50b310e66818061e67810b87cb26472e5e5690a02f57761263a39a",
+    "bios-sram-hi.hex": "8f05a95611c408a5a9c82ea9f0b777c8eb4f66e1772292358b34e1b11c531b60",
+    "bios-sram-lo.hex": "f4de492964d52117164169c42de443419316f70b0964520930a91417fd73574d"
+  },
+  "description": "Unmodified stock BIOS menu after clocked CPU read-buffer replacement; SRAM rendering, not physical VGA.",
+  "screen": {
+    "ram_page": 5,
+    "screen_sha256": "9bbbdb60b4190617cad846812744e9b33d41aa4779204b6c55bde896fc860c1a",
+    "description": "SRAM software view with standard Spectrum colors; not captured VGA",
+    "flash_phase": false,
+    "menu_signature": "181516f3511dccf571c92aa518da79f6ecbec84f77eb6739675fa6222d8cdb6b"
+  }
+}

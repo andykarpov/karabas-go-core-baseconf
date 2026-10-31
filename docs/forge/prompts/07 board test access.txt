@@ -1,0 +1,5 @@
+User answer to hardware availability question:
+Can you test on board yourself? My karabas has 2 sd and CF
+
+Assistant work record (2026-10-28):
+Performed read-only host USB/block/video-device enumeration. No Karabas/RP2040 USB device, USB serial adapter or removable SD/CF media was visible. No media writes or board programming. Recorded two-SD-plus-CF setup and direct-access/test requirements in docs/hardware-test.md. Continued ISE and simulation verification independently.

@@ -1,0 +1,26 @@
+{
+  "build": "26102804",
+  "date": "2026-10-28",
+  "manifest_sha256": "25ef859ad9725c25b0365e3733e5374ee32178e0fb89a6f37fa48575c0e35f01",
+  "bitstream_sha256": "3246b072a1b8d8d384ddd5e558a33b0cc9bfa28cb07934cb234c8e2b236ec87c",
+  "toolchain": "docker.i74.de:5000/xilinx-ise@sha256:9a12826e3c0696e9b855a669a1e0f7a04fdd180126c735d62d325dae13b769bf",
+  "timing_errors": 0,
+  "slice_luts": 10305,
+  "slice_registers": 6204,
+  "occupied_slices": 3355,
+  "ramb16": 38,
+  "ramb8": 6,
+  "latches": 0,
+  "package_bytes": 1308389,
+  "artifacts_sha256": {
+    "baseconf.kg1": "9da320b0c3fcf60679e95f8ce8ea533d4d953c49779e18b64ef58f183fb9bd00",
+    "karabas_go.bin": "3246b072a1b8d8d384ddd5e558a33b0cc9bfa28cb07934cb234c8e2b236ec87c",
+    "karabas_go.twr": "00d90c45bef11d82361d585ed09a93085e9d3a0b54a0be637ce5969205f679d7",
+    "karabas_go_map.mrp": "ddb1719ff33b6497d0ed16189e2c5980061b0338a96f5051549181681b3024ad",
+    "manifest.json": "25ef859ad9725c25b0365e3733e5374ee32178e0fb89a6f37fa48575c0e35f01",
+    "ise-completed.json": "2b1194633cbf07b7a09403a30fcc82316c5add3562e530ce4d15b63c29c81898",
+    "bios-result.json": "02ccd3aac09e58b746359b2b715ccaaf0f2da6e2c2d017ea5d1fa095953f22c8"
+  },
+  "installed_package_sha256": "d5675fc72d33e35b1bc63dcfb7b47a7c559b70bb8fb53eba65e148b6c2fda1a1",
+  "hardware_status": "SD1 readback verified, other root files unchanged, cleanly ejected; firmware lists 26102804. Physical SEGA mapping pending."
+}

@@ -1,0 +1,13 @@
+Video mode=3 raster=50 lines=640 active=576 pixels=414720 OSD=416
+Video mode=3 raster=60 lines=524 active=480 pixels=345600 OSD=416
+Video mode=0 raster=50 lines=640 active=576 pixels=414720 OSD=416
+Video mode=0 raster=60 lines=524 active=480 pixels=345600 OSD=416
+Video mode=2 raster=50 lines=640 active=576 pixels=414720 OSD=416
+Video mode=2 raster=60 lines=524 active=480 pixels=345600 OSD=416
+Video mode=6 raster=50 lines=640 active=576 pixels=414720 OSD=416
+Video mode=6 raster=60 lines=524 active=480 pixels=345600 OSD=416
+PASS mini video: blanking, 50/60 Hz, ZX/320/640/text, full OSD
+- /var/www/own/karabas-forge/tests/tb_mini_video.v:67: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 180ms; walltime 9.948 s; speed 18.095 ms/s
+- Verilator: cpu 9.947 s on 1 threads; alloced 153 MB

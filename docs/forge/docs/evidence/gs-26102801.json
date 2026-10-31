@@ -1,0 +1,24 @@
+{
+  "build": "26102801",
+  "manifest_sha256": "43c24774c79b80aca8beaff2eb6f14c577c3082e5ded9c446d03682e7ce38f63",
+  "baseline_serviced": [
+    41,
+    29
+  ],
+  "reference_serviced": [
+    74,
+    75
+  ],
+  "candidate_serviced": [
+    74,
+    75
+  ],
+  "timer_periods": 149,
+  "test_source_sha256": {
+    "tests/tb_gs_timing.v": "6c15a9d512a2883f1dc12aa50869c36150bff1b99bfb87646e47faddbda02d0d",
+    "tests/sdram_model.v": "832ac6c4aad19d5b41914b4dcfe1195d93203030eac0b75a8d01011222aba3e6",
+    "tests/tb_storage.v": "b4be596c68ed409bbe1da6c10cddd953c966074d450d52ff7a9a6292b9bd19b3",
+    "tests/tb_boot.v": "ad7529a0ecde5c5a820cd335953d237133eabd3dc3b508b1df13069df95a5cab"
+  },
+  "scope": "Synthetic four-channel ISR, not Dune player; normal and approximate routed read delays. Physical audio test pending."
+}

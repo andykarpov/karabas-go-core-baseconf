@@ -1,0 +1,7 @@
+User request, 2026-10-28: add docs covering these hotkeys.
+
+Added docs/hotkeys.md with current OSD/core shortcuts and EVO boot/reset
+combinations for GO, Mini and Mini G, PC key equivalents, practical examples,
+0 recovery and multi-key counting. Linked from README, reset-controls and
+hardware-test docs. Verified configured shortcut coverage and local links.
+Documentation only; no RTL, configuration or release-package changes.

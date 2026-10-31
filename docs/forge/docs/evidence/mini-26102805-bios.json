@@ -1,0 +1,15 @@
+{
+  "simulator": "verilator",
+  "milliseconds": 2500,
+  "menu_verified": true,
+  "manifest_sha256": "ceb3e9e9729b61e4fb373845a9cc060ef40060cacb39b9460e4c1f955e964a60",
+  "testbench_sha256": "600ca7c0696e2327de4246d65f38aeb0a244fbec637d2edf4a7001af78bd3f58",
+  "artifacts_sha256": {
+    "roms/baseconf.rom": "f2e94dfcacf67a76a3999f56bd3740e69f65e2362d4783b5e7d248e650bed560",
+    "roms/gs105b.rom": "9948ec9617365fb1913b0c56e00d5f6b6a36084875cca16debae270a4c6e6adf",
+    "tb_bios.log": "6322029443cddfa22bda4845d14be1c467a94b1b160b2b9550659c0dc1c60ed1",
+    "bios-trace.log": "083921d1be99dcfff32a0e385cdc0813d76ffe7b6d70c369505672c93255aa80",
+    "bios-sram-hi.hex": "833178457a9fd6ddcfe994c8441d7d75ee0376963736555032434cfe38cd0cf0",
+    "bios-sram-lo.hex": "bb7de7a97b0f93779c7ff3d74645d229b36c352f1c99e2d3005f12b43e900abe"
+  }
+}

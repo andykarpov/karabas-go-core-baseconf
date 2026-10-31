@@ -1,0 +1,4 @@
+2026-10-28
+User: check once again hdmi audio path compared between tsconf core in external and ours
+
+Compare actual generated Mini/Mini G paths against local TSConf: sample wiring, clock source/divider, format/CDC, packetizer, ACR, signaling/serializer, reset differences and actual BaseConf blanking. Add packet-level checks beyond existing transmitter-input checks. No speculative production change or hardware transfer.

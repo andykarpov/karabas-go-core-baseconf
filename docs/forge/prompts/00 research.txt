@@ -1,0 +1,45 @@
+Prepare ZX Evolution BaseConf core for Karabas GO board rev. B4
+
+During work
+- create documentation in human-redable form under ./docs/:
+  * progress
+  * current plan
+  * problems
+- prepare skills for tools you create and binaries downloaded
+  skills should be documented also
+- keep prompt history under prompts/
+  in format "NN step description.txt"
+  "00 research.txt", for example
+
+Main rules:
+- do not write outside project folder
+- temporary dir is ./tmp
+- downloaded binaries are under ./bin
+  place there any tools you need for work
+- build dir is ./build
+- prefer self-contained python scripts under ./tools
+  each one should contain human-readable help and command parameters
+
+Infosources:
+- ./external/karabas-go
+  karabas hardware main repository
+- ./external/karabas-go-core-tsconf
+  ZX Evolution TSConf core for Karabas GO
+- ./external/zxevo.pentevo
+  ZX Evolution BaseConf main repository
+- internet searches are allowed also
+
+Detailed goal:
+Prepare Karabas-compatible core which will run ZX Evolution BaseConf.
+- Real floppy support (based on Firefly FDC hdl sources)
+- Real CF card support (Nemo IDE)
+- BaseConf extended graphics
+- USB Keyboard (with zx-evo ps/2 keybuffer emulation)
+- USB mouse
+- 2x Joysticks support (selectable via OSD)
+- Turbosound + FM
+- General Sound (2 MB)
+- Provide OSD Menu by Win+ESC to change some settings
+
+For the test - ./external/dune can be used - it is dune game port for BaseConf,
+more details if needed is under ./external/retro-game-zxevo-dune

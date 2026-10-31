@@ -1,0 +1,3 @@
+Assistant work-step record, 2026-10-27 (not a new user prompt).
+Validate full-board elaboration, CPU diagnostics at 3.5/7/14 MHz, SRAM/SDRAM transfers and MCU/HID SPI behavior. Add a Yosys structural check using real Xilinx primitive declarations, correcting floating wrapper/PSG inputs and the input-only burst chip-select driver. Compare 183 UCF balls against B4 interactive PCB data with explicit aliases. Stage supplied Dune media with checksums and add provenance-gated Karabas package generation. Keep ISE implementation, stock BIOS boot, physical peripherals and gameplay explicitly pending.
+Fix MCU FT-video takeover to release FPGA RGB/sync drivers and select the FT clock. Add an actual-board-wrapper SPI regression for takeover and return of video ownership.

@@ -1,0 +1,31 @@
+{
+  "build": "26102804",
+  "previous_sd1_sha256": "a22c1bd2878895024c0d0a34e3577a6aaf031e365a1a5a1f88b97676ff4b7dca",
+  "generic_package_sha256": "9da320b0c3fcf60679e95f8ce8ea533d4d953c49779e18b64ef58f183fb9bd00",
+  "installed_package_sha256": "d5675fc72d33e35b1bc63dcfb7b47a7c559b70bb8fb53eba65e148b6c2fda1a1",
+  "preserved_osd_bytes": [
+    0,
+    1,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0
+  ],
+  "payloads_verified": true,
+  "eeprom_bank_unchanged": 1,
+  "date": "2026-10-28",
+  "usb": "2e8a:000a",
+  "serial": "D26610685F233021",
+  "filesystem_uuid": "3F19-B304",
+  "destination": "SD1:/baseconf.kg1",
+  "readback_verified": true,
+  "other_root_files_unchanged": true,
+  "clean_eject": true,
+  "firmware_list_verified": true,
+  "firmware_list_evidence": "board-core-list-26102804.txt",
+  "physical_sega_acceptance": "Pending"
+}

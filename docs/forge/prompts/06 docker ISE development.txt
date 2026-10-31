@@ -1,0 +1,9 @@
+User prompt:
+ISE provided through docker (as host OS is recent and ISE is quite outdated) - check ./external/xilinx-ise/xilinx as main run file (it also maps xilinx filder onto ./build) - create a skill for that also
+
+lets continue development
+
+Assistant work record (2026-10-28):
+Inspect supplied launcher and image. Add a batch adapter with explicit project build mapping, read-only license mount, pinned existing image and no terminal dependency. Continue real ISE synthesis, implementation, timing review and validation; document observed results below.
+
+Result: Docker ISE synthesis/map/route/BitGen succeeded for build 26102800. Fixed XST script command separation, replaced the CPU read latch with clocked storage/bypass, added MCU SPI offset constraints, and expanded input provenance to headers/BitGen settings. All regressions and the 2500 ms stock BIOS menu signature pass. Created baseconf.kg1 and retained ISE reports/hashes. Subsequent USB/SD1 transfer is recorded in prompt 08.

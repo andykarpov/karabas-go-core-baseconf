@@ -1,0 +1,8 @@
+User prompt:
+so prepare kg2 kg3 cores then, in addition to existing kg1
+
+Work record:
+Implement isolated Mini and Mini G targets, preserve the accepted GO release, add HDMI blanking and board-specific output wiring, run offline simulations and ISE implementation, and package genuine BaseConf bitstreams. Document tools, evidence and hardware validation limits.
+
+Outcome:
+Completed BaseConf build 26102805 for Karabas Mini (kg2) and Mini G (kg3), with separate bitstreams and pin/clock/audio wiring. Added real HDMI blanking, corrected synchronous scan-doubler validity and HDMI programming/reset sequencing. Both targets pass regression, real video/HDMI, ERS/4096KB BIOS and both ISE timing modes; payload/menu verification passes. Release build/releases/multi-board-26102805 includes both packages, unchanged GO kg1 build 26102804, checksums, input snapshots and evidence. GO regenerated implementation inputs are byte-identical and its full regressions pass. Documentation and three existing skills updated. No downloaded binaries, external source edits, hardware testing or board transfer. Mini hardware acceptance remains outstanding.

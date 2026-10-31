@@ -1,0 +1,3 @@
+Reorganize karabas-forge as a shared Forge workspace. Keep global Karabas/Xilinx tools, dependencies, docs and tests at the top. Move the ZX Evo Base task (including GO, Mini and Mini G variants) into forge/cores/zx-evo-base, with its own task-specific bin/build/docs/external/skills/tmp/tools/config/tests/prompts. Add src for maintained core sources and res for BIOS and other core resources. Update docs/tools and prepare for future extraction into a separate repository.
+
+The user reviewed the proposed inventory and approved implementation with: "sounds great, proceed". Historical prompt/evidence/release contents remain unchanged.

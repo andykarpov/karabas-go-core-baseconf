@@ -1,0 +1,46 @@
+{
+  "repositories": [
+    {
+      "path": "external/karabas-go",
+      "url": "https://github.com/andykarpov/karabas-go.git",
+      "revision": "86e5929f290246284c1ee42662bbe467283654a2",
+      "scope": "forge"
+    },
+    {
+      "path": "external/karabas-go-core-tsconf",
+      "url": "https://github.com/andykarpov/karabas-go-core-tsconf.git",
+      "revision": "edb2060c36164946622b71847e598ff01e6039f8",
+      "scope": "forge"
+    },
+    {
+      "path": "external/karabas-go-core-tsconf/modules",
+      "url": "https://github.com/andykarpov/karabas-go-modules.git",
+      "revision": "cff5087502f4d6bbeaeba55ddcfac213af8bf6b5",
+      "scope": "forge"
+    },
+    {
+      "path": "external/zxevo.pentevo",
+      "url": "https://github.com/aaydev/zxevo.pentevo.git",
+      "revision": "ec1405e35edc8632b273384aaa9067aae4ce1c7c",
+      "scope": "core"
+    },
+    {
+      "path": "external/karabas-go-firmware",
+      "url": "https://github.com/andykarpov/karabas-go-firmware.git",
+      "revision": "3d1d7977fb4948d622db3816c683f2be710a8b0f",
+      "scope": "forge"
+    },
+    {
+      "path": "external/retro-game-zxevo-dune",
+      "url": "https://github.com/lordamot/retro-game-zxevo-dune.git",
+      "revision": "1163ae43edde58098af72597f9443642974a08be",
+      "scope": "core"
+    },
+    {
+      "path": "external/karabas-go-tools",
+      "url": "https://github.com/andykarpov/karabas-go-tools.git",
+      "revision": "a4405501e2871dce4cdb63f7df48d69ccbfe88a8",
+      "scope": "forge"
+    }
+  ]
+}

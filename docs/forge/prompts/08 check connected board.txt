@@ -1,0 +1,5 @@
+User prompt:
+check for karabas connected also
+
+Assistant work record (2026-10-28):
+Detected Karabas Go USB 2e8a:000a and its serial interface. AT+KARABAS=list succeeded. Entered SD1 mass-storage mode, identified the 1.9 GB FAT16 card, unmounted the desktop auto-mount, and used a temporary project-path container mount. Added only baseconf.kg1 build 26102800, verified its bytes and existing root core/config hashes, unmounted and cleanly ejected. The live firmware then listed ZX Evolution BaseConf build 26102800. Asked the user to select it and report the display/Win+Esc behavior because the serial protocol provides neither core selection nor VGA capture.

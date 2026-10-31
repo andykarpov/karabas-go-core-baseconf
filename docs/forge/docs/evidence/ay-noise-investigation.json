@@ -1,0 +1,365 @@
+{
+  "date": "2026-10-28",
+  "reported_symptom": "Remote report: noisy AY on kg2/kg3, on HDMI and analog; GS reportedly plays correctly. Exact program/recording and settings not yet available.",
+  "root_cause_confirmed": false,
+  "production_rtl_changed": false,
+  "packages_rebuilt": false,
+  "reference": "external/karabas-go-core-tsconf at edb2060c36164946622b71847e598ff01e6039f8",
+  "source_comparison": [
+    {
+      "path": "rtl/sound/ym2149.v",
+      "sha256": "16e3615e40db8511ae28e7e7a10680aa06837161684c5962399d925507ed95bc",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/audio_mixer.v",
+      "sha256": "389fb314391582be60c379b0ddc665293b791afa76714b3da3235f2772ee0bc2",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt03.v",
+      "sha256": "d863846da45aceb72263fafc549f3d710d1d1822dc96f0b734f9a2916c1f3880",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt03_acc.v",
+      "sha256": "977791c03acc1af413618d17a32fc2d7bdce5c95e5533e240617881954606794",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_acc.v",
+      "sha256": "7abc8f553f84209f41261a6aacaf43325ff7911d4699aad8e5f48603e87ecad5",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_csr.v",
+      "sha256": "5126f72be77c0e833bf02a77810066c73d561984968a4525746b2ffbd41b2d10",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_div.v",
+      "sha256": "4898d42e535c1919f335c1da1864fb62c904f225b66991f52e8991202d54d25f",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_dout.v",
+      "sha256": "46695f9a01029047eae28d8bd4e6c8636b7ceb9d79835dd003aab3c2c1c8d574",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_eg.v",
+      "sha256": "e23ae7fbc85ca9dcbf5515dd90792a292f60fd5252b073de31b4d252df6a95bb",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_eg_cnt.v",
+      "sha256": "16ece2d4eadec9dcb5cf6630f57071e02e103ff1af57fb6db70b10b6219b3215",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_eg_comb.v",
+      "sha256": "550ff21322fe4fe3501fc92a3a9eab8980acbba920cfb9dfcb33487aa1b57191",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_eg_ctrl.v",
+      "sha256": "2fcbf8dfbe93982df6d9b54f6a6b4e8761d8ef2b3a40d18e7280ab0a08afa246",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_eg_final.v",
+      "sha256": "abece9abf7f8a63a5895cec45b0cfbdcaf6a389ad917d04189c1d8a76edf9de0",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_eg_pure.v",
+      "sha256": "a6e8ccc8c1f1e2fa78da1e37c55289e59a6147d5401dc4a0b53cea44f865a496",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_eg_step.v",
+      "sha256": "19ca73c3891850f8862d13f454c1253b7161df0cff53ab5e95a40b787d3d8280",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_exprom.v",
+      "sha256": "350c267597d218eb3750224326482658ee952f682ffb201529bed83a945ec664",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_kon.v",
+      "sha256": "f8cb0ad5864159c436b8cc7b536a885c29a239f5031249b922068afe3e3d8d52",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_lfo.v",
+      "sha256": "a862c2df52fab6e3efa8850ba89d8f76b4780223ac552f60f39309d8842def4e",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_logsin.v",
+      "sha256": "df1f41d111c0a1da3fb07d7ddd788d08b0e20ecef98c1a27b9580067222b98b4",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_mmr.v",
+      "sha256": "4450903b95dcd934f759715dd7f91cfa5b1d9ec6466882089abb8d95576057c2",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_mod.v",
+      "sha256": "870ad109e13b33aed86e0247599d158997256b43f4b3981acb1ab433948e1c4b",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_op.v",
+      "sha256": "978baf9606cbe9cbb32ef2b48d53eb632be7b067fd832547555569ef000b9056",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_pcm_interpol.v",
+      "sha256": "0506bcf9b3dbb55f0fd725ec27b6d283b7b309cf0367a9dd08bb0e284b0ed51e",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_pg.v",
+      "sha256": "c8b80340784adfc0dd58bc7477ce93f69cb692039d543a4919ba6952a5752644",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_pg_comb.v",
+      "sha256": "63c89a7979d73e9bc506bc9d0a927dff91c98778f52c34c0f23b2d9bcf4003c2",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_pg_dt.v",
+      "sha256": "f43e0491bbb9f69446b16536121d6ad3c91c31edaf86c0d8f7055395bf1750ab",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_pg_inc.v",
+      "sha256": "e5d5a6dd460a42b4dee8f8baa7fbaf031adc4d5de4abb69725b55fceb436b867",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_pg_sum.v",
+      "sha256": "d312308e7c65d25d522a3de617ae4814ca507d35d213d6821015d4f1ed680c32",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_pm.v",
+      "sha256": "8b9ae16ade06425ceabf4b11a073afbb24eb0d5b80adcf94326d13bdd9b51518",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_reg.v",
+      "sha256": "905183e7fe1dd7afda71b644663304818b45a9793a2f86af342e61f03fcf8747",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_reg_ch.v",
+      "sha256": "51be4ff0c12d3f7433e0a2e4dcf70de5de5eca6f4d1c651fac028f755e6b1d9e",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_rst.v",
+      "sha256": "a9db2939dcdadc8082bd6a3d63a547f4b7ef6bee6fd671f14c0a48baea87b10a",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_sh.v",
+      "sha256": "3f3f186346d2b0582308af779b8636f477ed8332e820d40f18c85ee01a5b8a1e",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_sh_rst.v",
+      "sha256": "3070af65803fe048c851895d5f7f7f3e24431f5698510ee2951d1557fc55ab58",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_single_acc.v",
+      "sha256": "85e5f423ef628cd8190758b428fd0d0610831d2a9e06b0836ca91bbaeaa092a4",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_sumch.v",
+      "sha256": "fabd70478532e4c69bf10d3ad28f3c6d84567d2a5d8f7a965287849f60886463",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_timers.v",
+      "sha256": "81ffe7421376281c5ee88a91a035c4a97b795e18f012d9f827bab301bda47252",
+      "identical_to_tsconf": true
+    },
+    {
+      "path": "rtl/sound/jt12/jt12_top.v",
+      "sha256": "62c5cb218eaa34af3e706742a4c5b9729fce47c13b4fbb94c1ea0e3da67510b6",
+      "identical_to_tsconf": true
+    }
+  ],
+  "findings": [
+    "AY/YM generator, JT03/FM implementation and mixer are identical to pinned TSConf. Imported TurboSound only ties unused IO input pins to FF.",
+    "BaseConf uses the same 28.0303 MHz domain and divide-by-eight PSG master enable. Its combinational enable is one bus cycle out of phase with the registered TSConf enable, without a rate change.",
+    "Both ports use the same final mixer. ADC/ESP mixer branches are disabled in the BaseConf Mini synthesis configuration.",
+    "Mini analog sigma-delta input differs: BaseConf uses full 16-bit offset-binary while TSConf right-shifts by two and discards two more low bits. This is roughly 4x DAC input gain, but is not on HDMI or Mini G.",
+    "Mini G I2S divider and HDMI sample handoff match the reference structure. HDMI and analog consume the same mixer signal.",
+    "All 18 CPU-driven AY/YM tests pass: 3 targets x 3 CPU speeds x 2 chip types. Register readback on both chips, distinct stereo fixed levels, and noise-disabled ~438 Hz tone have expected samples and exact periods."
+  ],
+  "boards": [
+    {
+      "board": "go",
+      "manifest_unchanged": true,
+      "package_sha256": "9da320b0c3fcf60679e95f8ce8ea533d4d953c49779e18b64ef58f183fb9bd00",
+      "ay_test": {
+        "board": "go",
+        "passed": true,
+        "simulator": "verilator",
+        "manifest_sha256": "25ef859ad9725c25b0365e3733e5374ee32178e0fb89a6f37fa48575c0e35f01",
+        "testbench_sha256": "3dcb5e242fc226acf4f686bd54ec585d198669e7dfd541b6046a086be297a2e6",
+        "cases": [
+          {
+            "speed": "7mhz",
+            "type": "ay",
+            "log": "ay-7mhz-ay.log",
+            "sha256": "c269147f64ff634b084f500ecde4a49f5825995549cadaa1ea5758cd213da576"
+          },
+          {
+            "speed": "7mhz",
+            "type": "ym",
+            "log": "ay-7mhz-ym.log",
+            "sha256": "3461fd2264ef6051ccd709a44fd28b1ee3d85f64369e3cd03286a132cf4c44dc"
+          },
+          {
+            "speed": "14mhz",
+            "type": "ay",
+            "log": "ay-14mhz-ay.log",
+            "sha256": "5eadc9f5627146d42f52939be0d112229332f3afd7048b4994d3175fe37cc810"
+          },
+          {
+            "speed": "14mhz",
+            "type": "ym",
+            "log": "ay-14mhz-ym.log",
+            "sha256": "37b2d85a6cd8dc9256f1278c1f4ce8bf37edda96b034779a7fb5526f0d5f5bf1"
+          },
+          {
+            "speed": "3_5mhz",
+            "type": "ay",
+            "log": "ay-3_5mhz-ay.log",
+            "sha256": "42b8791992fa65fd3f4e939745237f41b90cc734c787bcdb59aae5532d630c91"
+          },
+          {
+            "speed": "3_5mhz",
+            "type": "ym",
+            "log": "ay-3_5mhz-ym.log",
+            "sha256": "d25cfec545ae0e252fb4bdc855152b827522b4c40d279052fe75c4e77051db71"
+          }
+        ],
+        "limits": "Two-state functional test; no routed timing, analog capture, envelope/music acceptance or hardware noise reproduction."
+      }
+    },
+    {
+      "board": "mini",
+      "manifest_unchanged": true,
+      "package_sha256": "2ca11544605ba65b8814d494eb2235dc0f076a75e580f78a9536996fb326a6c1",
+      "ay_test": {
+        "board": "mini",
+        "passed": true,
+        "simulator": "verilator",
+        "manifest_sha256": "ceb3e9e9729b61e4fb373845a9cc060ef40060cacb39b9460e4c1f955e964a60",
+        "testbench_sha256": "3dcb5e242fc226acf4f686bd54ec585d198669e7dfd541b6046a086be297a2e6",
+        "cases": [
+          {
+            "speed": "7mhz",
+            "type": "ay",
+            "log": "ay-7mhz-ay.log",
+            "sha256": "f497bf44618128c1a2f5c92c75740b715cd8a873f6fe39abaac1cfae9dc109f1"
+          },
+          {
+            "speed": "7mhz",
+            "type": "ym",
+            "log": "ay-7mhz-ym.log",
+            "sha256": "acadb7d7df447b45e8a162589906d2b8e38691cdf46ad7dd5e06e8c47e69d39b"
+          },
+          {
+            "speed": "14mhz",
+            "type": "ay",
+            "log": "ay-14mhz-ay.log",
+            "sha256": "b5fee33861db49e4901b3744bfc2273fe0b0b4ff1250e78676750d587ad23dbb"
+          },
+          {
+            "speed": "14mhz",
+            "type": "ym",
+            "log": "ay-14mhz-ym.log",
+            "sha256": "0912e0d5c65b54f2c315ec83f2a347f53ad4b164bcc52cb9225bef9febc25a2d"
+          },
+          {
+            "speed": "3_5mhz",
+            "type": "ay",
+            "log": "ay-3_5mhz-ay.log",
+            "sha256": "aa27b5c181ea5c4e589a929aed635e8240d4c532f85fa4d0e44f6f801cf40ecd"
+          },
+          {
+            "speed": "3_5mhz",
+            "type": "ym",
+            "log": "ay-3_5mhz-ym.log",
+            "sha256": "e38cee5d8ee86452a5173a3e2d088878502f809222b0153492aa6736d675baff"
+          }
+        ],
+        "limits": "Two-state functional test; no routed timing, analog capture, envelope/music acceptance or hardware noise reproduction."
+      }
+    },
+    {
+      "board": "minig",
+      "manifest_unchanged": true,
+      "package_sha256": "1d1876251de93d4adf02a69d290e3cd37b3d77cac58485e0b4847c40a09edc99",
+      "ay_test": {
+        "board": "minig",
+        "passed": true,
+        "simulator": "verilator",
+        "manifest_sha256": "841ad7e5d324c21823bc9fa23de571d047e3312575d5277bc5de08e13a84a5a2",
+        "testbench_sha256": "3dcb5e242fc226acf4f686bd54ec585d198669e7dfd541b6046a086be297a2e6",
+        "cases": [
+          {
+            "speed": "7mhz",
+            "type": "ay",
+            "log": "ay-7mhz-ay.log",
+            "sha256": "8d9d382d716ddb441b6074cc769a70e6d4df875a29dda895b4a80ab5ff825949"
+          },
+          {
+            "speed": "7mhz",
+            "type": "ym",
+            "log": "ay-7mhz-ym.log",
+            "sha256": "9416110fb1e98ac6b684888fd0047af84474da3c0fcd6cd3b1d49e77877bd315"
+          },
+          {
+            "speed": "14mhz",
+            "type": "ay",
+            "log": "ay-14mhz-ay.log",
+            "sha256": "0d0dd5e59161f3dda0018dd1863110a9d3466c3ea69989521cd428f3bccade71"
+          },
+          {
+            "speed": "14mhz",
+            "type": "ym",
+            "log": "ay-14mhz-ym.log",
+            "sha256": "74c72a16b1eef46f59648a1f164b0407c986193dea1d6d634bee46810b79591a"
+          },
+          {
+            "speed": "3_5mhz",
+            "type": "ay",
+            "log": "ay-3_5mhz-ay.log",
+            "sha256": "efc20d9c6f009a9640c70b28c61b910a255fdb3269c818e429ad205bca8e1994"
+          },
+          {
+            "speed": "3_5mhz",
+            "type": "ym",
+            "log": "ay-3_5mhz-ym.log",
+            "sha256": "ca5d7a833705e3b7c3f057a87ab9ac7411166124c83d61de660d54c5374779a8"
+          }
+        ],
+        "limits": "Two-state functional test; no routed timing, analog capture, envelope/music acceptance or hardware noise reproduction."
+      }
+    }
+  ],
+  "limits": "Functional two-state tests of the actual BaseConf CPU/decoder/TurboSound/mixer, with GS held reset. They do not reproduce an unknown tune, envelope-heavy playback, board-specific electrical behavior, post-route timing or measured HDMI/analog noise.",
+  "next_evidence": "Affected program/tune and exact package/build; whether TSConf is clean on that same program/board; whether AY/YM selection, PSG stereo mode, Covox off or GS reset changes the symptom."
+}

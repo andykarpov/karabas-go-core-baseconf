@@ -1,0 +1,2 @@
+Assistant work-step record, 2026-10-27 (not a new user prompt).
+Integrate the BaseConf logical core with the TSConf B4 board/MCU/HID/OSD/FDC/audio interfaces. Replace the Altera-only font wrapper, normalize source includes, explicitly initialize BaseConf clock/pager state for Spartan-6, add SDRAM arbitration and waits, test byte lanes/address bounds/refresh and integrated CPU execution. Record ISE and hardware availability as unresolved, not as passed validation.

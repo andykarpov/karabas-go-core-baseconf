@@ -1,0 +1,301 @@
+{
+  "date": "2026-10-28",
+  "conclusion": "No BaseConf-specific kg3 HDMI PCM-format, divider, packetizer or ACR mismatch found; hardware AY fault unresolved.",
+  "production_sources_changed": false,
+  "packages_changed": false,
+  "source_comparison": [
+    {
+      "board": "mini",
+      "path": "upstream/modules/rtl/video/hdmi/dvi.vhd",
+      "sha256": "4bebbd12ec0dbf5336ccf2c7cc32aca6a779c492e884e80d23527c68d5d7ee07",
+      "reference_sha256": "4bebbd12ec0dbf5336ccf2c7cc32aca6a779c492e884e80d23527c68d5d7ee07",
+      "identical": true
+    },
+    {
+      "board": "mini",
+      "path": "upstream/modules/rtl/video/hdmi/dvi_encoder.vhd",
+      "sha256": "b202a25c2303c87387f9d7c88d53a1e78d042b296072859affec4877635514ba",
+      "reference_sha256": "b202a25c2303c87387f9d7c88d53a1e78d042b296072859affec4877635514ba",
+      "identical": true
+    },
+    {
+      "board": "mini",
+      "path": "upstream/modules/rtl/video/hdmi/pll_reset.v",
+      "sha256": "34dd9a46063b0ecdbd9a26b075dba6acf077aa3d82a347a1dc3bcd8052611279",
+      "reference_sha256": "430a9b60e3c778efa1ede91a8c019291b2bcc43cd94f50c6cbb724672489bd10",
+      "identical": false
+    },
+    {
+      "board": "mini",
+      "path": "upstream/modules/rtl/video/hdmi/zhdmi_audio_packetizer.vhd",
+      "sha256": "a7a5e9000263f4d421d6d4a3d88c1ef3506c8f9410ca2c51e569d5c570b5afef",
+      "reference_sha256": "a7a5e9000263f4d421d6d4a3d88c1ef3506c8f9410ca2c51e569d5c570b5afef",
+      "identical": true
+    },
+    {
+      "board": "mini",
+      "path": "upstream/modules/rtl/video/hdmi/zhdmi_island_encoder.vhd",
+      "sha256": "84cf5dc257819d7f47da1d5274e4c5a824b74394574377d51418aa55a22986fb",
+      "reference_sha256": "84cf5dc257819d7f47da1d5274e4c5a824b74394574377d51418aa55a22986fb",
+      "identical": true
+    },
+    {
+      "board": "mini",
+      "path": "upstream/modules/rtl/video/hdmi/zhdmi_packet_gen.vhd",
+      "sha256": "679ca545c5092c89859ce94f5252cafe8a3f2d1b714cbf095214a5f98ec7857c",
+      "reference_sha256": "679ca545c5092c89859ce94f5252cafe8a3f2d1b714cbf095214a5f98ec7857c",
+      "identical": true
+    },
+    {
+      "board": "mini",
+      "path": "upstream/modules/rtl/video/hdmi/zhdmi_signaling.vhd",
+      "sha256": "be9ac43438d3b0464c9a3392d553fe4b31e4ea5aa37b294a6ec18ffd4e14c44e",
+      "reference_sha256": "be9ac43438d3b0464c9a3392d553fe4b31e4ea5aa37b294a6ec18ffd4e14c44e",
+      "identical": true
+    },
+    {
+      "board": "mini",
+      "path": "upstream/modules/rtl/video/hdmi/zhdmi_tmds_encoder.vhd",
+      "sha256": "406e80fa735116e37109fe13fd55c4e32fd787f9f1ccc603d832bda7e3a0c2cb",
+      "reference_sha256": "406e80fa735116e37109fe13fd55c4e32fd787f9f1ccc603d832bda7e3a0c2cb",
+      "identical": true
+    },
+    {
+      "board": "mini",
+      "path": "upstream/modules/rtl/video/hdmi/zhdmi_tmds_serializer_spartan6.vhd",
+      "sha256": "2fac63ff3980ea7b90ebb2bc1f531caa530ac26973b3cb9c36dcaf87ef6b0d95",
+      "reference_sha256": "2fac63ff3980ea7b90ebb2bc1f531caa530ac26973b3cb9c36dcaf87ef6b0d95",
+      "identical": true
+    },
+    {
+      "board": "mini",
+      "path": "upstream/modules/rtl/video/hdmi/zhdmi_tx.vhd",
+      "sha256": "4fda2982207847a9bf9fa2fe41d048051fa7c9bad3c73d80eda9bf2f27e2302d",
+      "reference_sha256": "4fda2982207847a9bf9fa2fe41d048051fa7c9bad3c73d80eda9bf2f27e2302d",
+      "identical": true
+    },
+    {
+      "board": "mini",
+      "path": "upstream/tsconf/rtl/hdmi/hdmi_top.v",
+      "sha256": "f745899aa606822d7b7c80f57ce27ae4d8b3a1f41d955e8617b5654b264db81e",
+      "reference_sha256": "f745899aa606822d7b7c80f57ce27ae4d8b3a1f41d955e8617b5654b264db81e",
+      "identical": true
+    },
+    {
+      "board": "mini",
+      "path": "upstream/tsconf/rtl/hdmi/hdmi_pll.v",
+      "sha256": "c693ffa920165517cdb3ab1e1ab30be6558c5fbd67edcb0a01df6564a01df1d0",
+      "reference_sha256": "7a4eff5046e265b21bc02b61a6c53c1990db7d8c5acff32639468c5566bc404b",
+      "identical": false
+    },
+    {
+      "board": "mini",
+      "path": "upstream/tsconf/rtl/hdmi/freq_counter.vhd",
+      "sha256": "d9a0c8c2ecf8ec6e8e9144e92d9f50acd16b83799dd7566ff3c1b769339d1fdb",
+      "reference_sha256": "d9a0c8c2ecf8ec6e8e9144e92d9f50acd16b83799dd7566ff3c1b769339d1fdb",
+      "identical": true
+    },
+    {
+      "board": "minig",
+      "path": "upstream/modules/rtl/video/hdmi/dvi.vhd",
+      "sha256": "4bebbd12ec0dbf5336ccf2c7cc32aca6a779c492e884e80d23527c68d5d7ee07",
+      "reference_sha256": "4bebbd12ec0dbf5336ccf2c7cc32aca6a779c492e884e80d23527c68d5d7ee07",
+      "identical": true
+    },
+    {
+      "board": "minig",
+      "path": "upstream/modules/rtl/video/hdmi/dvi_encoder.vhd",
+      "sha256": "b202a25c2303c87387f9d7c88d53a1e78d042b296072859affec4877635514ba",
+      "reference_sha256": "b202a25c2303c87387f9d7c88d53a1e78d042b296072859affec4877635514ba",
+      "identical": true
+    },
+    {
+      "board": "minig",
+      "path": "upstream/modules/rtl/video/hdmi/pll_reset.v",
+      "sha256": "34dd9a46063b0ecdbd9a26b075dba6acf077aa3d82a347a1dc3bcd8052611279",
+      "reference_sha256": "430a9b60e3c778efa1ede91a8c019291b2bcc43cd94f50c6cbb724672489bd10",
+      "identical": false
+    },
+    {
+      "board": "minig",
+      "path": "upstream/modules/rtl/video/hdmi/zhdmi_audio_packetizer.vhd",
+      "sha256": "a7a5e9000263f4d421d6d4a3d88c1ef3506c8f9410ca2c51e569d5c570b5afef",
+      "reference_sha256": "a7a5e9000263f4d421d6d4a3d88c1ef3506c8f9410ca2c51e569d5c570b5afef",
+      "identical": true
+    },
+    {
+      "board": "minig",
+      "path": "upstream/modules/rtl/video/hdmi/zhdmi_island_encoder.vhd",
+      "sha256": "84cf5dc257819d7f47da1d5274e4c5a824b74394574377d51418aa55a22986fb",
+      "reference_sha256": "84cf5dc257819d7f47da1d5274e4c5a824b74394574377d51418aa55a22986fb",
+      "identical": true
+    },
+    {
+      "board": "minig",
+      "path": "upstream/modules/rtl/video/hdmi/zhdmi_packet_gen.vhd",
+      "sha256": "679ca545c5092c89859ce94f5252cafe8a3f2d1b714cbf095214a5f98ec7857c",
+      "reference_sha256": "679ca545c5092c89859ce94f5252cafe8a3f2d1b714cbf095214a5f98ec7857c",
+      "identical": true
+    },
+    {
+      "board": "minig",
+      "path": "upstream/modules/rtl/video/hdmi/zhdmi_signaling.vhd",
+      "sha256": "be9ac43438d3b0464c9a3392d553fe4b31e4ea5aa37b294a6ec18ffd4e14c44e",
+      "reference_sha256": "be9ac43438d3b0464c9a3392d553fe4b31e4ea5aa37b294a6ec18ffd4e14c44e",
+      "identical": true
+    },
+    {
+      "board": "minig",
+      "path": "upstream/modules/rtl/video/hdmi/zhdmi_tmds_encoder.vhd",
+      "sha256": "406e80fa735116e37109fe13fd55c4e32fd787f9f1ccc603d832bda7e3a0c2cb",
+      "reference_sha256": "406e80fa735116e37109fe13fd55c4e32fd787f9f1ccc603d832bda7e3a0c2cb",
+      "identical": true
+    },
+    {
+      "board": "minig",
+      "path": "upstream/modules/rtl/video/hdmi/zhdmi_tmds_serializer_spartan6.vhd",
+      "sha256": "2fac63ff3980ea7b90ebb2bc1f531caa530ac26973b3cb9c36dcaf87ef6b0d95",
+      "reference_sha256": "2fac63ff3980ea7b90ebb2bc1f531caa530ac26973b3cb9c36dcaf87ef6b0d95",
+      "identical": true
+    },
+    {
+      "board": "minig",
+      "path": "upstream/modules/rtl/video/hdmi/zhdmi_tx.vhd",
+      "sha256": "4fda2982207847a9bf9fa2fe41d048051fa7c9bad3c73d80eda9bf2f27e2302d",
+      "reference_sha256": "4fda2982207847a9bf9fa2fe41d048051fa7c9bad3c73d80eda9bf2f27e2302d",
+      "identical": true
+    },
+    {
+      "board": "minig",
+      "path": "upstream/tsconf/rtl/hdmi/hdmi_top.v",
+      "sha256": "f745899aa606822d7b7c80f57ce27ae4d8b3a1f41d955e8617b5654b264db81e",
+      "reference_sha256": "f745899aa606822d7b7c80f57ce27ae4d8b3a1f41d955e8617b5654b264db81e",
+      "identical": true
+    },
+    {
+      "board": "minig",
+      "path": "upstream/tsconf/rtl/hdmi/hdmi_pll.v",
+      "sha256": "c693ffa920165517cdb3ab1e1ab30be6558c5fbd67edcb0a01df6564a01df1d0",
+      "reference_sha256": "7a4eff5046e265b21bc02b61a6c53c1990db7d8c5acff32639468c5566bc404b",
+      "identical": false
+    },
+    {
+      "board": "minig",
+      "path": "upstream/tsconf/rtl/hdmi/freq_counter.vhd",
+      "sha256": "d9a0c8c2ecf8ec6e8e9144e92d9f50acd16b83799dd7566ff3c1b769339d1fdb",
+      "reference_sha256": "d9a0c8c2ecf8ec6e8e9144e92d9f50acd16b83799dd7566ff3c1b769339d1fdb",
+      "identical": true
+    }
+  ],
+  "differences": {
+    "sampler_clock_declaration": {
+      "reference": 28000000,
+      "baseconf": 28030303,
+      "physical_clock_hz": 28030303,
+      "minig": {
+        "nominal_rate": 48000,
+        "reference_divider": 583,
+        "baseconf_divider": 583,
+        "effective_rate_hz": 48079.421955403086
+      },
+      "mini": {
+        "nominal_rate": 44100,
+        "reference_divider": 634,
+        "baseconf_divider": 635,
+        "reference_effective_rate_hz": 44211.83438485804,
+        "baseconf_effective_rate_hz": 44142.209448818896
+      }
+    },
+    "audio_enable": "Reference ~dvi_only; BaseConf constant 1. Equivalent when reference outputs HDMI.",
+    "pll_reset": "BaseConf reset helper uses else-if to hold reset while requested; HDMI PLL controller defines startup and completes FT programming before release. No PCM-path modification.",
+    "reset_input": "Identical areset || kb_reset || hw_btn[0]",
+    "sample_format": "Identical signed 16-bit PCM shifted left eight bits into 24-bit HDMI words; no gain change or channel swap."
+  },
+  "results": {
+    "mini": {
+      "transport": {
+        "passed": true,
+        "board": "mini",
+        "audio_rate": 44100,
+        "manifest_sha256": "4f5c071208eeb15c5510f65a4bc25219ad118c97eeb5693784b518e5af84f5f7",
+        "testbench_sha256": "137065ab0120d4ffae2ebcd4728dd81ecc1503175f51cd1e84ceb458bddfdd27",
+        "log_sha256": "ca9bb1da0d855fda8b6ebcefea693dd36908ff1ed503b9475d7fbf57bbc6b4f5",
+        "coverage": "Real HDMI transport and vendor clock models; core/FT40/FT64/core; pixels and stereo samples at TX input; no electrical capture"
+      },
+      "packets": {
+        "passed": true,
+        "board": "mini",
+        "nominal_audio_rate": 44100,
+        "manifest_sha256": "4f5c071208eeb15c5510f65a4bc25219ad118c97eeb5693784b518e5af84f5f7",
+        "testbench_sha256": "f75abf7eab2baad12dcd2eaf97b143e6ad502fe7f1dab2080636b65002c24cc7",
+        "cases": [
+          {
+            "declared_clock": 28030303,
+            "checks": [
+              "PASS HDMI packets: rate=44100 declared_clock=28030303 raster=50 accepted=2709 delivered=2708 packets=2005 ACR=55 max_pending=3",
+              "PASS HDMI packets: rate=44100 declared_clock=28030303 raster=60 accepted=2218 delivered=2217 packets=1644 ACR=45 max_pending=3"
+            ],
+            "log_sha256": "153f610f9eedf052d5ce2cfb48d52fa8a38690a6f7816a48b31088b97ce38490"
+          },
+          {
+            "declared_clock": 28000000,
+            "checks": [
+              "PASS HDMI packets: rate=44100 declared_clock=28000000 raster=50 accepted=2713 delivered=2712 packets=2007 ACR=55 max_pending=3",
+              "PASS HDMI packets: rate=44100 declared_clock=28000000 raster=60 accepted=2221 delivered=2220 packets=1641 ACR=45 max_pending=3"
+            ],
+            "log_sha256": "2c7010ecd970cf97b2f322c09efcc2f53990a8e2c988c49cd2f5e6c26240010d"
+          }
+        ],
+        "coverage": "Actual ZX BaseConf raster at 50/60 Hz; signed stereo packet payload/order/parity, buffer capacity, ACR N/CTS, data-island clipping; BaseConf and reference sampler divisors.",
+        "limits": "Core-mode packet/signaling test; audio sampler stimulus modeled. Separate hdmi-test covers sampler CDC/PLL modes. No physical TMDS decoding or routed timing."
+      },
+      "production_manifest_matches_26102806": true
+    },
+    "minig": {
+      "transport": {
+        "passed": true,
+        "board": "minig",
+        "audio_rate": 48000,
+        "manifest_sha256": "0027551c89eedfd7e2292ca886ed5dce39a0647f72562c504e6d302bd43d82a9",
+        "testbench_sha256": "137065ab0120d4ffae2ebcd4728dd81ecc1503175f51cd1e84ceb458bddfdd27",
+        "log_sha256": "238a5e7325972903b96a1784899b16c5cf9fba6285bd6ad39d8d12147aedd3e5",
+        "coverage": "Real HDMI transport and vendor clock models; core/FT40/FT64/core; pixels and stereo samples at TX input; no electrical capture"
+      },
+      "packets": {
+        "passed": true,
+        "board": "minig",
+        "nominal_audio_rate": 48000,
+        "manifest_sha256": "0027551c89eedfd7e2292ca886ed5dce39a0647f72562c504e6d302bd43d82a9",
+        "testbench_sha256": "f75abf7eab2baad12dcd2eaf97b143e6ad502fe7f1dab2080636b65002c24cc7",
+        "cases": [
+          {
+            "declared_clock": 28030303,
+            "checks": [
+              "PASS HDMI packets: rate=48000 declared_clock=28030303 raster=50 accepted=2950 delivered=2949 packets=2015 ACR=61 max_pending=3",
+              "PASS HDMI packets: rate=48000 declared_clock=28030303 raster=60 accepted=2415 delivered=2414 packets=1649 ACR=50 max_pending=3"
+            ],
+            "log_sha256": "0d2967ad5fba9949f40c76594651f7b2b35467755618fc8c066eafaba1c1a0d3"
+          },
+          {
+            "declared_clock": 28000000,
+            "checks": [
+              "PASS HDMI packets: rate=48000 declared_clock=28000000 raster=50 accepted=2950 delivered=2949 packets=2015 ACR=61 max_pending=3",
+              "PASS HDMI packets: rate=48000 declared_clock=28000000 raster=60 accepted=2415 delivered=2414 packets=1649 ACR=50 max_pending=3"
+            ],
+            "log_sha256": "4cdcdaa391ba14f6d01cd3a0fd192be58dc210c83d7c54db45f7da80407cc308"
+          }
+        ],
+        "coverage": "Actual ZX BaseConf raster at 50/60 Hz; signed stereo packet payload/order/parity, buffer capacity, ACR N/CTS, data-island clipping; BaseConf and reference sampler divisors.",
+        "limits": "Core-mode packet/signaling test; audio sampler stimulus modeled. Separate hdmi-test covers sampler CDC/PLL modes. No physical TMDS decoding or routed timing."
+      },
+      "production_manifest_matches_26102806": true
+    }
+  },
+  "limits": [
+    "Source comparison uses supplied local TSConf, not an identified bitstream from the recording.",
+    "Existing transport test checks samples at TX input and real vendor clock models.",
+    "New packet test uses actual BaseConf rasters, modeled sampler cadence, real packet/signaling logic.",
+    "No physical TMDS decode, cable/receiver capture or new routed-timing result.",
+    "Tests do not resolve hardware AY distortion."
+  ]
+}

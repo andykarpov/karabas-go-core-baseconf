@@ -1,0 +1,125 @@
+{
+  "build": "26102801",
+  "date": "2026-10-28",
+  "target": "XC6SLX25-2-FTG256",
+  "manifest_sha256": "43c24774c79b80aca8beaff2eb6f14c577c3082e5ded9c446d03682e7ce38f63",
+  "bitstream_sha256": "dd2de4f76cb87c117a1216b924423f9dc37949b9f7fa3b40c4c61379869d446f",
+  "toolchain": "docker.i74.de:5000/xilinx-ise@sha256:9a12826e3c0696e9b855a669a1e0f7a04fdd180126c735d62d325dae13b769bf",
+  "timing_errors": 0,
+  "slice_luts": 9828,
+  "slice_registers": 5737,
+  "occupied_slices": 3352,
+  "available_slices": 3758,
+  "latches": 0,
+  "package_bytes": 1300227,
+  "hardware_status": "Copied to SD1 with existing OSD settings preserved; readback verified and live firmware lists 26102801. Physical boot/audio acceptance pending.",
+  "artifacts_sha256": {
+    "karabas_go.bit": "6dd4782f723ca59b67d50fef94566a6ec03d3d53a75c312381fa2aaf147c92d1",
+    "karabas_go.bin": "dd2de4f76cb87c117a1216b924423f9dc37949b9f7fa3b40c4c61379869d446f",
+    "baseconf.kg1": "abef39ec1b2db0e662879ffb18d8c4eebd871d8cb770fa8f49b6b9674f571df9",
+    "karabas_go.twr": "8c420bf8bd9ef7903d188f7fe34f6d4677ae83951bc67a5ce07405fc709eebd5",
+    "karabas_go_map.mrp": "5bad892ccfdcaf9ff9eca73260553260dc913f32cddbe3dc6774b0932da7e7ab",
+    "karabas_go.par": "a20dc3492e828bf73effd7955974ec50f87cb90651c13d09a3dae97b3ea658c3",
+    "manifest.json": "43c24774c79b80aca8beaff2eb6f14c577c3082e5ded9c446d03682e7ce38f63",
+    "ise-completed.json": "8efcad45b2e45adfa34bd08233ee91fd9d21c576a3dfc2aa539684475e0dfbb9"
+  },
+  "constraint_summaries": [
+    {
+      "constraint": "TS_CLK_50MHZ = PERIOD TIMEGRP \"CLK_50MHZ\" 20 ns HIGH 50%; For more information, see Period Analysis in the Timing Closure User Guide (UG612).",
+      "minimum_reported_slack_ns": 10.84
+    },
+    {
+      "constraint": "TS_CLK_MCU = PERIOD TIMEGRP \"TG_CLK_MCU\" 16 MHz HIGH 50%; For more information, see Period Analysis in the Timing Closure User Guide (UG612).",
+      "minimum_reported_slack_ns": 25.349
+    },
+    {
+      "constraint": "TS_MCU_TO_BUS = MAXDELAY FROM TIMEGRP \"TG_CLK_MCU\" TO TIMEGRP \"TG_CLK_BUS\" 31.25 ns DATAPATHONLY; For more information, see From:To (Multicycle) Analysis in the Timing Closure User Guide (UG612).",
+      "minimum_reported_slack_ns": 22.373
+    },
+    {
+      "constraint": "TS_BUS_TO_MCU = MAXDELAY FROM TIMEGRP \"TG_CLK_BUS\" TO TIMEGRP \"TG_CLK_MCU\" 31.25 ns DATAPATHONLY; For more information, see From:To (Multicycle) Analysis in the Timing Closure User Guide (UG612).",
+      "minimum_reported_slack_ns": 22.138
+    },
+    {
+      "constraint": "TS_BUS_TO_CLK8 = MAXDELAY FROM TIMEGRP \"TG_CLK_BUS\" TO TIMEGRP \"TG_CLK_8\" 35 ns DATAPATHONLY; For more information, see From:To (Multicycle) Analysis in the Timing Closure User Guide (UG612).",
+      "minimum_reported_slack_ns": 29.07
+    },
+    {
+      "constraint": "TS_CLK8_TO_BUS = MAXDELAY FROM TIMEGRP \"TG_CLK_8\" TO TIMEGRP \"TG_CLK_BUS\" 35 ns DATAPATHONLY; For more information, see From:To (Multicycle) Analysis in the Timing Closure User Guide (UG612).",
+      "minimum_reported_slack_ns": 17.879
+    },
+    {
+      "constraint": "TS_SRAM_OUT = MAXDELAY FROM TIMEGRP \"FFS\" TO TIMEGRP \"TG_SRAM_OUT\" 12 ns DATAPATHONLY; For more information, see From:To (Multicycle) Analysis in the Timing Closure User Guide (UG612).",
+      "minimum_reported_slack_ns": 2.7
+    },
+    {
+      "constraint": "TS_SRAM_IN = MAXDELAY FROM TIMEGRP \"TG_SRAM_IN\" TO TIMEGRP \"FFS\" 12 ns DATAPATHONLY; For more information, see From:To (Multicycle) Analysis in the Timing Closure User Guide (UG612).",
+      "minimum_reported_slack_ns": 8.379
+    },
+    {
+      "constraint": "TS_SDR_OUT = MAXDELAY FROM TIMEGRP \"FFS\" TO TIMEGRP \"TG_SDR_OUT\" 8 ns DATAPATHONLY; For more information, see From:To (Multicycle) Analysis in the Timing Closure User Guide (UG612).",
+      "minimum_reported_slack_ns": 1.41
+    },
+    {
+      "constraint": "TS_SDR_IN = MAXDELAY FROM TIMEGRP \"TG_SDR_IN\" TO TIMEGRP \"FFS\" 4 ns DATAPATHONLY; For more information, see From:To (Multicycle) Analysis in the Timing Closure User Guide (UG612).",
+      "minimum_reported_slack_ns": 0.321
+    },
+    {
+      "constraint": "TS_pll_clkout_3_ = PERIOD TIMEGRP \"pll_clkout_3_\" TS_CLK_50MHZ / 0.24025974 HIGH 50%; For more information, see Period Analysis in the Timing Closure User Guide (UG612).",
+      "minimum_reported_slack_ns": 80.577
+    },
+    {
+      "constraint": "TS_pll_clkout_1_ = PERIOD TIMEGRP \"pll_clkout_1_\" TS_CLK_50MHZ / 0.159482759 HIGH 50%; For more information, see Period Analysis in the Timing Closure User Guide (UG612).",
+      "minimum_reported_slack_ns": 60.081
+    },
+    {
+      "constraint": "TS_pll_clkout_0_ = PERIOD TIMEGRP \"pll_clkout_0_\" TS_CLK_50MHZ / 1.68181818 HIGH 50%; For more information, see Period Analysis in the Timing Closure User Guide (UG612).",
+      "minimum_reported_slack_ns": 1.051
+    },
+    {
+      "constraint": "TS_pll_clk_2_ = PERIOD TIMEGRP \"pll_clk_2_\" TS_CLK_50MHZ / 0.560606061 HIGH 50%; For more information, see Period Analysis in the Timing Closure User Guide (UG612).",
+      "minimum_reported_slack_ns": 3.307
+    },
+    {
+      "constraint": "COMP \"MCU_MOSI\" OFFSET = IN 16 ns VALID 32 ns BEFORE COMP \"MCU_SCK\" \"RISING\"; For more information, see Offset In Analysis in the Timing Closure User Guide (UG612).",
+      "minimum_reported_slack_ns": 14.762
+    },
+    {
+      "constraint": "COMP \"MCU_MISO\" OFFSET = OUT 25 ns AFTER COMP \"MCU_SCK\" \"FALLING\"; For more information, see Offset Out Analysis in the Timing Closure User Guide (UG612).",
+      "minimum_reported_slack_ns": 5.987
+    },
+    {
+      "constraint": "Unconstrained OFFSET IN BEFORE analysis for clock \"clk_bus\"",
+      "minimum_reported_slack_ns": null
+    },
+    {
+      "constraint": "Unconstrained OFFSET OUT AFTER analysis for clock \"clk_bus\"",
+      "minimum_reported_slack_ns": null
+    },
+    {
+      "constraint": "Unconstrained OFFSET IN BEFORE analysis for clock \"pll_clk<1>\"",
+      "minimum_reported_slack_ns": null
+    },
+    {
+      "constraint": "Unconstrained OFFSET OUT AFTER analysis for clock \"pll_clk<1>\"",
+      "minimum_reported_slack_ns": null
+    },
+    {
+      "constraint": "Unconstrained OFFSET IN BEFORE analysis for clock \"MCU_SCK_IBUF_BUFG\"",
+      "minimum_reported_slack_ns": null
+    },
+    {
+      "constraint": "Unconstrained OFFSET OUT AFTER analysis for clock \"pll_clk<0>\"",
+      "minimum_reported_slack_ns": null
+    },
+    {
+      "constraint": "Unconstrained OFFSET OUT AFTER analysis for clock \"pll_clk<3>\"",
+      "minimum_reported_slack_ns": null
+    },
+    {
+      "constraint": "Unconstrained path analysis",
+      "minimum_reported_slack_ns": null
+    }
+  ],
+  "installed_package_sha256": "b3f3ffc0cac1dc70ee7c6c7e490e3f26c323540e0a17da66bbb14c62e125639b"
+}

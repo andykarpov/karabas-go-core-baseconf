@@ -1,0 +1,3 @@
+User reports noisy AY sound on kg2 and kg3, through HDMI and analog output, and requests comparison with TSConf under shared external/. The user has no device locally and is waiting for a remote tester; the exact program/tune is unknown. Additional report: GS plays correctly.
+
+Compared pinned audio sources and board outputs, added real-CPU AY/YM regression, retained production RTL/packages unchanged because the complete reported symptom has not been reproduced or traced to a confirmed defect. See docs/ay-audio.md and docs/evidence/ay-noise-investigation.json.

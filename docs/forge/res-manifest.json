@@ -1,0 +1,72 @@
+{
+  "resources": [
+    {
+      "path": "res/roms/baseconf.rom",
+      "sha256": "f2e94dfcacf67a76a3999f56bd3740e69f65e2362d4783b5e7d248e650bed560",
+      "source": {
+        "repository": "https://github.com/aaydev/zxevo.pentevo.git",
+        "revision": "ec1405e35edc8632b273384aaa9067aae4ce1c7c",
+        "path": "rom/zxevo.rom"
+      },
+      "license": "Original upstream terms; see docs/attribution.md. Not relicensed by this core."
+    },
+    {
+      "path": "res/roms/gs105b.rom",
+      "sha256": "9948ec9617365fb1913b0c56e00d5f6b6a36084875cca16debae270a4c6e6adf",
+      "source": {
+        "repository": "https://github.com/andykarpov/karabas-go-core-tsconf.git",
+        "revision": "edb2060c36164946622b71847e598ff01e6039f8",
+        "path": "src/roms/gs105b.rom"
+      },
+      "license": "Original upstream terms; see docs/attribution.md. Not relicensed by this core."
+    },
+    {
+      "path": "res/fonts/atm.fnt",
+      "sha256": "d52eb69704c009d21e7e62211846c15459fa08db9298dde044ab77ca547cbb8f",
+      "source": {
+        "repository": "https://github.com/aaydev/zxevo.pentevo.git",
+        "revision": "ec1405e35edc8632b273384aaa9067aae4ce1c7c",
+        "path": "fpga/baseconf/trunk/video/atm.fnt"
+      },
+      "license": "Original upstream terms; see docs/attribution.md. Not relicensed by this core."
+    },
+    {
+      "path": "res/microcode/vg93-microcode-rom.hex",
+      "sha256": "e5235821e8f9737b8ae626db7734cb32e7456f524aa67567b9625de6a4cd56a0",
+      "source": {
+        "repository": "https://github.com/andykarpov/karabas-go-core-tsconf.git",
+        "revision": "edb2060c36164946622b71847e598ff01e6039f8",
+        "path": "src/rtl/vg93/vg93-microcode-rom.hex"
+      },
+      "license": "Original upstream terms; see docs/attribution.md. Not relicensed by this core."
+    },
+    {
+      "path": "res/media/external.mod",
+      "sha256": "522ff91f941db4acc031ebaab0866c035e85c07966b0d50bd01f09c9ce1768ad",
+      "source": {
+        "repository": "https://github.com/lordamot/retro-game-zxevo-dune.git",
+        "revision": "1163ae43edde58098af72597f9443642974a08be",
+        "path": "src/res/external.mod"
+      },
+      "license": "Original upstream terms; see docs/attribution.md. Not relicensed by this core."
+    },
+    {
+      "path": "res/media/dune/DUNE.DAT",
+      "sha256": "6ecf9d68552e789087dcaa0c56efd2cbd76f7ce8730b7138674b03a9e141f3f7",
+      "source": {
+        "path": "external/dune/DUNE.DAT",
+        "origin": "User-supplied local test media; upstream revision not established"
+      },
+      "license": "Supplied reference asset; not relicensed by this core."
+    },
+    {
+      "path": "res/media/dune/dune.trd",
+      "sha256": "18edf2baf896eb5b65c3b387836fba0b1429c86fd72e872c0d46b95c1dd091a4",
+      "source": {
+        "path": "external/dune/dune.trd",
+        "origin": "User-supplied local test media; upstream revision not established"
+      },
+      "license": "Supplied reference asset; not relicensed by this core."
+    }
+  ]
+}

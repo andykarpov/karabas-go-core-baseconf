@@ -1,0 +1,19 @@
+{
+  "reported_build": "26102802",
+  "osd_physical_acceptance": "User: OSD good!",
+  "boot_report": "Gluk instead of ERS; cause not yet confirmed",
+  "changed_implementation_inputs": [
+    "core.json",
+    "rtl/baseconf_storage.v",
+    "rtl/karabas_go_top.v",
+    "upstream/modules/rtl/video/osd/kg_osd_overlay.v"
+  ],
+  "baseconf_rom_unchanged": true,
+  "baseconf_rom_sha256": "f2e94dfcacf67a76a3999f56bd3740e69f65e2362d4783b5e7d248e650bed560",
+  "eeprom_bank": 1,
+  "rtc_mode": 2,
+  "reset_target_register": "CMOS ED bits 1:0: 0 ERS, 1 Gluk, 2 ProfROM, 3 custom",
+  "hypothesis": "Saved reset target changed; forwarded Menu+G can change it in ERS. Not established as this incident cause.",
+  "hardware_state_read": false,
+  "core_modified_or_replaced": false
+}

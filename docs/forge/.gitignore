@@ -1,0 +1,10 @@
+/bin/*
+!/bin/.noempty
+/build/*
+!/build/.noempty
+/external/*
+!/external/.noempty
+/tmp/*
+!/tmp/.noempty
+__pycache__/
+*.pyc

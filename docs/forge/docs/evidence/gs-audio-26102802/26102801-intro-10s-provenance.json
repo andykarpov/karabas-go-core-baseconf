@@ -1,0 +1,7 @@
+{
+  "source": "build/gs-audio/26102801-verified2",
+  "seconds": 10,
+  "description": "Exact-length playback excerpt after stock memory/warm-reset and byte-for-byte upload checks; no claim that the longer source run finished.",
+  "source_run_finished": false,
+  "wav_sha256": "bf0b7112e94c6267567e610dd9191d5c80a741433c6b2255a4bae4f81513e2cb"
+}

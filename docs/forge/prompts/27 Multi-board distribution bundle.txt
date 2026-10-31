@@ -1,0 +1,4 @@
+2026-10-31
+User: lets do the same for zx evo base core also
+
+Scope: reproduce the UKNC delivery format for BaseConf: KG1, KG2, KG3, matching RP2040 UF2, media, checksums and installation/rebuild instructions. No board flashing or new AY fix requested.

@@ -1,0 +1,2 @@
+PASS hid: MCU SPI 16MHz, PS2 make/break FIFO/reset, reserved shortcuts isolated, USB matrix, two OSD-selectable joysticks, mouse, OSD command
+/var/www/own/karabas-forge/tests/tb_hid.v:80: $finish called at 91152700 (1ps)

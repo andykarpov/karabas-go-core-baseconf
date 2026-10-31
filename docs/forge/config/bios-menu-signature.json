@@ -1,0 +1,25 @@
+{
+  "rom_sha256": "f2e94dfcacf67a76a3999f56bd3740e69f65e2362d4783b5e7d248e650bed560",
+  "rectangles": [
+    [
+      0,
+      0,
+      32,
+      3
+    ],
+    [
+      17,
+      6,
+      12,
+      16
+    ]
+  ],
+  "signature_sha256": "181516f3511dccf571c92aa518da79f6ecbec84f77eb6739675fa6222d8cdb6b",
+  "visible_content": [
+    "EVO Reset Service V0.61",
+    "ZX-Evolution 4096 Kb",
+    "www.nedopc.com",
+    "Main menu, initial TR-DOS boot selection"
+  ],
+  "provenance": "Visually reviewed SRAM screen after 3500 ms of unmodified stock BIOS execution on 2026-10-27. Coordinates are x,y,width,height in 8x8 cells. Excludes dynamic clock, animation and device-status text. This is not captured FPGA video."
+}
