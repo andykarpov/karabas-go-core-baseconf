@@ -200,6 +200,11 @@ module baseconf
     wire [7:0] fdc_data, ts_data, gs_data;
     wire fdc_oe, fdc_oe_n, gs_oe;
     wire ts_read = !iorq_n && !rd_n && a[15] && a[7:0]==8'hfd;
+    // used by the CPU below, declared here: without `default_nettype none from the file before (hdmi_top.v
+    // of TS-Conf) XST took them as implicit nets and failed on their declarations
+    wire zpos, zneg;
+    wire rst_n; // global reset
+    wire gen_nmi;
     assign cpu_di = d_pre_out;
     t80pa cpu(.RESET_n(rst_n), .CLK(fclk), .CEN_p(zpos), .CEN_n(zneg),
         .WAIT_n(wait_n && (!rom_req || rom_done)), .INT_n(int_n),
@@ -230,10 +235,6 @@ module baseconf
 
 
 	wire zclk; // z80 clock for short
-
-	wire zpos,zneg;
-
-	wire rst_n; // global reset
 
 	wire rrdy;
 	wire [15:0] rddata;
@@ -283,7 +284,6 @@ module baseconf
 	wire [3:0] fdd_mask;
 
 	// nmi signals
-	wire gen_nmi;
 	wire clr_nmi;
 	wire in_nmi;
 	wire [1:0] set_nmi;

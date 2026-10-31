@@ -229,10 +229,11 @@ TIMESPEC "TS_CLK_50MHZ" = PERIOD "CLK_50MHZ" 20 ns HIGH 50%;
 NET "clk_bus" TNM_NET = "TG_CLK_BUS";
 NET "pll_clk<1>" TNM_NET = "TG_CLK_8";
 NET "MCU_SCK" TNM_NET = "TG_CLK_MCU";
-TIMESPEC "TS_CLK_MCU" = PERIOD "TG_CLK_MCU" 16 MHz;
+# Classic frames at 16 MHz, bursts up to 32 MHz (BURST_MAX_MHZ of kg_mcu), as in tsconf.
+TIMESPEC "TS_CLK_MCU" = PERIOD "TG_CLK_MCU" 32 MHz;
 # SPI mode 0: MOSI changes on falling SCK; sample on rising SCK.
-# 31.25 ns half-cycle leaves 15.25 ns for MCU/PCB skew around a 16 ns window.
-NET "MCU_MOSI" OFFSET = IN 16 ns VALID 32 ns BEFORE "MCU_SCK" RISING;
+# 15.6 ns half-cycle at 32 MHz leaves 7.6 ns for MCU/PCB skew around an 8 ns window.
+NET "MCU_MOSI" OFFSET = IN 8 ns VALID 16 ns BEFORE "MCU_SCK" RISING;
 # Reply changes after falling SCK; reserve 6.25 ns for PCB/MCU setup.
 NET "MCU_MISO" OFFSET = OUT 25 ns AFTER "MCU_SCK" FALLING;
 TIMESPEC "TS_MCU_TO_BUS" = FROM "TG_CLK_MCU" TO "TG_CLK_BUS" 31.25 ns DATAPATHONLY;

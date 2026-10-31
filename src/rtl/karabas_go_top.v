@@ -402,9 +402,10 @@ assign MCU_SPI_IO[0] = mcu_burst_ready;
 // MCU_SPI_IO[1] is input-only (burst chip select), so it has no FPGA driver.
 
 // the tsconf configuration of kg_mcu: RTC (all registers below F0 sent, D too), USB UART with the
-// EVO RS232 registers, FT812 chip select passed through; no matrix, debug, file loader, image mounter
+// EVO RS232 registers, FT812 chip select passed through; no matrix, debug, file loader, image mounter.
+// Bursts at the link clock (0 = 16 MHz), as in tsconf: the queue of baseconf_storage drains faster.
 kg_mcu #(
-	.BURST_MAX_MHZ(1),
+	.BURST_MAX_MHZ(0),
 	.CS_FILTER(3),
 	.ENABLE_RTC(1),
 	.RTC_SKIP_0D(0),

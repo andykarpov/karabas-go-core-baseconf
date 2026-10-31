@@ -349,7 +349,7 @@ BUFG bufg_ft_clk(.I(ft_clk_ibufg), .O(ft_clk_int));
 
 // hdmi
 wire [7:0] hdmi_freq;
-hdmi_top #(.SAMPLERATE(44100), .CLKRATE(28030303)) hdmi_top(
+kg_hdmi_ft #(.SAMPLERATE(44100), .CLKRATE(28030303), .REF_MHZ(8'd28)) hdmi_top(
 	.clk				(ft_clk_int),
 	.clk_ref			(clk_bus),
 	.clk_ref_pll	(clk_bus_pll),

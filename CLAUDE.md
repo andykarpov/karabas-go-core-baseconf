@@ -10,9 +10,9 @@ Keep the authorship: `README.md` / `README.ru.md` name the author of the port an
 
 ## Related repositories (siblings in `..`)
 
-- `karabas-go-modules` (submodule `modules/`, master): the shared modules come from it unchanged (`kg_osd_overlay` with `V_OFFSET_IN`, modules #19). Only `src/rtl/hdmi/pll_reset.v` is still a local copy (the held reset fix, Mini boards) until the fix is in modules.
-- `karabas-go-core-tsconf`: the origin of `src/rtl/{T80,sound,vg93,mcu,hdmi}` and of the board wrappers.
-- `karabas-go-firmware`: no firmware change is needed (EVO RTC mode `rtc_mode` 2, burst caps with `BURST_MAX_MHZ` 1 on Go / Mini G, 0 on Mini).
+- `karabas-go-modules` (submodule `modules/`, master): the shared modules come from it unchanged (`kg_osd_overlay` with `V_OFFSET_IN`, modules #19; the HDMI of the Mini boards `kg_hdmi_ft`, modules #20).
+- `karabas-go-core-tsconf`: the origin of `src/rtl/{T80,sound,vg93,mcu}` and of the board wrappers.
+- `karabas-go-firmware`: no firmware change is needed (EVO RTC mode `rtc_mode` 2, burst caps with `BURST_MAX_MHZ` 32 on Mini G, 0 (16 MHz) on Go / Mini, as in TS-Conf: the 16 entry ROM queue of `baseconf_storage` drains faster than a burst fills it, `BURST_READY` stays 1).
 - `karabas-go-tools`: `make_core.py` (`src/make_core.py` is a symlink to `../../karabas-go-tools/make_core/make_core.py`) packs `core.json` (Go), `core_mini.json`, `core_minig.json` into `baseconf.kg1` / `kg2` / `kg3`.
 
 ## Build

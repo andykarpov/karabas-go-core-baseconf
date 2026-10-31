@@ -10,8 +10,7 @@ core is on karabas-go-modules master and has its own board tops (below, "Since t
 | `rtl/baseconf.v`, `rtl/karabas_*_top.v` | the port: BaseConf `top.v` and the TS-Conf board wrappers, adapted (`HW_ID1` Go, `HW_ID2` Mini, `HW_ID2 HW_ID3` Mini G, in the `.xst`) |
 | `rtl/baseconf_sram.v`, `rtl/baseconf_sdram.v`, `rtl/baseconf_storage.v`, `rtl/baseconf_keyboard_filter.v`, `rtl/video_fontrom.v` | the port (new) |
 | `rtl/zxevo/` | [zxevo.pentevo](https://github.com/aaydev/zxevo.pentevo) `ec1405e`, `fpga/baseconf/trunk` (`z80`, `mem`, `video`, `spihub`, `common`, `dram`) |
-| `rtl/T80`, `rtl/sound`, `rtl/vg93`, `rtl/mcu`, `rtl/hdmi` | [karabas-go-core-tsconf](https://github.com/andykarpov/karabas-go-core-tsconf) `edb2060`, `src/rtl` |
-| `rtl/hdmi/pll_reset.v` | karabas-go-modules `cff5087` `rtl/video/hdmi`, changed (below) |
+| `rtl/T80`, `rtl/sound`, `rtl/vg93`, `rtl/mcu` | [karabas-go-core-tsconf](https://github.com/andykarpov/karabas-go-core-tsconf) `edb2060`, `src/rtl` |
 | `rtl/adc` | karabas-go-core-tsconf `d728bcc`, `src/rtl/adc` (the PCM1808 ADC, the I2S of the ESP32) |
 | `../modules` | [karabas-go-modules](https://github.com/andykarpov/karabas-go-modules) master, unchanged |
 | `roms/baseconf.rom`, `atm_font.hex` | zxevo.pentevo `rom/zxevo.rom`, `fpga/baseconf/trunk/video/atm.fnt` (as hex) |
@@ -46,11 +45,8 @@ cp1251 comments are UTF-8.
 - `vg93/hrdy_fdc.v`: INIT values of the free-running counters. `vg93/vg93_host_bus.v`: the register
   address is taken with the written data (a 14 MHz CPU changes it before the 8 MHz side sees the end
   of the write).
-- `hdmi/hdmi_pll.v` (Mini boards): one whole DCM programming per measured FT frequency, the reset
-  held over it.
 - `kg_osd_overlay.v`: the vertical offset of the OSD is an input (`v_offset`: 50 / 60 Hz); now
   `V_OFFSET_IN` of karabas-go-modules (#19).
-- `rtl/hdmi/pll_reset.v` (Mini boards): a held reset request is not overridden by the stretch counter.
 
 ## Since the move
 
@@ -64,3 +60,9 @@ cp1251 comments are UTF-8.
   of the Mini at the level of TS-Conf (a quarter of full scale), `audio_en` of HDMI off with the
   DVI-only setting of the firmware.
 - `src/Makefile` of the other cores (cost table 2 on every board).
+- The HDMI of the Mini boards (the core or the FT812) is `kg_hdmi_ft` of karabas-go-modules
+  `rtl/video/hdmi` (#20: the `hdmi_top` / `hdmi_pll` of TS-Conf and menu with the held reset fix
+  of `pll_reset.v`); the local `rtl/hdmi` is gone.
+- ROM bursts of the MCU at 32 MHz on the Mini G, 16 MHz on Go / Mini (`BURST_MAX_MHZ` of `kg_mcu`,
+  1 MHz before): the queue of `baseconf_storage` writes a byte into the SDRAM faster than a burst
+  brings one, so `BURST_READY` stays 1. The ROMs of the Mini G load in 0.56 s (5.7 s before).
