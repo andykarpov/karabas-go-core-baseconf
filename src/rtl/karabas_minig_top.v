@@ -358,7 +358,7 @@ BUFG bufg_ft_clk(.I(ft_clk_ibufg), .O(ft_clk_int));
 
 // hdmi
 wire [7:0] hdmi_freq;
-hdmi_top #(.SAMPLERATE(48000), .CLKRATE(28030303)) hdmi_top(
+kg_hdmi_ft #(.SAMPLERATE(48000), .CLKRATE(28030303), .REF_MHZ(8'd28)) hdmi_top(
 	.clk				(ft_clk_int),
 	.clk_ref			(clk_bus),
 	.clk_ref_pll	(clk_bus_pll),
@@ -443,10 +443,11 @@ assign MCU_IO[5:2] = 4'bzzzz;
 
 // the configuration of kg_mcu: RTC (all registers below F0 sent, D too), USB UART with the EVO RS232 registers,
 // FT812 chip select passed through; no matrix, debug, file loader, image mounter.
-// Bursts at 1 MHz: the ROM loader of baseconf_sdram.v takes them through a short queue into the SDRAM
-// (docs/forge/docs/architecture.md, Memory and timing).
+// Bursts up to 32 MHz, as in tsconf: a byte every 8 SCK (250 ns) goes through the 16 entry queue of
+// baseconf_storage into the SDRAM, which takes one in ~140 ns (a refresh ~85 ns more): the queue never fills, so
+// BURST_READY stays 1 (kg_mcu_link).
 kg_mcu #(
-	.BURST_MAX_MHZ(1),
+	.BURST_MAX_MHZ(32),
 	.CS_FILTER(3),
 	.ENABLE_RTC(1),
 	.RTC_SKIP_0D(0),
