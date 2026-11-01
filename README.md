@@ -95,6 +95,11 @@ Build **26110105**: the bitstreams of 26110104 with the ERS 0.61.01 FE (pentevo 
 12.09.2026: the RAM disk is no longer damaged by the info of the main screen, the autoboot modes can be
 cycled with the mouse, SNA in the list of the file extensions). Not yet checked on hardware.
 
+Build **26110106**: the same with one byte of the ERS changed (`roms/baseconf.rom` 0x581E8, `VERSION_`
+of `page5/source/rst8service.a80`: `JR Z` -> `JR`): the ERS no longer probes `FDD_EMU_PORT` and no longer
+prints "Incorrect FPGA zxevo_fw.bin" at the bottom of the main screen (the FDD emulation of the AVR is
+not used here, the VG93 is in the FPGA).
+
 ## Building
 
 ISE 14.7 (`ISE_SETTINGS`, default `/opt/Xilinx/14.7/ISE_DS/settings64.sh`), from `src/`:
