@@ -1,7 +1,7 @@
 {
   "id": "baseconf",
   "name": "ZX Evolution BaseConf",
-  "build": "26110103",
+  "build": "26110104",
   "bitstream": "karabas_minig.bin",
   "visible": true,
   "type": "osd",
@@ -27,7 +27,8 @@
         "On"
       ],
       "default": 1,
-      "hotkey": "Menu+F6"
+      "hotkey": "Menu+F6",
+      "page": 1
     },
     {
       "type": "S",
@@ -38,7 +39,8 @@
         "Mono"
       ],
       "default": 1,
-      "hotkey": "Menu+F7"
+      "hotkey": "Menu+F7",
+      "page": 1
     },
     {
       "type": "S",
@@ -48,7 +50,8 @@
         "YM2149F"
       ],
       "default": 0,
-      "hotkey": "Menu+F8"
+      "hotkey": "Menu+F8",
+      "page": 1
     },
     {
       "type": "S",
@@ -57,7 +60,8 @@
         "Off",
         "On"
       ],
-      "default": 1
+      "default": 1,
+      "page": 1
     },
     {
       "type": "S",
@@ -66,7 +70,8 @@
         "Off",
         "On"
       ],
-      "default": 1
+      "default": 1,
+      "page": 1
     },
     {
       "type": "S",
@@ -76,6 +81,36 @@
         "On"
       ],
       "default": 1
+    },
+    {
+      "type": "S",
+      "name": "HDD",
+      "options": [
+        "CF card",
+        "Image"
+      ],
+      "default": 0,
+      "hotkey": "Menu+N",
+      "page": 2
+    },
+    {
+      "type": "F",
+      "name": "HDF0",
+      "slot": 4,
+      "extensions": ".hdf .img .vhd",
+      "hotkey": "Menu+F5",
+      "page": 2,
+      "enable_if": {
+        "item": "HDD",
+        "value": "Image"
+      }
+    },
+    {
+      "type": "F",
+      "name": "HDF1",
+      "slot": 5,
+      "extensions": ".hdf .img .vhd",
+      "page": 2
     },
     {
       "type": "S",
@@ -90,7 +125,8 @@
         "SEGA"
       ],
       "default": 0,
-      "hotkey": "Menu+J"
+      "hotkey": "Menu+J",
+      "page": 3
     },
     {
       "type": "S",
@@ -105,7 +141,8 @@
         "SEGA"
       ],
       "default": 1,
-      "hotkey": "Menu+R"
+      "hotkey": "Menu+R",
+      "page": 3
     },
     {
       "type": "S",
@@ -140,6 +177,25 @@
       "options": null,
       "default": 0,
       "hotkey": "F12"
+    },
+    {
+      "type": "-",
+      "name": "-"
+    },
+    {
+      "type": "M",
+      "name": "Sound",
+      "open": 1
+    },
+    {
+      "type": "M",
+      "name": "Disks",
+      "open": 2
+    },
+    {
+      "type": "M",
+      "name": "Input",
+      "open": 3
     }
   ],
   "spi_freq": 16

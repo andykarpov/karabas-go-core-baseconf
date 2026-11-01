@@ -55,8 +55,14 @@ shipped with the TS-Conf core) and keep their original terms: they are not relic
 
 ## Using it
 
-Copy the core file of your board to the SD card (SD1). It works with the current firmware of the
-board (no special firmware is needed). The OSD opens with Menu (Win) + Esc.
+Copy the core file of your board to the SD card (SD1). The OSD opens with Menu (Win) + Esc; its
+pages Sound, Disks and Input need firmware 26103113 or newer (older firmware shows one flat list),
+the core and firmware builds in the ERS need firmware 26110114 or newer.
+
+Virtual hard disks: in the OSD page Disks set **HDD** to *Image* and choose the image (`.hdf`, `.img`,
+`.vhd`, an MBR with a FAT partition) as **HDF0** (IDE master; with HDD = CF card the CF card is the
+master), **HDF1** is the slave. The ERS keeps the list of the found partitions in RAM: after changing
+the images power the board off and on (a reset or a core reload keeps the RAM).
 
 | Keys | Action |
 |---|---|
@@ -69,6 +75,8 @@ board (no special firmware is needed). The OSD opens with Menu (Win) + Esc.
 | F11 | NMI |
 | F12 | reset (the core and GS) |
 | OSD only | SAA1099, OPL2, ZiFi RS232: on / off (Off also mutes the device / frees its ports) |
+| Menu+N | HDD: CF card / image (IDE master) |
+| Menu+F5 | choose the image HDF0 |
 
 Shift, Ctrl and keys held over F12 choose the start of the Evo BIOS (Shift: BASIC 128, Ctrl: BASIC 48,
 S: CMOS setup, 0: clears the boot choice, ...): [docs/hotkeys.md](docs/hotkeys.md). The joystick
@@ -76,11 +84,12 @@ mappings: [docs/joysticks.md](docs/joysticks.md).
 
 ## State
 
-Build **26110103**: on Mini G hardware the BIOS, the resets (F12, 0+F12, after games), the RS232 of the
-Evo, SAA1099, OPL2 and the version strings in ERS are checked; the physical floppy drives work on the
-Go (26110102: write, read, format, also in turbo). Open ([docs/problems.md](docs/problems.md)): CF
-cards are not tested on hardware, the virtual drives of the AVR are not there (virtual HDD images are
-planned), TS ZiFi (ESP8266) is not tested. All three builds use 99 % of the slices.
+Build **26110104**: on Mini G hardware the BIOS, the resets (F12, 0+F12, after games), the RS232 of the
+Evo, SAA1099, OPL2, the version strings in ERS and the virtual HDD (ERS device detector, FAT32 browser,
+a game loaded from the image) are checked; the physical floppy drives work on the Go (26110102: write,
+read, format, also in turbo). Open ([docs/problems.md](docs/problems.md)): CF cards are not tested on
+hardware, TS ZiFi (ESP8266) is not tested, Go / Mini not tested on hardware since 26110103. All three
+builds use 99 % of the slices.
 
 ## Building
 

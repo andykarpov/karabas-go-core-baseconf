@@ -28,6 +28,8 @@ Use these while the core is running. For a Win combination, hold Win, press the 
 | F11 | Request NMI; behavior depends on the running software |
 | F12 | Reset the core and GS together |
 
+The OSD has the pages **Sound** (Covox, PSG Mix, PSG Type, SAA1099, OPL2), **Disks** (HDD, HDF0, HDF1) and **Input** (the joysticks); the main page keeps ZiFi RS232, VGA Hsync, Pause, NMI and Reset. **Win+N** switches HDD (the IDE master) between the CF card and the image HDF0, **Win+F5** chooses the image HDF0.
+
 OSD only (no shortcut): **SAA1099**, **OPL2** and **ZiFi RS232** (TS ZiFi on the ESP8266, the RS232 ports of TS-Conf and of the Evo on the USB serial port), On by default. Off mutes the device and frees its ports.
 
 Joystick choices are Kempston, Sinclair1, Sinclair2, Cursor, QAOPM, QAOPS and SEGA. See [joystick setup and mappings](joysticks.md).

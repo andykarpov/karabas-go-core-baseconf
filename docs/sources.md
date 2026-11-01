@@ -42,7 +42,8 @@ cp1251 comments are UTF-8.
 
 - `sound/gs.v`: a `MEM_WAIT_n` input (GS memory in SDRAM / block RAM), the bank of the address
   valid at once.
-- `mcu/hid_parser.vhd`: joystick mode 6 SEGA (all twelve buttons as Spectrum keys).
+- `mcu/hid_parser.vhd`: joystick mode 6 SEGA (all twelve buttons as Spectrum keys); the six key slots are decoded
+  one per clock by one case (as in the spec256 core), the matrix taken every 6 clocks: 2168 -> 1085 LUT.
 - `mcu/hid_parser.vhd`, the RTC registers of the ZX Evolution AVR: reg D bit 6 = F12 held; F0..FF with the
   EEPROM flag (reg C bit 7) off, its power-up state as on the AVR: a write sets the type (not sent to the mcu),
   a read gives the version string of the type (0 = the core build id, 1 = the firmware build id, from the

@@ -35,7 +35,11 @@ JSON_minig = core_minig.json
 MAP_T_go = 2
 MAP_T_mini = 2
 MAP_T_minig = 2
-MAP_OPT = -logic_opt off -ol high -xe n -xt 0 -register_duplication off -r 4 -global_opt off -mt 2 -detail -ir off -pr b -lc off -power off
+# LUT combining: the Mini (sigma-delta audio) fits only with -lc area since 26110104
+MAP_LC_go = off
+MAP_LC_mini = area
+MAP_LC_minig = off
+MAP_OPT = -logic_opt off -ol high -xe n -xt 0 -register_duplication off -r 4 -global_opt off -mt 2 -detail -ir off -pr b -power off
 PAR_OPT = -ol high -xe n -mt 4
 
 # included or read by the sources, not in the prj
@@ -59,7 +63,7 @@ karabas_$(1).ngc: karabas_$(1).prj karabas_$(1).xst $$(SRC_$(1)) $(INCLUDES)
 
 karabas_$(1).bin: karabas_$(1).ngc karabas_$(1).ucf karabas_$(1).ut
 	$(XIL) ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc karabas_$(1).ucf -p $(PART) karabas_$(1).ngc karabas_$(1).ngd
-	$(XIL) map -intstyle ise -p $(PART) -w $(MAP_OPT) -t $(MAP_T_$(1)) -o karabas_$(1)_map.ncd karabas_$(1).ngd karabas_$(1).pcf
+	$(XIL) map -intstyle ise -p $(PART) -w $(MAP_OPT) -lc $(MAP_LC_$(1)) -t $(MAP_T_$(1)) -o karabas_$(1)_map.ncd karabas_$(1).ngd karabas_$(1).pcf
 	$(XIL) par -w -intstyle ise $(PAR_OPT) karabas_$(1)_map.ncd karabas_$(1).ncd karabas_$(1).pcf
 	$(XIL) trce -intstyle ise -v 3 -s 2 -n 3 -fastpaths -xml karabas_$(1).twx karabas_$(1).ncd -o karabas_$(1).twr karabas_$(1).pcf -ucf karabas_$(1).ucf
 	$(XIL) bitgen -intstyle ise -f karabas_$(1).ut karabas_$(1).ncd
