@@ -370,6 +370,8 @@ module karabas_go_top (
 	 );
 	 
 wire [7:0] rtc_do_mapped;
+wire rtc_wr_en; // hid_parser: 0 = a write to its own registers (F0..FF with the EEPROM off)
+wire [63:0] core_build, fw_build; // build ids from the mcu (HW_SETUP 10..1F)
 	 
 wire ftcs_n, espcs_n, espcs_in, esp_ft_spi_dis, ftclk, ftdo, ftdi, ftint, vdac2_sel;
 wire mcu_ft_spi_on, mcu_ft_vga_on, mcu_ft_sck, mcu_ft_mosi, mcu_ft_cs_n;
@@ -458,7 +460,9 @@ kg_mcu #(
 	.RTC_DI(rtc_di),
 	.RTC_DO(rtc_do),
 	.RTC_CS(1'b1),
-	.RTC_WR_N(~rtc_wr),
+	.RTC_WR_N(~(rtc_wr && rtc_wr_en)),
+	.CORE_BUILD(core_build),
+	.FW_BUILD(fw_build),
 	
 	.UART_RX_DATA(uart_rx_data),
 	.UART_RX_IDX(uart_rx_idx),	 
@@ -550,7 +554,10 @@ hid_parser hid_parser(
 	.RTC_RD(rtc_rd),
 	.RTC_DI(rtc_di),
 	.RTC_DO_IN(rtc_do),
-	.RTC_DO_OUT(rtc_do_mapped)
+	.RTC_DO_OUT(rtc_do_mapped),
+	.RTC_WR_EN(rtc_wr_en),
+	.CORE_BUILD(core_build),
+	.FW_BUILD(fw_build)
 );
 
 //---------- Soft switches ------------

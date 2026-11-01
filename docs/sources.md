@@ -42,6 +42,10 @@ cp1251 comments are UTF-8.
 - `sound/gs.v`: a `MEM_WAIT_n` input (GS memory in SDRAM / block RAM), the bank of the address
   valid at once.
 - `mcu/hid_parser.vhd`: joystick mode 6 SEGA (all twelve buttons as Spectrum keys).
+- `mcu/hid_parser.vhd`, the RTC registers of the ZX Evolution AVR: reg D bit 6 = F12 held; F0..FF with the
+  EEPROM flag (reg C bit 7) off, its power-up state as on the AVR: a write sets the type (not sent to the mcu),
+  a read gives the version string of the type (0 = the core build id, 1 = the firmware build id, from the
+  mcu as `kg_mcu` `CORE_BUILD` / `FW_BUILD`; date from the YYMMDD digits) or the PS/2 log (type 2).
 - `sound/turbosound.v`: the AY I/O ports read FF.
 - `kg_osd_overlay.v`: the vertical offset of the OSD is an input (`v_offset`: 50 / 60 Hz); now
   `V_OFFSET_IN` of karabas-go-modules (#19).

@@ -54,7 +54,13 @@ entity hid_parser is
 	 RTC_DO_IN : in std_logic_vector(7 downto 0);
 	 RTC_DO_OUT : out std_logic_vector(7 downto 0);
 	 RTC_WR : in std_logic;
-	 RTC_RD : in std_logic
+	 RTC_RD : in std_logic;
+	 RTC_WR_EN : out std_logic; -- 0: the write is to a register here (F0..FF with the EEPROM off), not to the mcu RTC
+
+	 -- build ids of the core and of the firmware from the mcu (kg_mcu CORE_BUILD / FW_BUILD): ASCII, 8 characters,
+	 -- character 0 in bits 63..56; read as the version strings of the ZX Evolution AVR (F0..FF, types 0 and 1)
+	 CORE_BUILD : in std_logic_vector(63 downto 0) := (others => '0');
+	 FW_BUILD : in std_logic_vector(63 downto 0) := (others => '0')
 	);
 end hid_parser;
 
@@ -99,7 +105,46 @@ architecture rtl of hid_parser is
 	signal macro_cnt : std_logic_vector(21 downto 0) := (others => '0');
 	
 	signal prev_rtc_rd : std_logic;
-	signal allow_eeprom : std_logic := '1';
+	-- reg C bit 7 (EEPROM flag of the AVR): 0 = F0..FF are the version strings / PS/2 log (ext_type), as the AVR at
+	-- power-up; 1 = the EEPROM (the mcu RTC)
+	signal allow_eeprom : std_logic := '0';
+	signal ext_type : std_logic_vector(7 downto 0) := x"00"; -- written to F0..FF with the EEPROM off
+	signal kb_f12 : std_logic;
+
+	-- byte i of a 16-byte version string of the AVR (rom/mainmenu/src/call_cmos.a80 GET_VERS_EVO): bytes 0..11 text
+	-- (0 after a shorter one), 12..13 the date: bits 4..0 day, 8..5 month, 14..9 year - 2000, 15 release (else ERS
+	-- shows "beta"). Text = the build id; date = its digits YYMMDD (none for an id like DEVBUILD).
+	function ver_byte(b : std_logic_vector(63 downto 0); i : integer) return std_logic_vector is
+		variable c : std_logic_vector(7 downto 0);
+		variable ok : boolean := true;
+		variable dg : integer;
+		variable n : integer;
+		variable yy, mm, dd : integer := 0;
+		variable date : std_logic_vector(15 downto 0);
+	begin
+		for k in 0 to 5 loop
+			c := b(63 - 8*k downto 56 - 8*k);
+			if c(7 downto 4) /= "0011" or c(3 downto 0) > "1001" then ok := false; end if;
+		end loop;
+		for k in 0 to 5 loop
+			dg := to_integer(unsigned(b(59 - 8*k downto 56 - 8*k)));
+			if k = 0 or k = 2 or k = 4 then n := dg * 10; else n := n + dg; end if;
+			if k = 1 then yy := n; end if;
+			if k = 3 then mm := n; end if;
+			if k = 5 then dd := n; end if;
+		end loop;
+		if ok then
+			date := '1' & std_logic_vector(to_unsigned(yy mod 64, 6)) & std_logic_vector(to_unsigned(mm mod 16, 4)) &
+				std_logic_vector(to_unsigned(dd mod 32, 5));
+		else
+			date := x"0000";
+		end if;
+		if i < 8 then return b(63 - 8*i downto 56 - 8*i);
+		elsif i = 12 then return date(7 downto 0);
+		elsif i = 13 then return date(15 downto 8);
+		else return x"00";
+		end if;
+	end function;
 	signal prev_rtc_wr : std_logic := '0';
 
     signal o_kb_status : std_logic_vector(7 downto 0);
@@ -112,6 +157,12 @@ begin
 
 	-- incoming data of pressed keys from usb hid report
 	data <= KB_DAT5 & KB_DAT4 & KB_DAT3 & KB_DAT2 & KB_DAT1 & KB_DAT0;
+
+	-- F12 held (any of the six key slots): bit 6 of RTC reg D, as the AVR
+	kb_f12 <= '1' when KB_DAT0 = x"45" or KB_DAT1 = x"45" or KB_DAT2 = x"45" or KB_DAT3 = x"45" or
+	                   KB_DAT4 = x"45" or KB_DAT5 = x"45" else '0';
+
+	RTC_WR_EN <= '0' when RTC_A(7 downto 4) = "1111" and allow_eeprom = '0' else '1';
 
 	U_PS2_KEYBUF: entity work.usb_ps2_keybuf
 	port map(
@@ -636,7 +687,8 @@ process (RESET, CLK)
 	process(RESET, CLK)
 	begin
 		if RESET = '1' then
-			allow_eeprom <= '1';
+			allow_eeprom <= '0';
+			ext_type <= x"00";
 		elsif rising_edge(CLK) then
 			
 			prev_rtc_rd <= RTC_RD;
@@ -649,6 +701,9 @@ process (RESET, CLK)
 					when x"0C" => 
                         keybuf_reset <= RTC_DI(0);
 						allow_eeprom <= RTC_DI(7);
+					when x"F0" | x"F1" | x"F2" | x"F3" | x"F4" | x"F5" | x"F6" | x"F7" |
+					     x"F8" | x"F9" | x"FA" | x"FB" | x"FC" | x"FD" | x"FE" | x"FF" =>
+						if allow_eeprom = '0' then ext_type <= RTC_DI; end if; -- the AVR: set version data type
 					when others => null;
 				end case;
 			-- read RTC special registers + keyboard buffer
@@ -657,14 +712,18 @@ process (RESET, CLK)
 					when x"0A" => RTC_DO_OUT <= x"00";
 					when x"0B" => RTC_DO_OUT <= x"02";
 					when x"0C" => RTC_DO_OUT <= x"00";
-					when x"0D" => RTC_DO_OUT <= "10" & KB_STATUS(5) & KB_STATUS(1) & KB_STATUS(6) & KB_STATUS(2) & KB_STATUS(4) & KB_STATUS(0); -- 1 f12 rshift lshift ralt lalt rctrl lctrl  
+					when x"0D" => RTC_DO_OUT <= '1' & kb_f12 & KB_STATUS(5) & KB_STATUS(1) & KB_STATUS(6) & KB_STATUS(2) & KB_STATUS(4) & KB_STATUS(0); -- 1 f12 rshift lshift ralt lalt rctrl lctrl  
 					when x"F0" | x"F1" | x"F2" | x"F3" | 
 						  x"F4" | x"F5" | x"F6" | x"F7" | 
 						  x"F8" | x"F9" | x"FA" | x"FB" |
 						  x"FC" | x"FD" | x"FE" | x"FF" => 
 							if allow_eeprom = '0' then
-                                RTC_DO_OUT <= keybuf_data;
-                                keybuf_rd <= '1';
+								case ext_type is
+									when x"00" => RTC_DO_OUT <= ver_byte(CORE_BUILD, to_integer(unsigned(RTC_A(3 downto 0))));
+									when x"01" => RTC_DO_OUT <= ver_byte(FW_BUILD, to_integer(unsigned(RTC_A(3 downto 0))));
+									when x"02" => RTC_DO_OUT <= keybuf_data; keybuf_rd <= '1';
+									when others => RTC_DO_OUT <= x"FF";
+								end case;
 							else 
 								RTC_DO_OUT <= RTC_DO_IN;
 							end if;

@@ -192,6 +192,8 @@ wire [15:8] keyboard_addr;
 wire [5:0] keyboard_data;
 wire [7:0] rtc_addr;
 wire [7:0] rtc_di, rtc_do, rtc_do_mapped;
+wire rtc_wr_en; // hid_parser: 0 = a write to its own registers (F0..FF with the EEPROM off)
+wire [63:0] core_build, fw_build; // build ids from the mcu (HW_SETUP 10..1F)
 wire rtc_wr, rtc_rd;
 wire [7:0] uart_rx_data, uart_rx_idx, uart_tx_data;
 wire uart_tx_wr;
@@ -494,7 +496,7 @@ kg_mcu #(
 	.RTC_DI			(rtc_di),
 	.RTC_DO			(rtc_do),
 	.RTC_CS			(1'b1),
-	.RTC_WR_N		(~rtc_wr),
+	.RTC_WR_N		(~(rtc_wr && rtc_wr_en)),
 
 	.UART_RX_DATA	(uart_rx_data),
 	.UART_RX_IDX	(uart_rx_idx),
@@ -524,6 +526,8 @@ kg_mcu #(
 	.FT_RESET		(mcu_ft_reset),
 
 	.HWID				(hwid),
+	.CORE_BUILD				(core_build),
+	.FW_BUILD				(fw_build),
 	.DVI_ONLY		(dvi_only),
 
 	.SD2_MISO		(1'b1),
@@ -595,7 +599,10 @@ hid_parser hid_parser(
 	.RTC_RD			(rtc_rd),
 	.RTC_DI			(rtc_di),
 	.RTC_DO_IN		(rtc_do),
-	.RTC_DO_OUT		(rtc_do_mapped)
+	.RTC_DO_OUT		(rtc_do_mapped),
+	.RTC_WR_EN		(rtc_wr_en),
+	.CORE_BUILD		(core_build),
+	.FW_BUILD		(fw_build)
 );
 
 //---------- Soft switches ------------
