@@ -4,7 +4,8 @@
 
 The ZX Evolution (Pentevo) of NedoPC with its own FPGA configuration, **BaseConf**, on the Karabas Go
 family of boards (Xilinx Spartan-6 XC6SLX25). It runs the stock ZX Evo BIOS (ERS) with 4 MB of RAM,
-the extended video modes of the Evo, General Sound and TurboSound FM.
+the extended video modes of the Evo, General Sound, TurboSound FM, SAA1099, OPL2, covox / Soundrive,
+the RS232 port of the Evo (on the USB serial port of the board) and TS ZiFi (ESP8266).
 
 | Board | Core file | Video | Audio | Drives |
 |---|---|---|---|---|
@@ -29,7 +30,9 @@ It is built from:
   and the ATM font come from there too.
 - **The TS-Conf core of Karabas Go** ([karabas-go-core-tsconf](https://github.com/andykarpov/karabas-go-core-tsconf),
   Andy Karpov and contributors, Oleh Starychenko among them): the board wrapper that the top levels
-  derive from, General Sound (`gs.v`, ROM `roms/gs105b.rom`), TurboSound, the HID parser,
+  derive from, General Sound (`gs.v`, ROM `roms/gs105b.rom`), TurboSound, the HID parser, covox /
+  Soundrive (`covox.vhd`), TS ZiFi with the RS232 ports of TS-Conf and the Evo (`zifi.vhd`, the UART of
+  nandland.com), SAA1099 (Miguel Angel Rodriguez Jodar), OPL2 on **JTOPL** (Jose Tejada),
   the physical floppy controller (`hrdy_fdc` with the VG93 model of
   [FD1793_1818VG93](https://github.com/demyanenko-d/FD1793_1818VG93) and its microcode ROM).
 - **T80** (Daniel Wallner, Sorgelig and others), **JT12 / JT03** (Jose Tejada),
@@ -44,7 +47,7 @@ sources listed in [docs/sources.md](docs/sources.md).
 
 ## License
 
-GPL-3.0-or-later, see [LICENSE](LICENSE). BaseConf, JT12 and zhdmi are GPL-3.0-or-later; the
+GPL-3.0-or-later, see [LICENSE](LICENSE). BaseConf, JT12, JTOPL and zhdmi are GPL-3.0-or-later; the
 TS-Conf core of Karabas Go is MIT ([docs/licenses/karabas-tsconf-MIT.txt](docs/licenses/karabas-tsconf-MIT.txt)),
 T80 has its BSD-style notice; every source file keeps its own header. The ROMs in `src/roms` are
 unchanged files of their projects (the ZX Evo BIOS of NedoPC, the General Sound ROM 1.05b as
@@ -65,6 +68,7 @@ board (no special firmware is needed). The OSD opens with Menu (Win) + Esc.
 | Menu+P | pause |
 | F11 | NMI |
 | F12 | reset (the core and GS) |
+| OSD only | SAA1099, OPL2, ZiFi RS232: on / off (Off also mutes the device / frees its ports) |
 
 Shift, Ctrl and keys held over F12 choose the start of the Evo BIOS (Shift: BASIC 128, Ctrl: BASIC 48,
 S: CMOS setup, 0: clears the boot choice, ...): [docs/hotkeys.md](docs/hotkeys.md). The joystick
@@ -72,11 +76,11 @@ mappings: [docs/joysticks.md](docs/joysticks.md).
 
 ## State
 
-Build **26102806** of the port: the hotkeys and the reset choices of the BIOS are checked on Go, Mini
-and Mini G hardware; the BIOS menu, 4096 KB of RAM and the Dune game (with GS) were seen running.
-Open ([docs/problems.md](docs/problems.md)): AY noise on the Mini and Mini G, the physical floppy
-drives and CF cards are not tested on hardware, the AVR services of the real Evo (virtual drives,
-COM port) are not there. The Mini builds use 96-98 % of the slices.
+Build **26110103**: on Mini G hardware the BIOS, the resets (F12, 0+F12, after games), the RS232 of the
+Evo, SAA1099, OPL2 and the version strings in ERS are checked; the physical floppy drives work on the
+Go (26110102: write, read, format, also in turbo). Open ([docs/problems.md](docs/problems.md)): CF
+cards are not tested on hardware, the virtual drives of the AVR are not there (virtual HDD images are
+planned), TS ZiFi (ESP8266) is not tested. All three builds use 99 % of the slices.
 
 ## Building
 

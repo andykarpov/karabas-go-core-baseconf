@@ -2,6 +2,17 @@
 
 These are actual limits of the current result, not hypothetical release warnings.
 
+**Resolved after the move to this repository** (the table below is the state of forge 26102806, kept as is):
+
+- AY noise on the Mini / Mini G: `FT_CLK_OUT` was undriven; driven at 8 MHz since 26103120, noise gone on Mini G.
+- F12 hang after a game (no reset helped): the ROM storage (SDRAM) is reset by the reset keys too, 26110101.
+- Physical floppy drives (Go): the FDC of TS-Conf on clk_bus, 26110102; write, read, format checked on hw, in turbo too.
+- COM services of the AVR: the RS232 of the Evo (#F8EF..#FFEF) is on the USB serial port of the board (`zifi.vhd`),
+  with TS ZiFi (ESP8266) and the TS RS232 ports; checked on Mini G (send and receive).
+- AVR version service: RTC F0..FF show the build ids of the core and the firmware ("Baseconf", "AVR Boot" in ERS),
+  sent by the firmware (CMD_HW_SETUP 10..1F); RTC reg D bit 6 = F12.
+- New: SAA1099, OPL2, Soundrive on all boards (OSD switches for SAA1099, OPL2, ZiFi RS232).
+
 | Priority | Open item | Consequence / next action |
 |---|---|---|
 | High | AY noise reported on Mini/Mini G | Remote user reports noise on HDMI and analog while GS plays correctly. ZX-Format 2 kg3 recordings confirm the comparison. Expanded OUTD tests and actual-player checks pass; full trace replay tests the TSConf CE-phase difference. Hardware cause remains unresolved. [Investigation](forge/docs/ay-audio.md). |

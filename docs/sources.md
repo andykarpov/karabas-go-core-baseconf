@@ -12,6 +12,7 @@ core is on karabas-go-modules master and has its own board tops (below, "Since t
 | `rtl/zxevo/` | [zxevo.pentevo](https://github.com/aaydev/zxevo.pentevo) `ec1405e`, `fpga/baseconf/trunk` (`z80`, `mem`, `video`, `spihub`, `common`, `dram`) |
 | `rtl/T80`, `rtl/sound`, `rtl/mcu` | [karabas-go-core-tsconf](https://github.com/andykarpov/karabas-go-core-tsconf) `edb2060`, `src/rtl` |
 | `rtl/vg93` (with `vg93-microcode-rom.hex`) | karabas-go-core-tsconf `8a1ce1f`, `src/rtl/vg93`, unchanged: `hrdy_fdc` + the VG93 model of [FD1793_1818VG93](https://github.com/demyanenko-d/FD1793_1818VG93) on clk_bus (as in Profi) |
+| `rtl/uart`, `rtl/sound/{covox.vhd,saa1099.v,saa1099_compressor_lut.hex,opl2_top.v,opl2_clk.v,jtopl}` | karabas-go-core-tsconf `8a1ce1f`, unchanged: TS ZiFi + TS / Evo RS232 (`zifi.vhd`), covox / Soundrive, SAA1099, OPL2 on [JTOPL](https://github.com/jotego/jtopl) |
 | `rtl/adc` | karabas-go-core-tsconf `d728bcc`, `src/rtl/adc` (the PCM1808 ADC, the I2S of the ESP32) |
 | `../modules` | [karabas-go-modules](https://github.com/andykarpov/karabas-go-modules) master, unchanged |
 | `roms/baseconf.rom`, `atm_font.hex` | zxevo.pentevo `rom/zxevo.rom`, `fpga/baseconf/trunk/video/atm.fnt` (as hex) |
@@ -42,6 +43,10 @@ cp1251 comments are UTF-8.
 - `sound/gs.v`: a `MEM_WAIT_n` input (GS memory in SDRAM / block RAM), the bank of the address
   valid at once.
 - `mcu/hid_parser.vhd`: joystick mode 6 SEGA (all twelve buttons as Spectrum keys).
+- `mcu/hid_parser.vhd`, the RTC registers of the ZX Evolution AVR: reg D bit 6 = F12 held; F0..FF with the
+  EEPROM flag (reg C bit 7) off, its power-up state as on the AVR: a write sets the type (not sent to the mcu),
+  a read gives the version string of the type (0 = the core build id, 1 = the firmware build id, from the
+  mcu as `kg_mcu` `CORE_BUILD` / `FW_BUILD`; date from the YYMMDD digits) or the PS/2 log (type 2).
 - `sound/turbosound.v`: the AY I/O ports read FF.
 - `kg_osd_overlay.v`: the vertical offset of the OSD is an input (`v_offset`: 50 / 60 Hz); now
   `V_OFFSET_IN` of karabas-go-modules (#19).

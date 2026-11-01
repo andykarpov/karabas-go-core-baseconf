@@ -4,7 +4,8 @@
 
 ZX Evolution (Pentevo) от NedoPC с её собственной конфигурацией FPGA, **BaseConf**, на платах семейства
 Karabas Go (Xilinx Spartan-6 XC6SLX25). Работает штатный BIOS ZX Evo (ERS), 4 МБ памяти, расширенные
-видеорежимы Evo, General Sound и TurboSound FM.
+видеорежимы Evo, General Sound, TurboSound FM, SAA1099, OPL2, covox / Soundrive, порт RS232 Evo (на
+USB-последовательном порту платы) и TS ZiFi (ESP8266).
 
 | Плата | Файл ядра | Видео | Звук | Накопители |
 |---|---|---|---|---|
@@ -27,7 +28,9 @@ Karabas Go (Xilinx Spartan-6 XC6SLX25). Работает штатный BIOS ZX 
   (`rom/zxevo.rom`) и шрифт ATM.
 - **Ядро TS-Conf для Karabas Go** ([karabas-go-core-tsconf](https://github.com/andykarpov/karabas-go-core-tsconf),
   Андрей Карпов и участники, в том числе Олег Старыченко): обвязка платы, от которой произошли верхние
-  уровни, General Sound (`gs.v`, ROM `roms/gs105b.rom`), TurboSound, разбор HID, контроллер физических
+  уровни, General Sound (`gs.v`, ROM `roms/gs105b.rom`), TurboSound, разбор HID, covox / Soundrive
+  (`covox.vhd`), TS ZiFi с портами RS232 TS-Conf и Evo (`zifi.vhd`, UART от nandland.com), SAA1099
+  (Miguel Angel Rodriguez Jodar), OPL2 на **JTOPL** (Jose Tejada), контроллер физических
   дисководов (`hrdy_fdc` с моделью VG93 из
   [FD1793_1818VG93](https://github.com/demyanenko-d/FD1793_1818VG93) и её ROM микрокода).
 - **T80** (Daniel Wallner, Sorgelig и другие), **JT12 / JT03** (Jose Tejada), **zhdmi**
@@ -41,7 +44,7 @@ Karabas Go (Xilinx Spartan-6 XC6SLX25). Работает штатный BIOS ZX 
 
 ## Лицензия
 
-GPL-3.0-or-later, см. [LICENSE](LICENSE). BaseConf, JT12 и zhdmi распространяются под GPL-3.0-or-later;
+GPL-3.0-or-later, см. [LICENSE](LICENSE). BaseConf, JT12, JTOPL и zhdmi распространяются под GPL-3.0-or-later;
 ядро TS-Conf для Karabas Go — под MIT ([docs/licenses/karabas-tsconf-MIT.txt](docs/licenses/karabas-tsconf-MIT.txt)),
 у T80 свой текст в стиле BSD; каждый файл исходников сохраняет свой заголовок. ROM в `src/roms` —
 неизменённые файлы своих проектов (BIOS ZX Evo от NedoPC, ROM General Sound 1.05b в том виде, в каком
@@ -62,6 +65,7 @@ GPL-3.0-or-later, см. [LICENSE](LICENSE). BaseConf, JT12 и zhdmi распро
 | Menu+P | пауза |
 | F11 | NMI |
 | F12 | сброс (ядра и GS) |
+| только в OSD | SAA1099, OPL2, ZiFi RS232: вкл. / выкл. (выкл. ещё и глушит устройство / освобождает его порты) |
 
 Shift, Ctrl и клавиши, удерживаемые при нажатии F12, выбирают, куда стартует BIOS Evo (Shift — BASIC 128,
 Ctrl — BASIC 48, S — настройка CMOS, 0 — сброс выбора загрузки, ...): [docs/hotkeys.md](docs/hotkeys.md).
@@ -69,10 +73,11 @@ Ctrl — BASIC 48, S — настройка CMOS, 0 — сброс выбора 
 
 ## Состояние
 
-Сборка порта **26102806**: горячие клавиши и выбор старта BIOS проверены на железе Go, Mini и Mini G;
-меню BIOS, 4096 КБ памяти и игра Dune (с GS) запускались. Открытые вопросы ([docs/problems.md](docs/problems.md)):
-шум AY на Mini и Mini G; физические дисководы и CF-карты на железе не проверены; сервисов AVR настоящей
-Evo (виртуальные дисководы, COM-порт) нет. Сборки для Mini занимают 96-98 % слайсов.
+Сборка **26110103**: на железе Mini G проверены BIOS, сбросы (F12, 0+F12, после игр), RS232 Evo, SAA1099,
+OPL2 и строки версий в ERS; физические дисководы работают на Go (26110102: запись, чтение, форматирование,
+в том числе в турбо). Открытые вопросы ([docs/problems.md](docs/problems.md)): CF-карты на железе не
+проверены; виртуальных дисководов AVR нет (запланированы виртуальные образы HDD); TS ZiFi (ESP8266) не
+проверен. Все три сборки занимают 99 % слайсов.
 
 ## Сборка
 

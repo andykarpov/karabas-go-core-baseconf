@@ -192,6 +192,8 @@ wire [15:8] keyboard_addr;
 wire [5:0] keyboard_data;
 wire [7:0] rtc_addr;
 wire [7:0] rtc_di, rtc_do, rtc_do_mapped;
+wire rtc_wr_en; // hid_parser: 0 = a write to its own registers (F0..FF with the EEPROM off)
+wire [63:0] core_build, fw_build; // build ids from the mcu (HW_SETUP 10..1F)
 wire rtc_wr, rtc_rd;
 wire [7:0] uart_rx_data, uart_rx_idx, uart_tx_data;
 wire uart_tx_wr;
@@ -211,6 +213,7 @@ wire kb_vga_60hz;
 wire [7:0] joy_bus;
 wire kb_pause, kb_reset, kb_nmi, mcu_busy;
 wire covox_en, psg_type;
+wire saa_en, opl_en, zifi_en; // OSD switches (see the soft switches below)
 wire [1:0] psg_mix;
 wire f1;
 wire [7:0] hwid;
@@ -293,6 +296,12 @@ baseconf machine (
 	.tape_out			(TAPE_OUT),
 
 	.covox_en			(covox_en),
+
+	.saa_en			(saa_en),
+
+	.opl_en			(opl_en),
+
+	.zifi_en			(zifi_en),
 	.psg_mix				(psg_mix),
 	.psg_type			(psg_type),
 	.vga_60hz			(kb_vga_60hz),
@@ -494,7 +503,7 @@ kg_mcu #(
 	.RTC_DI			(rtc_di),
 	.RTC_DO			(rtc_do),
 	.RTC_CS			(1'b1),
-	.RTC_WR_N		(~rtc_wr),
+	.RTC_WR_N		(~(rtc_wr && rtc_wr_en)),
 
 	.UART_RX_DATA	(uart_rx_data),
 	.UART_RX_IDX	(uart_rx_idx),
@@ -524,6 +533,8 @@ kg_mcu #(
 	.FT_RESET		(mcu_ft_reset),
 
 	.HWID				(hwid),
+	.CORE_BUILD				(core_build),
+	.FW_BUILD				(fw_build),
 	.DVI_ONLY		(dvi_only),
 
 	.SD2_MISO		(1'b1),
@@ -595,15 +606,18 @@ hid_parser hid_parser(
 	.RTC_RD			(rtc_rd),
 	.RTC_DI			(rtc_di),
 	.RTC_DO_IN		(rtc_do),
-	.RTC_DO_OUT		(rtc_do_mapped)
+	.RTC_DO_OUT		(rtc_do_mapped),
+	.RTC_WR_EN		(rtc_wr_en),
+	.CORE_BUILD		(core_build),
+	.FW_BUILD		(fw_build)
 );
 
 //---------- Soft switches ------------
 
 // OSD switches (core_mini.json "osd", in this order): register n = regs[n*8 +: 8]
-wire [9*8-1:0] softsw;
+wire [12*8-1:0] softsw;
 
-kg_soft_switches #(.N(9), .INIT(72'h000000000100000101)) soft_switches(
+kg_soft_switches #(.N(12), .INIT(96'h000000000100010101000101)) soft_switches(
 	.clk				(clk_bus),
 	.command			(softsw_command),
 	.regs				(softsw),
@@ -613,16 +627,19 @@ kg_soft_switches #(.N(9), .INIT(72'h000000000100000101)) soft_switches(
 assign covox_en = softsw[0];
 assign psg_mix = softsw[9:8];
 assign psg_type = softsw[16];
-assign kb_joy_type_l = softsw[26:24];
-assign kb_joy_type_r = softsw[34:32];
-assign kb_vga_60hz = softsw[40];
-assign kb_pause = softsw[48];
-assign kb_nmi = softsw[56];
+assign saa_en = softsw[24];
+assign opl_en = softsw[32];
+assign zifi_en = softsw[40];
+assign kb_joy_type_l = softsw[50:48];
+assign kb_joy_type_r = softsw[58:56];
+assign kb_vga_60hz = softsw[64];
+assign kb_pause = softsw[72];
+assign kb_nmi = softsw[80];
 // the hotkeys of the mcu look at HID slot 0 only: F12 in any slot resets, so a key held for the boot choice
 // of the BIOS does not stop it. The HID matrix and the filter are reset at power-up only: the held keys stay.
 wire hid_reset = hid_kb_dat0 == 8'h45 || hid_kb_dat1 == 8'h45 || hid_kb_dat2 == 8'h45 ||
                  hid_kb_dat3 == 8'h45 || hid_kb_dat4 == 8'h45 || hid_kb_dat5 == 8'h45;
-assign kb_reset = softsw[64] || hid_reset;
+assign kb_reset = softsw[88] || hid_reset;
 
 assign btn_reset_n = ~kb_reset && ~hw_btn[0] && ~mcu_busy;
 
