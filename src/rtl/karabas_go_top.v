@@ -252,7 +252,6 @@ module karabas_go_top (
 
 	baseconf machine (
      .clk(clk_sys),
-	  .clk8(clk_8mhz),
 	  .ce(ce_28m),
 	  .resetbtn_n(btn_reset_n),	
 	  .resetkey_n(~kb_reset && ~hw_btn[0]),

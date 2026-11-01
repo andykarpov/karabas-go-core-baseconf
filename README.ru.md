@@ -28,7 +28,8 @@ Karabas Go (Xilinx Spartan-6 XC6SLX25). Работает штатный BIOS ZX 
 - **Ядро TS-Conf для Karabas Go** ([karabas-go-core-tsconf](https://github.com/andykarpov/karabas-go-core-tsconf),
   Андрей Карпов и участники, в том числе Олег Старыченко): обвязка платы, от которой произошли верхние
   уровни, General Sound (`gs.v`, ROM `roms/gs105b.rom`), TurboSound, разбор HID, контроллер физических
-  дисководов (`vg93` от Firefly и его ROM микрокода).
+  дисководов (`hrdy_fdc` с моделью VG93 из
+  [FD1793_1818VG93](https://github.com/demyanenko-d/FD1793_1818VG93) и её ROM микрокода).
 - **T80** (Daniel Wallner, Sorgelig и другие), **JT12 / JT03** (Jose Tejada), **zhdmi**
   (François Galea) и общие модули [karabas-go-modules](https://github.com/andykarpov/karabas-go-modules)
   (связь с MCU, OSD, PLL, звук, HDMI), подмодуль `modules`.
