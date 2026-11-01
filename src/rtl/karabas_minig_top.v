@@ -222,6 +222,7 @@ baseconf machine (
 	.clk8					(clk_8mhz),
 	.ce					(ce_28m),
 	.resetbtn_n			(btn_reset_n),
+	.resetkey_n			(~kb_reset && ~hw_btn[0]),
 	.resetgsbtn_n		(1'b1),
 	.locked				(locked),
 	.clk_bus				(clk_bus),
