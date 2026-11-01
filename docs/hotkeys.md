@@ -18,7 +18,7 @@ Use these while the core is running. For a Win combination, hold Win, press the 
 | Shortcut | Action |
 |---|---|
 | Win+Esc | Open or close the OSD |
-| Win+F6 | Toggle Covox Off / On |
+| Win+F6 | Toggle Covox Off / On (covox #FB and the Soundrive ports) |
 | Win+F7 | Cycle PSG Mix: ABC / ACB / Mono |
 | Win+F8 | Switch PSG Type: AY3-8912 / YM2149F |
 | Win+F9 | Switch video raster: 50 Hz / 60 Hz |
@@ -27,6 +27,8 @@ Use these while the core is running. For a Win combination, hold Win, press the 
 | Win+P | Toggle CPU pause |
 | F11 | Request NMI; behavior depends on the running software |
 | F12 | Reset the core and GS together |
+
+OSD only (no shortcut): **SAA1099**, **OPL2** and **ZiFi RS232** (TS ZiFi on the ESP8266, the RS232 ports of TS-Conf and of the Evo on the USB serial port), On by default. Off mutes the device and frees its ports.
 
 Joystick choices are Kempston, Sinclair1, Sinclair2, Cursor, QAOPM, QAOPS and SEGA. See [joystick setup and mappings](joysticks.md).
 

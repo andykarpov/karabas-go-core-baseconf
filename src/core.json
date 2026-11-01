@@ -1,7 +1,7 @@
 {
   "id": "baseconf",
   "name": "ZX Evolution BaseConf",
-  "build": "26110102",
+  "build": "26110103",
   "bitstream": "karabas_go.bin",
   "visible": true,
   "type": "osd",
@@ -49,6 +49,33 @@
       ],
       "default": 0,
       "hotkey": "Menu+F8"
+    },
+    {
+      "type": "S",
+      "name": "SAA1099",
+      "options": [
+        "Off",
+        "On"
+      ],
+      "default": 1
+    },
+    {
+      "type": "S",
+      "name": "OPL2",
+      "options": [
+        "Off",
+        "On"
+      ],
+      "default": 1
+    },
+    {
+      "type": "S",
+      "name": "ZiFi RS232",
+      "options": [
+        "Off",
+        "On"
+      ],
+      "default": 1
     },
     {
       "type": "S",

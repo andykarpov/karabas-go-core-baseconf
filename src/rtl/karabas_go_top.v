@@ -246,6 +246,7 @@ module karabas_go_top (
 	wire kb_pause;
 	wire kb_reset;
 	wire kb_nmi;
+	wire saa_en, opl_en, zifi_en; // OSD switches (see the soft switches below)
 	wire mcu_busy;
 	wire f1;
 	wire [1:0] hw_btn;
@@ -323,6 +324,12 @@ module karabas_go_top (
 	  .tape_out(TAPE_OUT),
 	  
 	  .covox_en(covox_en),
+	  
+	  .saa_en(saa_en),
+	  
+	  .opl_en(opl_en),
+	  
+	  .zifi_en(zifi_en),
 	  .psg_mix(psg_mix),
 	  .psg_type(psg_type),
 	  .vga_60hz(kb_vga_60hz),
@@ -567,9 +574,9 @@ wire [1:0] psg_mix;
 wire psg_type;
 
 // OSD switches (core.json "osd", in this order): register n = regs[n*8 +: 8]
-wire [9*8-1:0] softsw;
+wire [12*8-1:0] softsw;
 
-kg_soft_switches #(.N(9), .INIT(72'h000000000100000101)) soft_switches(
+kg_soft_switches #(.N(12), .INIT(96'h000000000100010101000101)) soft_switches(
 	.clk(clk_bus),
 	.command(softsw_command),
 	.regs(softsw),
@@ -579,17 +586,20 @@ kg_soft_switches #(.N(9), .INIT(72'h000000000100000101)) soft_switches(
 assign covox_en = softsw[0];
 assign psg_mix = softsw[9:8];
 assign psg_type = softsw[16];
-assign kb_joy_type_l = softsw[26:24];
-assign kb_joy_type_r = softsw[34:32];
-assign kb_vga_60hz = softsw[40];
-assign kb_pause = softsw[48];
-assign kb_nmi = softsw[56];
+assign saa_en = softsw[24];
+assign opl_en = softsw[32];
+assign zifi_en = softsw[40];
+assign kb_joy_type_l = softsw[50:48];
+assign kb_joy_type_r = softsw[58:56];
+assign kb_vga_60hz = softsw[64];
+assign kb_pause = softsw[72];
+assign kb_nmi = softsw[80];
 // MCU hotkey matching only examines HID slot 0. Recognize F12 in every slot
 // so a held boot-selection key does not prevent reset. The HID matrix/filter
 // are deliberately reset only at power-up, preserving held keys across reset.
 wire hid_reset = hid_kb_dat0==8'h45 || hid_kb_dat1==8'h45 || hid_kb_dat2==8'h45 ||
                  hid_kb_dat3==8'h45 || hid_kb_dat4==8'h45 || hid_kb_dat5==8'h45;
-assign kb_reset = softsw[64] || hid_reset;
+assign kb_reset = softsw[88] || hid_reset;
 
 assign btn_reset_n = ~kb_reset && ~hw_btn[0] && ~mcu_busy;
 

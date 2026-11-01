@@ -32,3 +32,4 @@ always @(negedge clk_sys)
 	v_clk <= ce;
 
 endmodule
+`default_nettype wire

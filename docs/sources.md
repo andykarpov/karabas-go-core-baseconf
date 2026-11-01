@@ -12,6 +12,7 @@ core is on karabas-go-modules master and has its own board tops (below, "Since t
 | `rtl/zxevo/` | [zxevo.pentevo](https://github.com/aaydev/zxevo.pentevo) `ec1405e`, `fpga/baseconf/trunk` (`z80`, `mem`, `video`, `spihub`, `common`, `dram`) |
 | `rtl/T80`, `rtl/sound`, `rtl/mcu` | [karabas-go-core-tsconf](https://github.com/andykarpov/karabas-go-core-tsconf) `edb2060`, `src/rtl` |
 | `rtl/vg93` (with `vg93-microcode-rom.hex`) | karabas-go-core-tsconf `8a1ce1f`, `src/rtl/vg93`, unchanged: `hrdy_fdc` + the VG93 model of [FD1793_1818VG93](https://github.com/demyanenko-d/FD1793_1818VG93) on clk_bus (as in Profi) |
+| `rtl/uart`, `rtl/sound/{covox.vhd,saa1099.v,saa1099_compressor_lut.hex,opl2_top.v,opl2_clk.v,jtopl}` | karabas-go-core-tsconf `8a1ce1f`, unchanged: TS ZiFi + TS / Evo RS232 (`zifi.vhd`), covox / Soundrive, SAA1099, OPL2 on [JTOPL](https://github.com/jotego/jtopl) |
 | `rtl/adc` | karabas-go-core-tsconf `d728bcc`, `src/rtl/adc` (the PCM1808 ADC, the I2S of the ESP32) |
 | `../modules` | [karabas-go-modules](https://github.com/andykarpov/karabas-go-modules) master, unchanged |
 | `roms/baseconf.rom`, `atm_font.hex` | zxevo.pentevo `rom/zxevo.rom`, `fpga/baseconf/trunk/video/atm.fnt` (as hex) |

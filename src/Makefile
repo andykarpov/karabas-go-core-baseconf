@@ -39,7 +39,7 @@ MAP_OPT = -logic_opt off -ol high -xe n -xt 0 -register_duplication off -r 4 -gl
 PAR_OPT = -ol high -xe n -mt 4
 
 # included or read by the sources, not in the prj
-INCLUDES = $(wildcard ../modules/rtl/mcu/*.vh rtl/vg93/*.vh) baseconf_tune.vh atm_font.hex rtl/vg93/vg93-microcode-rom.hex
+INCLUDES = $(wildcard ../modules/rtl/mcu/*.vh rtl/vg93/*.vh) baseconf_tune.vh atm_font.hex rtl/vg93/vg93-microcode-rom.hex rtl/sound/saa1099_compressor_lut.hex
 
 .PHONY: all clean $(BOARDS) $(BOARDS:=-xst) $(BOARDS:=-impl) $(BOARDS:=-core) $(BOARDS:=-report) mini-coremode minig-coremode
 

@@ -124,7 +124,10 @@ module baseconf
 	output wire tape_out,
 	
 	// osd switches
-	input wire covox_en,
+	input wire covox_en,  // covox #FB and Soundrive (covox.vhd of TS-Conf)
+	input wire saa_en,    // SAA1099 on #FF (writes outside the shadow mode)
+	input wire opl_en,    // OPL2 on #C4 / #C5
+	input wire zifi_en,   // TS ZiFi (ESP8266) + TS RS232 + EVO RS232 #F8EF..#FFEF (USB UART of the mcu): zifi.vhd of TS-Conf
 	input wire [1:0] psg_mix,
 	input wire psg_type,
 	input wire vga_60hz,
@@ -200,6 +203,8 @@ module baseconf
     wire [7:0] fdc_data, ts_data, gs_data;
     wire fdc_oe, fdc_oe_n, gs_oe;
     wire fdc_busy, fdc_intrq, fdc_drq; // hrdy_fdc (Go): WAIT, bits 7, 6 of port #FF
+    wire [7:0] zifi_data, opl_data; // read data of zifi and OPL2 (instances at the sound below)
+    wire zifi_oe_n, opl_rd;
     wire ts_read = !iorq_n && !rd_n && a[15] && a[7:0]==8'hfd;
     // used by the CPU below, declared here: without `default_nettype none from the file before (hdmi_top.v
     // of TS-Conf) XST took them as implicit nets and failed on their declarations
@@ -225,9 +230,6 @@ module baseconf
 `endif
     assign ftcs_n=1'b1, espcs_n=1'b1, esp_ft_spi_dis=1'b0;
     assign ftclk=1'b0, ftdo=1'b1, vdac2_sel=1'b0;
-    assign uart_tx=1'b1, uart_cts=1'b1;
-    assign usb_uart_tx_data=8'd0, usb_uart_tx_wr=1'b0, usb_uart_tx_mode=1'b0;
-    assign usb_uart_dll=8'd0, usb_uart_dlm=8'd0, usb_uart_dll_wr=1'b0, usb_uart_dlm_wr=1'b0;
     assign midi_reset_n=rst_n;
     assign ioa=a, iod=d, iowr=!iorq_n && !wr_n;
     assign f1_out=zpos;
@@ -518,6 +520,7 @@ resetter myrst(.clk(fclk), .rst_in_n(resetbtn_n && locked && !loader_act && !sto
 assign d_pre_out = drive_00 ? 8'h00 :
         rom_req ? rom_data : ena_ram ? dout_ram :
         fdc_oe ? fdc_data : ts_read ? ts_data : gs_oe ? gs_data :
+        !zifi_oe_n ? zifi_data : opl_rd ? opl_data :
         ena_ports ? dout_ports : 8'hff;
     assign csrom = csrom_int && !drive_00;
 
@@ -833,7 +836,7 @@ baseconf_sram ram(.clk(fclk), .rst_n(rst_n), .addr(daddr),
     end
     assign rtc_rd = wait_start_gluclock && !rtc_access_seen && !rd_n;
     assign rtc_wr = wait_start_gluclock && !rtc_access_seen && !wr_n;
-    assign wait_read = wait_start_comport ? 8'hff : rtc_do;
+    assign wait_read = wait_start_comport ? 8'hff : rtc_do; // COMPORT: zifi.vhd answers #F8EF..#FFEF (no wait)
     assign spiint_n = 1'b1;
 
 assign keyboard_addr = a[15:8];
@@ -992,10 +995,10 @@ assign keyboard_addr = a[15:8];
 // Local RTC responds synchronously; stretch each service access for 4 bus clocks.
     reg [2:0] service_delay = 0;
     always @(posedge fclk) begin
-        if (!rst_n || !(wait_start_gluclock || wait_start_comport)) service_delay <= 0;
+        if (!rst_n || !wait_start_gluclock) service_delay <= 0;
         else if (service_delay != 4) service_delay <= service_delay + 1'b1;
     end
-    assign wait_n = !(wait_start_gluclock || wait_start_comport) || service_delay == 4;
+    assign wait_n = !wait_start_gluclock || service_delay == 4;
 
 
 
@@ -1077,15 +1080,47 @@ assign keyboard_addr = a[15:8];
         .SSG1_AUDIO_A(s1a), .SSG1_AUDIO_B(s1b), .SSG1_AUDIO_C(s1c),
         .SSG0_AUDIO_FM(fm0), .SSG1_AUDIO_FM(fm1), .SSG_FM_ENA(fm_ena), .MIDI_TX(midi_tx));
     reg speaker=0, tape=0;
-    reg [7:0] covox=0;
     always @(posedge fclk) begin
-        if (!rst_n) begin speaker<=0; tape<=0; covox<=0; end
-        else begin
-            if (beeper_wr) begin speaker<=d[4]; tape<=d[3]; end
-            if (covox_wr) covox<=d;
-        end
+        if (!rst_n) begin speaker<=0; tape<=0; end
+        else if (beeper_wr) begin speaker<=d[4]; tape<=d[3]; end
     end
     assign beep=speaker, tape_out=tape;
+
+    // covox #FB and Soundrive (#0F, #1F, #3F, #4F, #5F): covox.vhd of TS-Conf; not in the shadow mode (the VG93
+    // ports #1F..#7F and SAVPORT2 #4F there)
+    wire [7:0] covox_a, covox_b, covox_c, covox_d, covox_fb;
+    covox covox(.I_RESET(!rst_n), .I_CLK(fclk), .I_CS(covox_en), .I_ADDR(a[7:0]), .I_DATA(d),
+        .I_WR_N(wr_n), .I_IORQ_N(iorq_n), .I_DOS(shadow),
+        .O_A(covox_a), .O_B(covox_b), .O_C(covox_c), .O_D(covox_d), .O_FB(covox_fb));
+
+    // SAA1099 (#01FF address, #00FF data): writes outside the shadow mode only (there #FF is the VG93 system
+    // port and the ATM palette). 8 MHz enable from clk_bus: 8 / 28.0303 * 2^16 = 18704 (as TS-Conf)
+    reg [16:0] acc8 = 17'd0;
+    always @(posedge fclk) acc8 <= {1'b0, acc8[15:0]} + 17'd18704;
+    wire saa_wr_n = iorq_n || wr_n || a[7:0] != 8'hFF || shadow || !saa_en;
+    wire [7:0] saa_l, saa_r;
+    saa1099 saa(.clk(fclk), .ena(acc8[16]), .rst_n(rst_n), .cs_n(1'b0), .a0(a[8]), .wr_n(saa_wr_n), .din(d),
+        .out_l(saa_l), .out_r(saa_r));
+
+    // OPL2 (#C4 address / status, #C5 data): opl2_top of TS-Conf (jtopl)
+    wire opl_port = a[7:1] == 7'b1100010 && opl_en;
+    wire opl_cs_n = !(m1_n && !iorq_n && opl_port);
+    assign opl_rd = !opl_cs_n && !rd_n;
+    wire [15:0] opl_l, opl_r;
+    opl2_top opl(.clk(fclk), .reset(!rst_n), .din(d), .a(a[0]), .dout(opl_data), .wr_n(wr_n), .cs_n(opl_cs_n),
+        .out_l(opl_l), .out_r(opl_r));
+
+    // TS ZiFi (ESP8266 on the UART pins, #BFEF..#C7EF), TS RS232 and EVO RS232 (16550, #F8EF..#FFEF; in the EVO
+    // the AVR answered them) on the USB UART of the mcu: zifi.vhd of TS-Conf
+    wire zifi_oe_n_int;
+    assign zifi_oe_n = zifi_oe_n_int || !zifi_en;
+    zifi zifi(.CLK(fclk), .RESET(!locked), .DS80(1'b0), .A(a), .DI(d), .DO(zifi_data),
+        .IORQ_N(iorq_n || !zifi_en), .RD_N(rd_n), .WR_N(wr_n), .ZIFI_OE_N(zifi_oe_n_int), .ENABLED(),
+        .USB_UART_RX_DATA(usb_uart_rx_data), .USB_UART_RX_IDX(usb_uart_rx_idx),
+        .USB_UART_TX_DATA(usb_uart_tx_data), .USB_UART_TX_WR(usb_uart_tx_wr), .USB_UART_TX_MODE(usb_uart_tx_mode),
+        .USB_UART_DLL(usb_uart_dll), .USB_UART_DLM(usb_uart_dlm),
+        .USB_UART_DLL_WR(usb_uart_dll_wr), .USB_UART_DLM_WR(usb_uart_dlm_wr),
+        .UART_RX(uart_rx), .UART_TX(uart_tx), .UART_CTS(uart_cts));
     wire [20:0] gs_addr;
     wire [7:0] gs_din,gs_dout;
     wire gs_rd_n,gs_wr_n,gs_done;
@@ -1112,8 +1147,10 @@ assign keyboard_addr = a[15:8];
         .sdram_ras_n(sdram_ras_n), .sdram_cas_n(sdram_cas_n), .sdram_we_n(sdram_we_n), .sdram_dq(sdram_dq));
     audio_mixer mix(.clk(fclk), .mute(pause), .mode(psg_mix), .speaker(speaker), .tape_in(tape_in),
         .ssg0_a(s0a), .ssg0_b(s0b), .ssg0_c(s0c), .ssg1_a(s1a), .ssg1_b(s1b), .ssg1_c(s1c),
-        .covox_a(8'd0), .covox_b(8'd0), .covox_c(8'd0), .covox_d(8'd0),
-        .covox_fb(covox_en ? covox : 8'd0), .saa_l(8'd0), .saa_r(8'd0),
+        // an OSD switch Off also mutes the device (its registers keep what was written)
+        .covox_a(covox_en ? covox_a : 8'd0), .covox_b(covox_en ? covox_b : 8'd0),
+        .covox_c(covox_en ? covox_c : 8'd0), .covox_d(covox_en ? covox_d : 8'd0),
+        .covox_fb(covox_en ? covox_fb : 8'd0), .saa_l(saa_en ? saa_l : 8'd0), .saa_r(saa_en ? saa_r : 8'd0),
         .gs_l(gs_l), .gs_r(gs_r), .fm_l(fm0), .fm_r(fm1), .fm_ena(fm_ena),
 `ifdef HW_ID2
         .adc_l(adc_in_l), .adc_r(adc_in_r),
@@ -1121,6 +1158,6 @@ assign keyboard_addr = a[15:8];
 `ifdef HW_ID3
         .esp_l(esp_in_l), .esp_r(esp_in_r),
 `endif
-        .opl3_l(16'd0), .opl3_r(16'd0), .audio_l(audio_out_l), .audio_r(audio_out_r));
+        .opl3_l(opl_en ? opl_l : 16'd0), .opl3_r(opl_en ? opl_r : 16'd0), .audio_l(audio_out_l), .audio_r(audio_out_r));
 
 endmodule
