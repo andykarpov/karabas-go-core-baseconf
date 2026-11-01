@@ -91,6 +91,10 @@ read, format, also in turbo). Open ([docs/problems.md](docs/problems.md)): CF ca
 hardware, TS ZiFi (ESP8266) is not tested, Go / Mini not tested on hardware since 26110103. All three
 builds use 99 % of the slices.
 
+Build **26110105**: the bitstreams of 26110104 with the ERS 0.61.01 FE (pentevo `rom/zxevo_fe.rom`,
+12.09.2026: the RAM disk is no longer damaged by the info of the main screen, the autoboot modes can be
+cycled with the mouse, SNA in the list of the file extensions). Not yet checked on hardware.
+
 ## Building
 
 ISE 14.7 (`ISE_SETTINGS`, default `/opt/Xilinx/14.7/ISE_DS/settings64.sh`), from `src/`:
