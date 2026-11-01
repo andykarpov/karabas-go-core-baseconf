@@ -213,7 +213,13 @@ wire kb_vga_60hz;
 wire [7:0] joy_bus;
 wire kb_pause, kb_reset, kb_nmi, mcu_busy;
 wire covox_en, psg_type;
-wire saa_en, opl_en, zifi_en; // OSD switches (see the soft switches below)
+wire saa_en, opl_en, zifi_en, hdd_image; // OSD switches (see the soft switches below)
+wire [7:0] img_mounted, img_data, img_result; // the image files of the mcu (HDF0 slot 4, HDF1 slot 5)
+wire [63:0] img_size;
+wire [8:0] img_data_addr;
+wire [15:0] img_sum;
+wire [23:0] img_q_di;
+wire img_data_wr, img_result_wr, img_q_wr, img_q_ack;
 wire [1:0] psg_mix;
 wire f1;
 wire [7:0] hwid;
@@ -304,6 +310,18 @@ baseconf machine (
 	.opl_en			(opl_en),
 
 	.zifi_en			(zifi_en),
+	.hdd_image			(hdd_image),
+	.img_mounted			(img_mounted),
+	.img_size			(img_size),
+	.img_data_wr			(img_data_wr),
+	.img_data_addr			(img_data_addr),
+	.img_data			(img_data),
+	.img_result_wr			(img_result_wr),
+	.img_result			(img_result),
+	.img_sum			(img_sum),
+	.img_q_wr			(img_q_wr),
+	.img_q_di			(img_q_di),
+	.img_q_ack			(img_q_ack),
 	.psg_mix				(psg_mix),
 	.psg_type			(psg_type),
 	.vga_60hz			(kb_vga_60hz),
@@ -464,7 +482,7 @@ kg_mcu #(
 	.ENABLE_UART(1),
 	.ENABLE_MATRIX(0),
 	.ENABLE_DEBUG(0),
-	.ENABLE_IMG(0),
+	.ENABLE_IMG(1),
 	.ENABLE_FILE(0),
 	.ENABLE_FT(1),
 	.ENABLE_SD2(0)
@@ -550,8 +568,17 @@ kg_mcu #(
 	.MATRIX_CMD_WR	(1'b0),
 	.DEBUG_ADDR		(16'd0),
 	.DEBUG_DATA		(16'd0),
-	.IMG_Q_WR		(1'b0),
-	.IMG_Q_DI		(24'd0),
+	.IMG_Q_WR		(img_q_wr),
+	.IMG_Q_DI		(img_q_di),
+	.IMG_Q_ACK		(img_q_ack),
+	.IMG_MOUNTED		(img_mounted),
+	.IMG_SIZE		(img_size),
+	.IMG_DATA_WR		(img_data_wr),
+	.IMG_DATA_ADDR		(img_data_addr),
+	.IMG_DATA		(img_data),
+	.IMG_RESULT_WR		(img_result_wr),
+	.IMG_RESULT		(img_result),
+	.IMG_SUM		(img_sum),
 	.PS2_COMMAND	(16'h0000),
 	.PS2_COMMAND_WR(1'b0),
 	.ESP_UART_RX_DATA(8'h00),
@@ -623,9 +650,9 @@ hid_parser hid_parser(
 //---------- Soft switches ------------
 
 // OSD switches (core_minig.json "osd", in this order): register n = regs[n*8 +: 8]
-wire [12*8-1:0] softsw;
+wire [15*8-1:0] softsw;
 
-kg_soft_switches #(.N(12), .INIT(96'h000000000100010101000101)) soft_switches(
+kg_soft_switches #(.N(15), .INIT(120'h000000000100000000010101000101)) soft_switches(
 	.clk				(clk_bus),
 	.command			(softsw_command),
 	.regs				(softsw),
@@ -638,16 +665,18 @@ assign psg_type = softsw[16];
 assign saa_en = softsw[24];
 assign opl_en = softsw[32];
 assign zifi_en = softsw[40];
-assign kb_joy_type_l = softsw[50:48];
-assign kb_joy_type_r = softsw[58:56];
-assign kb_vga_60hz = softsw[64];
-assign kb_pause = softsw[72];
-assign kb_nmi = softsw[80];
+assign hdd_image = softsw[48];
+// items 7, 8: the files HDF0 / HDF1 (their registers are unused)
+assign kb_joy_type_l = softsw[74:72];
+assign kb_joy_type_r = softsw[82:80];
+assign kb_vga_60hz = softsw[88];
+assign kb_pause = softsw[96];
+assign kb_nmi = softsw[104];
 // the hotkeys of the mcu look at HID slot 0 only: F12 in any slot resets, so a key held for the boot choice
 // of the BIOS does not stop it. The HID matrix and the filter are reset at power-up only: the held keys stay.
 wire hid_reset = hid_kb_dat0 == 8'h45 || hid_kb_dat1 == 8'h45 || hid_kb_dat2 == 8'h45 ||
                  hid_kb_dat3 == 8'h45 || hid_kb_dat4 == 8'h45 || hid_kb_dat5 == 8'h45;
-assign kb_reset = softsw[88] || hid_reset;
+assign kb_reset = softsw[112] || hid_reset;
 
 assign btn_reset_n = ~kb_reset && ~hw_btn[0] && ~mcu_busy;
 

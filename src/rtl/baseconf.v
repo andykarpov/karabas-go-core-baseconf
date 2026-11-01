@@ -127,6 +127,19 @@ module baseconf
 	input wire covox_en,  // covox #FB and Soundrive (covox.vhd of TS-Conf)
 	input wire saa_en,    // SAA1099 on #FF (writes outside the shadow mode)
 	input wire opl_en,    // OPL2 on #C4 / #C5
+	input wire hdd_image, // the IDE device 0: 0 = the CF card, 1 = the image HDF0 (hdf_ata); HDF1 is device 1
+	// image files of the mcu (kg_mcu ENABLE_IMG): HDF0 = slot 4, HDF1 = slot 5 (img_sdc, hdf_ata)
+	input wire [7:0] img_mounted,
+	input wire [63:0] img_size,
+	input wire img_data_wr,
+	input wire [8:0] img_data_addr,
+	input wire [7:0] img_data,
+	input wire img_result_wr,
+	input wire [7:0] img_result,
+	input wire [15:0] img_sum,
+	output wire img_q_wr,
+	output wire [23:0] img_q_di,
+	input wire img_q_ack,
 	input wire zifi_en,   // TS ZiFi (ESP8266) + TS RS232 + EVO RS232 #F8EF..#FFEF (USB UART of the mcu): zifi.vhd of TS-Conf
 	input wire [1:0] psg_mix,
 	input wire psg_type,
@@ -351,8 +364,21 @@ resetter myrst(.clk(fclk), .rst_in_n(resetbtn_n && locked && !loader_act && !sto
 
 	assign ide_rs_n = rst_n;
 
-	assign ide_d = idedataout ? ideout : 16'hZZZZ;
-	assign idein = ide_d;
+	// The IDE bus of zports goes to the CF card (device 0, with hdd_image = 0) and to hdf_ata (the images:
+	// device 0 with hdd_image = 1, device 1), as ide_mux of the Profi core: the card gets the strobes only
+	// when it is device 0, the read data come from the card when it is device 0 and selected, else hdf_ata.
+	wire [2:0] ide_a_i;
+	wire ide_cs0_n_i, ide_cs1_n_i, ide_rd_n_i, ide_wr_n_i;
+	wire hdf_dev, hdf_dev1_here;
+	wire [15:0] hdf_dout;
+	wire cf_sel = !hdd_image;
+	assign ide_a = ide_a_i;
+	assign ide_cs0_n = ide_cs0_n_i || !cf_sel;
+	assign ide_cs1_n = ide_cs1_n_i || !cf_sel;
+	assign ide_rd_n = ide_rd_n_i || !cf_sel;
+	assign ide_wr_n = ide_wr_n_i || !cf_sel;
+	assign ide_d = (idedataout && cf_sel) ? ideout : 16'hZZZZ;
+	assign idein = (cf_sel && !hdf_dev) ? ide_d : hdf_dout;
 
 	assign ide_dir = ~idedataout;
 
@@ -853,8 +879,8 @@ assign keyboard_addr = a[15:8];
 	               .p7ffd(p7ffd), .peff7(peff7), .mreq_n(mreq_n), .m1_n(m1_n), .dos(dos),
 	               .vg_intrq(fdc_intrq), .vg_drq(fdc_drq), .vg_wrFF(vg_wrFF), .vg_cs_n(vg_cs_n),
 	               .idein(idein), .ideout(ideout), .idedataout(idedataout),
-	               .ide_a(ide_a), .ide_cs0_n(ide_cs0_n), .ide_cs1_n(ide_cs1_n),
-	               .ide_wr_n(ide_wr_n), .ide_rd_n(ide_rd_n),
+	               .ide_a(ide_a_i), .ide_cs0_n(ide_cs0_n_i), .ide_cs1_n(ide_cs1_n_i),
+	               .ide_wr_n(ide_wr_n_i), .ide_rd_n(ide_rd_n_i),
 
 		       .sd_cs_n_val(zx_sdcs_n_val),
 		       .sd_cs_n_stb(zx_sdcs_n_stb),
@@ -1159,5 +1185,35 @@ assign keyboard_addr = a[15:8];
         .esp_l(esp_in_l), .esp_r(esp_in_r),
 `endif
         .opl3_l(opl_en ? opl_l : 16'd0), .opl3_r(opl_en ? opl_r : 16'd0), .audio_l(audio_out_l), .audio_r(audio_out_r));
+
+
+    // Virtual hard disks: the image files HDF0 / HDF1 of the mcu (slots 4, 5) as ATA devices 0 / 1 on the Nemo
+    // IDE ports, hdf_ata + img_sdc of karabas-go-modules, as in the Profi core
+    wire [7:0] sdc_img_mounted;
+    wire [63:0] sdc_img_size;
+    wire [1:0] hdf_rd, hdf_wr;
+    wire [31:0] hdf_sector;
+    wire sdc_busy, sdc_done, sdc_error, sdc_byte_in_strobe;
+    wire [2:0] sdc_slot;
+    wire [8:0] sdc_byte_addr;
+    wire [7:0] sdc_byte_in_data, hdf_out_data;
+    wire hdf_own = sdc_slot[2:1] == 2'b10;
+    wire sdc_active, hdf_led; // activity (no LED / OSD icon on these boards)
+    img_sdc #(.OUT_LATENCY(3), .TIMEOUT(24'd5600000), .RETRIES(2'd3)) img_sdc(.clk(fclk), .reset(!locked),
+        .img_mounted(img_mounted), .img_size(img_size), .img_data_wr(img_data_wr), .img_data_addr(img_data_addr),
+        .img_data(img_data), .img_result_wr(img_result_wr), .img_result(img_result), .img_sum(img_sum),
+        .img_q_wr(img_q_wr), .img_q_di(img_q_di), .img_q_ack(img_q_ack),
+        .sdc_img_mounted(sdc_img_mounted), .sdc_img_size(sdc_img_size),
+        .sdc_rd({2'b00, hdf_rd, 4'b0000}), .sdc_wr({2'b00, hdf_wr, 4'b0000}), .sdc_sector(hdf_sector),
+        .sdc_busy(sdc_busy), .sdc_done(sdc_done), .sdc_error(sdc_error), .sdc_slot(sdc_slot),
+        .sdc_byte_in_strobe(sdc_byte_in_strobe), .sdc_byte_addr(sdc_byte_addr), .sdc_byte_in_data(sdc_byte_in_data),
+        .sdc_byte_out_data(hdf_out_data), .active(sdc_active));
+    hdf_ata hdf_ata(.clk(fclk), .reset(!locked), .ata_reset(!rst_n), .dev0_en(hdd_image), .dev(hdf_dev),
+        .dev1_here(hdf_dev1_here), .a(ide_a_i), .cs_n({ide_cs1_n_i, ide_cs0_n_i}), .rd_n(ide_rd_n_i), .wr_n(ide_wr_n_i),
+        .din(ideout), .dout(hdf_dout), .img_mounted(sdc_img_mounted[5:4]), .img_size(sdc_img_size),
+        .sdc_rd(hdf_rd), .sdc_wr(hdf_wr), .sdc_sector(hdf_sector), .sdc_busy(sdc_busy && hdf_own),
+        .sdc_done(sdc_done && hdf_own), .sdc_error(sdc_error), .sdc_byte_in_strobe(sdc_byte_in_strobe && hdf_own),
+        .sdc_byte_addr(sdc_byte_addr), .sdc_byte_in_data(sdc_byte_in_data), .sdc_byte_out_data(hdf_out_data),
+        .led(hdf_led));
 
 endmodule

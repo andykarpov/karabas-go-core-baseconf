@@ -18,7 +18,7 @@ Keep the authorship: `README.md` / `README.ru.md` name the author of the port an
 ## Build
 
 - `cd src && make` builds the three boards (`make go`, `make mini`, `make minig`; steps `<board>-xst`, `-impl`, `-core`; `make <board>-report`). The Mini boards also need `make <board>-coremode` (trce without the FT mode constraints of HDMI, `pcf_core.py`).
-- `src/Makefile` is that of the other cores (TS-Conf): map / par `-ol high`, cost table `-t 2` on every board. Build 26102806 of forge (commit `50177ec`) used other options, so its bitstreams are not reproduced any more.
+- `src/Makefile` is that of the other cores (TS-Conf): map / par `-ol high`, cost table `-t 2` on every board; LUT combining `-lc area` on the Mini only (`MAP_LC_<board>`, needed since 26110104). Build 26102806 of forge (commit `50177ec`) used other options, so its bitstreams are not reproduced any more.
 - Inputs per board: `karabas_<board>.prj`, `.xst` (defines `HW_ID1` Go, `HW_ID2` Mini, `HW_ID2 HW_ID3` Mini G), `.ucf`, `.ut`. The board code is under `` `ifdef HW_ID1 `` in `baseconf.v` and the video, and in the tops `karabas_<board>_top.v` (after those of TS-Conf). Every Mini / Mini G top must drive `FT_CLK_OUT` (8 MHz).
 - Builds take 10..30 minutes: run them in the background, one board at a time, do not edit RTL while XST runs, and do not build all boards without need. The Mini builds use 96-98 % of the slices.
 - The `.bin` and `.kg*` files are committed as the release.

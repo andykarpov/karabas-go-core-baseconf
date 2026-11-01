@@ -12,6 +12,8 @@ These are actual limits of the current result, not hypothetical release warnings
 - AVR version service: RTC F0..FF show the build ids of the core and the firmware ("Baseconf", "AVR Boot" in ERS),
   sent by the firmware (CMD_HW_SETUP 10..1F); RTC reg D bit 6 = F12.
 - New: SAA1099, OPL2, Soundrive on all boards (OSD switches for SAA1099, OPL2, ZiFi RS232).
+- Virtual drives of the AVR: virtual hard disks instead (HDF0 / HDF1, image files of the firmware as IDE master /
+  slave, `hdf_ata` of karabas-go-modules), 26110104; virtual floppies are not needed (the BIOS mounts TRD / SCL).
 
 | Priority | Open item | Consequence / next action |
 |---|---|---|
