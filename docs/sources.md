@@ -10,11 +10,12 @@ core is on karabas-go-modules master and has its own board tops (below, "Since t
 | `rtl/baseconf.v`, `rtl/karabas_*_top.v` | the port: BaseConf `top.v` and the TS-Conf board wrappers, adapted (`HW_ID1` Go, `HW_ID2` Mini, `HW_ID2 HW_ID3` Mini G, in the `.xst`) |
 | `rtl/baseconf_sram.v`, `rtl/baseconf_sdram.v`, `rtl/baseconf_storage.v`, `rtl/baseconf_keyboard_filter.v`, `rtl/video_fontrom.v` | the port (new) |
 | `rtl/zxevo/` | [zxevo.pentevo](https://github.com/aaydev/zxevo.pentevo) `ec1405e`, `fpga/baseconf/trunk` (`z80`, `mem`, `video`, `spihub`, `common`, `dram`) |
-| `rtl/T80`, `rtl/sound`, `rtl/vg93`, `rtl/mcu` | [karabas-go-core-tsconf](https://github.com/andykarpov/karabas-go-core-tsconf) `edb2060`, `src/rtl` |
+| `rtl/T80`, `rtl/sound`, `rtl/mcu` | [karabas-go-core-tsconf](https://github.com/andykarpov/karabas-go-core-tsconf) `edb2060`, `src/rtl` |
+| `rtl/vg93` (with `vg93-microcode-rom.hex`) | karabas-go-core-tsconf `8a1ce1f`, `src/rtl/vg93`, unchanged: `hrdy_fdc` + the VG93 model of [FD1793_1818VG93](https://github.com/demyanenko-d/FD1793_1818VG93) on clk_bus (as in Profi) |
 | `rtl/adc` | karabas-go-core-tsconf `d728bcc`, `src/rtl/adc` (the PCM1808 ADC, the I2S of the ESP32) |
 | `../modules` | [karabas-go-modules](https://github.com/andykarpov/karabas-go-modules) master, unchanged |
 | `roms/baseconf.rom`, `atm_font.hex` | zxevo.pentevo `rom/zxevo.rom`, `fpga/baseconf/trunk/video/atm.fnt` (as hex) |
-| `roms/gs105b.rom`, `vg93-microcode-rom.hex` | karabas-go-core-tsconf `src/roms`, `src/rtl/vg93` |
+| `roms/gs105b.rom` | karabas-go-core-tsconf `src/roms` |
 | `karabas_*.ucf` | the pins of the TS-Conf ucf of the board, the timing of the port |
 | `karabas_*.xst`, `karabas_*.ut` | TS-Conf (the include dirs of this tree) |
 
@@ -42,9 +43,6 @@ cp1251 comments are UTF-8.
   valid at once.
 - `mcu/hid_parser.vhd`: joystick mode 6 SEGA (all twelve buttons as Spectrum keys).
 - `sound/turbosound.v`: the AY I/O ports read FF.
-- `vg93/hrdy_fdc.v`: INIT values of the free-running counters. `vg93/vg93_host_bus.v`: the register
-  address is taken with the written data (a 14 MHz CPU changes it before the 8 MHz side sees the end
-  of the write).
 - `kg_osd_overlay.v`: the vertical offset of the OSD is an input (`v_offset`: 50 / 60 Hz); now
   `V_OFFSET_IN` of karabas-go-modules (#19).
 

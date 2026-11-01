@@ -30,7 +30,8 @@ It is built from:
 - **The TS-Conf core of Karabas Go** ([karabas-go-core-tsconf](https://github.com/andykarpov/karabas-go-core-tsconf),
   Andy Karpov and contributors, Oleh Starychenko among them): the board wrapper that the top levels
   derive from, General Sound (`gs.v`, ROM `roms/gs105b.rom`), TurboSound, the HID parser,
-  the physical floppy controller (Firefly's `vg93`, its microcode ROM).
+  the physical floppy controller (`hrdy_fdc` with the VG93 model of
+  [FD1793_1818VG93](https://github.com/demyanenko-d/FD1793_1818VG93) and its microcode ROM).
 - **T80** (Daniel Wallner, Sorgelig and others), **JT12 / JT03** (Jose Tejada),
   **zhdmi** (François Galea) and the shared modules of
   [karabas-go-modules](https://github.com/andykarpov/karabas-go-modules) (the MCU link, OSD, PLL,

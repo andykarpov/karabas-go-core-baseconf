@@ -30,7 +30,6 @@ module baseconf
   // clocks, from the PLL of the top with phase 0: clk_bus is clk / 3, its edges are edges of clk
 	input wire clk,       // 84 MHz: the SRAM controller, the SDRAM of the General Sound
 	input wire clk_bus,   // 28 MHz: the machine
-	input wire clk8,      // 8 MHz: the FDC (Go)
 	input wire ce,        // clk: the clock before each edge of clk_bus
 	input wire resetbtn_n,
 	input wire resetkey_n, // F12 / OSD Reset / button only (not mcu_busy): also resets the ROM storage
@@ -200,6 +199,7 @@ module baseconf
     wire rom_req = csrom && !mreq_n && (!rd_n || !romwe_n);
     wire [7:0] fdc_data, ts_data, gs_data;
     wire fdc_oe, fdc_oe_n, gs_oe;
+    wire fdc_busy, fdc_intrq, fdc_drq; // hrdy_fdc (Go): WAIT, bits 7, 6 of port #FF
     wire ts_read = !iorq_n && !rd_n && a[15] && a[7:0]==8'hfd;
     // used by the CPU below, declared here: without `default_nettype none from the file before (hdmi_top.v
     // of TS-Conf) XST took them as implicit nets and failed on their declarations
@@ -208,7 +208,7 @@ module baseconf
     wire gen_nmi;
     assign cpu_di = d_pre_out;
     t80pa cpu(.RESET_n(rst_n), .CLK(fclk), .CEN_p(zpos), .CEN_n(zneg),
-        .WAIT_n(wait_n && (!rom_req || rom_done)), .INT_n(int_n),
+        .WAIT_n(wait_n && (!rom_req || rom_done) && !fdc_busy), .INT_n(int_n),
         .NMI_n(!gen_nmi), .BUSRQ_n(1'b1), .M1_n(m1_n), .MREQ_n(mreq_n),
         .IORQ_n(iorq_n), .RD_n(rd_n), .WR_n(wr_n), .RFSH_n(rfsh_n),
         .OUT0(1'b1), .A(a), .DI(cpu_di), .DO(d), .DIRSet(1'b0),
@@ -848,7 +848,7 @@ assign keyboard_addr = a[15:8];
 	               .a(a), .iorq_n(iorq_n), .rd_n(rd_n), .wr_n(wr_n), .porthit(porthit),
 	               .ay_bdir(ay_bdir), .ay_bc1(ay_bc1), .border(border),
 	               .p7ffd(p7ffd), .peff7(peff7), .mreq_n(mreq_n), .m1_n(m1_n), .dos(dos),
-	               .vg_intrq(fdc_data[7]), .vg_drq(fdc_data[6]), .vg_wrFF(vg_wrFF), .vg_cs_n(vg_cs_n),
+	               .vg_intrq(fdc_intrq), .vg_drq(fdc_drq), .vg_wrFF(vg_wrFF), .vg_cs_n(vg_cs_n),
 	               .idein(idein), .ideout(ideout), .idedataout(idedataout),
 	               .ide_a(ide_a), .ide_cs0_n(ide_cs0_n), .ide_cs1_n(ide_cs1_n),
 	               .ide_wr_n(ide_wr_n), .ide_rd_n(ide_rd_n),
@@ -1045,13 +1045,16 @@ assign keyboard_addr = a[15:8];
 
 
 
-    // Keep the Firefly-derived physical drive path, including its own #FF latch.
+    // The FDC of TS-Conf / Profi (hrdy_fdc + the VG93 model of github.com/demyanenko-d/FD1793_1818VG93) on
+    // clk_bus, the CPU clock (28 MHz): no clock domain crossing to the CPU bus. busy holds the CPU (WAIT) after a
+    // write to a VG93 register until the model took it and paces the port accesses of a turbo CPU.
     // #FF read decode must be a level: vg_wrFF is only a write strobe.
 `ifdef HW_ID1
-    hrdy_fdc fdc(.clk(fclk), .clk_8(clk8), .reset(!rst_n), .turbo_fdc(1'b0),
-        .a(a), .d(d), .m1_n(m1_n), .wr_n(wr_n), .rd_n(rd_n), .iorq_n(iorq_n),
+    hrdy_fdc fdc(.clk(fclk), .ds80(1'b0), .reset(!rst_n), .ena_cpu(zpos),
+        .a(a), .d(d), .wr_n(wr_n), .rd_n(rd_n), .iorq_n(iorq_n),
         .cs_n(vg_cs_n), .csff_n(!(shadow && a[7:0]==8'hff && !iorq_n)),
-        .oe_n(fdc_oe_n), .dout(fdc_data), .FDC_SIDE1(fdc_side), .FDC_RDATA(fdc_rdata),
+        .oe_n(fdc_oe_n), .dout(fdc_data), .busy(fdc_busy), .intrq_o(fdc_intrq), .drq_o(fdc_drq),
+        .FDC_SIDE1(fdc_side), .FDC_RDATA(fdc_rdata),
         .FDC_WPRT(fdc_wprt), .FDC_TR00(fdc_tr00), .FDC_INDEX(fdc_index),
         .FDC_WG(fdc_wg), .FDC_WR_DATA(fdc_wr_data), .FDC_STEP(fdc_step),
         .FDC_DIR(fdc_dir), .FDC_MOTOR(fdc_motor), .FDC_DS(fdc_ds));
@@ -1061,6 +1064,7 @@ assign keyboard_addr = a[15:8];
     // by an absent FDC and report inactive IRQ/DRQ to the port decoder.
     // (the fdc_* ports are not there with HW_ID2)
     assign fdc_oe = 1'b0, fdc_oe_n = 1'b1, fdc_data = 8'h00;
+    assign fdc_busy = 1'b0, fdc_intrq = 1'b0, fdc_drq = 1'b0;
 `endif
     reg [2:0] sound_div = 0;
     always @(posedge fclk) sound_div <= sound_div + 1'b1;

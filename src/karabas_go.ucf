@@ -219,11 +219,12 @@ NET "FLASH_WP_N"    LOC="N12"  | IOSTANDARD = LVCMOS33; # CONF_IO2
 NET "FLASH_HOLD_N"  LOC="P12"  | IOSTANDARD = LVCMOS33; # CONF_IO3
 
 # ------------------------------------------------------------------------------------------------------------
-# BaseConf B4: main system 28.0303 MHz, FDC 7.974 MHz, SDRAM 84.0909 MHz inverted (TSConf clock domain).
+# BaseConf B4: main system 28.0303 MHz, SDRAM 84.0909 MHz inverted (TSConf clock domain).
+# The FDC (hrdy_fdc, the VG93 model and its drive glue, from TS-Conf) runs on clk_bus (it was on clk_8): clk_8 has no
+# loads on the Go, no clk_8 <-> clk_bus bounds.
 NET "CLK_50MHZ" TNM_NET = "CLK_50MHZ";
 TIMESPEC "TS_CLK_50MHZ" = PERIOD "CLK_50MHZ" 20 ns HIGH 50%;
 NET "clk_bus" TNM_NET = "TG_CLK_BUS";
-NET "pll_clk<1>" TNM_NET = "TG_CLK_8";
 NET "MCU_SCK" TNM_NET = "TG_CLK_MCU";
 TIMESPEC "TS_CLK_MCU" = PERIOD "TG_CLK_MCU" 16 MHz;
 # SPI mode 0: MOSI changes on falling SCK; sample on rising SCK.
@@ -233,8 +234,6 @@ NET "MCU_MOSI" OFFSET = IN 16 ns VALID 32 ns BEFORE "MCU_SCK" RISING;
 NET "MCU_MISO" OFFSET = OUT 25 ns AFTER "MCU_SCK" FALLING;
 TIMESPEC "TS_MCU_TO_BUS" = FROM "TG_CLK_MCU" TO "TG_CLK_BUS" 31.25 ns DATAPATHONLY;
 TIMESPEC "TS_BUS_TO_MCU" = FROM "TG_CLK_BUS" TO "TG_CLK_MCU" 31.25 ns DATAPATHONLY;
-TIMESPEC "TS_BUS_TO_CLK8" = FROM "TG_CLK_BUS" TO "TG_CLK_8" 35 ns DATAPATHONLY;
-TIMESPEC "TS_CLK8_TO_BUS" = FROM "TG_CLK_8" TO "TG_CLK_BUS" 35 ns DATAPATHONLY;
 TIMEGRP "TG_SRAM_IN" = PADS("MD<*>");
 TIMEGRP "TG_SRAM_OUT" = "TG_SRAM_IN" PADS("MA<*>") PADS("MRD_N<*>") PADS("MWR_N<*>");
 TIMESPEC "TS_SRAM_OUT" = FROM FFS TO "TG_SRAM_OUT" 12 ns DATAPATHONLY;
