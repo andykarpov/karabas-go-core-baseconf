@@ -33,6 +33,7 @@ module baseconf
 	input wire clk8,      // 8 MHz: the FDC (Go)
 	input wire ce,        // clk: the clock before each edge of clk_bus
 	input wire resetbtn_n,
+	input wire resetkey_n, // F12 / OSD Reset / button only (not mcu_busy): also resets the ROM storage
 	input wire resetgsbtn_n,
 	input wire locked,
 	output wire f1_out,
@@ -1091,7 +1092,12 @@ assign keyboard_addr = a[15:8];
         .A(a), .DI(d), .DO(gs_data), .OE(gs_oe), .WR_n(wr_n), .RD_n(rd_n),
         .IORQ_n(iorq_n), .M1_n(m1_n), .MA(gs_addr), .MDI(gs_din), .MDO(gs_dout),
         .MRFSH_n(), .MWE_n(gs_wr_n), .MRD_n(gs_rd_n), .OUT_L(gs_l), .OUT_R(gs_r));
-    baseconf_storage storage(.clk(clk), .reset(!locked),
+    // F12 hang experiment: the ROM storage and its SDRAM controller were reset by !locked only, so a stuck
+    // ROM access survived every Z80 reset. Reset them by the reset keys too (not by rst_n: storage_busy
+    // holds rst_n during the SDRAM init, a loop), synchronized to clk.
+    reg [1:0] storage_key_rst = 2'b00;
+    always @(posedge clk) storage_key_rst <= {storage_key_rst[0], !resetkey_n};
+    baseconf_storage storage(.clk(clk), .reset(!locked || storage_key_rst[1]),
         .rom_req(rom_req), .rom_wr(!romwe_n), .rom_addr({rompg,a[13:0]}),
         .rom_din(d), .rom_dout(rom_data), .rom_done(rom_done),
         .gs_req(gs_req), .gs_wr(!gs_wr_n), .gs_addr(gs_addr), .gs_din(gs_dout),
