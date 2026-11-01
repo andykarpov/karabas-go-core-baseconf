@@ -15,7 +15,7 @@ core is on karabas-go-modules master and has its own board tops (below, "Since t
 | `rtl/uart`, `rtl/sound/{covox.vhd,saa1099.v,saa1099_compressor_lut.hex,opl2_top.v,opl2_clk.v,jtopl}` | karabas-go-core-tsconf `8a1ce1f`, unchanged: TS ZiFi + TS / Evo RS232 (`zifi.vhd`), covox / Soundrive, SAA1099, OPL2 on [JTOPL](https://github.com/jotego/jtopl) |
 | `rtl/adc` | karabas-go-core-tsconf `d728bcc`, `src/rtl/adc` (the PCM1808 ADC, the I2S of the ESP32) |
 | `../modules` | [karabas-go-modules](https://github.com/andykarpov/karabas-go-modules) master, unchanged |
-| `roms/baseconf.rom`, `atm_font.hex` | zxevo.pentevo `rom/zxevo.rom`, `fpga/baseconf/trunk/video/atm.fnt` (as hex) |
+| `roms/baseconf.rom`, `atm_font.hex` | zxevo.pentevo `rom/zxevo_fe.rom` (ERS 0.61.01 FE, 12.09.2026; `rom/zxevo.rom` was removed upstream), `fpga/baseconf/trunk/video/atm.fnt` (as hex) |
 | `roms/gs105b.rom` | karabas-go-core-tsconf `src/roms` |
 | `karabas_*.ucf` | the pins of the TS-Conf ucf of the board, the timing of the port |
 | `karabas_*.xst`, `karabas_*.ut` | TS-Conf (the include dirs of this tree) |
