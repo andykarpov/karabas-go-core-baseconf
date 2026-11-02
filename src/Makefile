@@ -34,7 +34,8 @@ JSON_minig = core_minig.json
 # Build 26102806 of karabas-forge used the map / par defaults on the Go and -ol high -t 2 / -t 1 on Mini / Mini G.
 MAP_T_go = 2
 MAP_T_mini = 2
-MAP_T_minig = 2
+# Mini G -t 3 since 26110201: with -t 2 three JT12 paths were 1.3 ns short (100 % slices)
+MAP_T_minig = 3
 # LUT combining: the Mini (sigma-delta audio) fits only with -lc area since 26110104
 MAP_LC_go = off
 MAP_LC_mini = area
