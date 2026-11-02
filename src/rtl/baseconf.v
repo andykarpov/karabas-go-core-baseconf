@@ -302,6 +302,9 @@ module baseconf
 	// nmi signals
 	wire clr_nmi;
 	wire in_nmi;
+	wire in_trdemu, trdemu_wr_disable; // TR-DOS emulation of base_trdemu (RAM page #FE)
+	wire vg_rdwr_fclk;
+	wire [1:0] vg_drv;
 	wire [1:0] set_nmi;
 	wire imm_nmi;
 	wire nmi_buf_clr;
@@ -612,6 +615,8 @@ assign d_pre_out = drive_00 ? 8'h00 :
                                 
                                 
 				.in_nmi(in_nmi),
+				.in_trdemu(in_trdemu),
+				.trdemu_wr_disable(trdemu_wr_disable),
                                 
 				.atmF7_wr(atmF7_wr_fclk),
                                 
@@ -651,8 +656,20 @@ assign d_pre_out = drive_00 ? 8'h00 :
 	           .dos_turn_off( |dos_turn_off ),
 
 	           .cpm_n(cpm_n),
+	           .atm_pen2(atm_pen2),
 
-	           .dos(dos)
+	           .dos(dos),
+
+	           .zpos(zpos),
+	           .m1_n(m1_n),
+	           .in_trdemu   (in_trdemu   ),
+	           .in_nmi      (in_nmi      ),
+	           .clr_nmi     (clr_nmi     ),
+	           .vg_rdwr_fclk(vg_rdwr_fclk),
+	           .fdd_mask    (fdd_mask    ),
+	           .vg_a        (vg_drv      ),
+	           .romnram     (romnram[0]  ),
+	           .trdemu_wr_disable(trdemu_wr_disable)
 	         );
 
 
@@ -878,6 +895,7 @@ assign keyboard_addr = a[15:8];
 	               .ay_bdir(ay_bdir), .ay_bc1(ay_bc1), .border(border),
 	               .p7ffd(p7ffd), .peff7(peff7), .mreq_n(mreq_n), .m1_n(m1_n), .dos(dos),
 	               .vg_intrq(fdc_intrq), .vg_drq(fdc_drq), .vg_wrFF(vg_wrFF), .vg_cs_n(vg_cs_n),
+	               .vg_rdwr_fclk(vg_rdwr_fclk), .vg_drv(vg_drv), .fdd_mask(fdd_mask),
 	               .idein(idein), .ideout(ideout), .idedataout(idedataout),
 	               .ide_a(ide_a_i), .ide_cs0_n(ide_cs0_n_i), .ide_cs1_n(ide_cs1_n_i),
 	               .ide_wr_n(ide_wr_n_i), .ide_rd_n(ide_rd_n_i),
@@ -1087,7 +1105,9 @@ assign keyboard_addr = a[15:8];
         .FDC_WPRT(fdc_wprt), .FDC_TR00(fdc_tr00), .FDC_INDEX(fdc_index),
         .FDC_WG(fdc_wg), .FDC_WR_DATA(fdc_wr_data), .FDC_STEP(fdc_step),
         .FDC_DIR(fdc_dir), .FDC_MOTOR(fdc_motor), .FDC_DS(fdc_ds));
-    assign fdc_oe = !fdc_oe_n;
+    // #FF reads come from zports ({intrq, drq, 1, last written bits 4..0}, as in base_trdemu); the FDC
+    // still sees them (busy paces the CPU)
+    assign fdc_oe = !fdc_oe_n && (a[7:0] != 8'hFF);
 `else // Mini, Mini G
     // Mini boards have no physical drive interface. Leave the I/O bus undriven
     // by an absent FDC and report inactive IRQ/DRQ to the port decoder.

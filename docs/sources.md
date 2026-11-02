@@ -15,10 +15,25 @@ core is on karabas-go-modules master and has its own board tops (below, "Since t
 | `rtl/uart`, `rtl/sound/{covox.vhd,saa1099.v,saa1099_compressor_lut.hex,opl2_top.v,opl2_clk.v,jtopl}` | karabas-go-core-tsconf `8a1ce1f`, unchanged: TS ZiFi + TS / Evo RS232 (`zifi.vhd`), covox / Soundrive, SAA1099, OPL2 on [JTOPL](https://github.com/jotego/jtopl) |
 | `rtl/adc` | karabas-go-core-tsconf `d728bcc`, `src/rtl/adc` (the PCM1808 ADC, the I2S of the ESP32) |
 | `../modules` | [karabas-go-modules](https://github.com/andykarpov/karabas-go-modules) master, unchanged |
-| `roms/baseconf.rom`, `atm_font.hex` | zxevo.pentevo `rom/zxevo.rom` (ERS 0.61, without `DOS_FE`: EVO-DOS reads the TRD / SCL images itself; the FE variant `rom/zxevo_fe.rom` needs the trap FPGA of `fpga/base_trdemu` (`FDD_EMU_PORT`, page `#FE`), which this port does not have, so it was used only in 26110105 / 26110106), `fpga/baseconf/trunk/video/atm.fnt` (as hex) |
+| `roms/baseconf.rom` | NedoPC SVN `svn://svn.nedopc.com/pentevo` r1368 `rom/zxevo_fe.rom` (ERS 0.61.01 with `DOS_FE`, unpatched; needs the TR-DOS emulation traps below) |
+| `atm_font.hex` | zxevo.pentevo `fpga/baseconf/trunk/video/atm.fnt` (as hex) |
 | `roms/gs105b.rom` | karabas-go-core-tsconf `src/roms` |
 | `karabas_*.ucf` | the pins of the TS-Conf ucf of the board, the timing of the port |
 | `karabas_*.xst`, `karabas_*.ut` | TS-Conf (the include dirs of this tree) |
+
+The upstream of `rtl/zxevo` is the NedoPC SVN `svn://svn.nedopc.com/pentevo` (the GitHub copy
+zxevo.pentevo has the same `fpga/baseconf/trunk`). `fpga/baseconf/trunk` has not changed since r930
+(2021); the BaseConf of the official `zxevo_fw.bin` (`cfgs/standalone_base_trdemu`) is
+`fpga/base_trdemu/trunk`. Taken from it (r1368) into our `fpga/baseconf` files:
+
+- the TR-DOS emulation traps: `zdos.v` (`in_trdemu`, `trdemu_wr_disable`; no trap while the palette is
+  written, r1112), `atm_pager.v` (window 0 = RAM page `#FE` in the emulation), `zports.v` (`fdd_mask` =
+  `#13BD`, no `vg_cs_n` for a masked drive, `vg_rdwr_fclk`, `#FF` reads `{intrq, drq, 1, bits 4..0 last
+  written}`), wired in `baseconf.v`; on the Go the `#FF` reads come from `zports`, not `hrdy_fdc`;
+- `zports.v`: the SD read buffer (r996), the `savelij` ports `#2F`, `#4F`, `#6F`, `#8F` removed.
+
+Not taken: the code / data cache of `zmem.v`, the 8 bit Kempston, the ATM3 444 palette and the ULAplus
+raster change, the removal of the `xxBE` reads; the branch `fpga/base_trdemu/newirq` (work in progress).
 
 ## Changes to the BaseConf sources
 
@@ -28,7 +43,7 @@ cp1251 comments are UTF-8.
 - `zports.v`: the registers clocked by `zclk` run on `fclk` with `zpos`; the three transparent IDE
   trigger latches are `fclk` registers; blocking assignments of the ATM registers are non-blocking;
   `xxBD` reads as `xxBE` (the register map of the newer `base_trdemu` that the BIOS uses), breakpoint
-  writes only at `10BD` / `11BD`; register `13BD` reads 0 (no virtual drives); the output `shadow_out`.
+  writes only at `10BD` / `11BD`; the output `shadow_out`.
 - `zmem.v`: the CPU read latch clocked by `cpu_strobe` is an `fclk` register with a bypass while
   `cpu_strobe` is high.
 - `zclock.v`: the power-up values of the simulation are kept for the FPGA (INIT values).

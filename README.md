@@ -105,6 +105,13 @@ without `DOS_FE`). The FE ROM of 26110105 / 26110106 mounts the TRD images throu
 the trap FPGA of `fpga/base_trdemu` (`FDD_EMU_PORT`, page `#FE`): this port is on `fpga/baseconf`, so the
 TRD images mounted in the ERS did not work there. The EVO-DOS of the plain ROM reads them itself.
 
+Build **26110201**: the TR-DOS emulation traps of the current NedoPC BaseConf (SVN `fpga/base_trdemu/trunk`;
+the port was made from `fpga/baseconf/trunk`, frozen since 2021) and the ERS 0.61.01 FE again (pentevo
+`rom/zxevo_fe.rom`, unpatched): the drives set in `#13BD` get no CS of the VG93, an access of TR-DOS to
+its ports switches the window `#0000` to the RAM page `#FE` (the `dos_fe` of the ROM, it reads the TRD
+image mounted in the ERS), `OUT (#BE)` returns. Also from `base_trdemu`: port `#FF` reads its last written
+bits 4..0, the read buffer of the SD card (contended 48K / 128K modes), the `savelij` ports `#2F..#8F` are gone.
+
 ## Building
 
 ISE 14.7 (`ISE_SETTINGS`, default `/opt/Xilinx/14.7/ISE_DS/settings64.sh`), from `src/`:

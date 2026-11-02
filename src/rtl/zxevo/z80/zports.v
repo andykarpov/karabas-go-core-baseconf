@@ -79,6 +79,9 @@ module zports(output wire shadow_out,
 	input  wire        vg_intrq,
 	input  wire        vg_drq, // from vg93 module - drq + irq read
 	output wire        vg_wrFF,        // write strobe of #FF port
+	output reg         vg_rdwr_fclk,   // pulses when ANY port of TR-DOS controller was read or written (base_trdemu)
+	output wire [ 1:0] vg_drv,         // drive selected by #FF (bits 1:0)
+	output reg  [ 3:0] fdd_mask,       // #13BD: drives emulated by the ROM (page #FE), no CS to the FDC
 
 	output wire        sd_cs_n_val,
 	output wire        sd_cs_n_stb,
@@ -183,10 +186,6 @@ module zports(output wire shadow_out,
 	localparam VGDAT  = 8'h7F;
 	localparam VGSYS  = 8'hFF;
 
-	localparam SAVPORT1 = 8'h2F;
-	localparam SAVPORT2 = 8'h4F;
-	localparam SAVPORT3 = 8'h6F;
-	localparam SAVPORT4 = 8'h8F;
 
 	localparam KJOY   = 8'h1F;
 	localparam KMOUSE = 8'hDF;
@@ -273,7 +272,7 @@ module zports(output wire shadow_out,
 
 
 
-	reg [7:0] savport [3:0];
+	reg [7:0] sd_rd_buffer;
 	reg [5:0] vgFF;
 
 
@@ -303,8 +302,6 @@ module zports(output wire shadow_out,
 		    ( (loa==VGCOM)&&shadow ) || ( (loa==VGTRK)&&shadow ) || ( (loa==VGSEC)&&shadow ) || ( (loa==VGDAT)&&shadow ) ||
 		    ( (loa==VGSYS)&&shadow ) || ( (loa==KJOY)&&(!shadow) ) ||
 
-    		    ( (loa==SAVPORT1)&&shadow ) || ( (loa==SAVPORT2)&&shadow ) ||
-		    ( (loa==SAVPORT3)&&shadow ) || ( (loa==SAVPORT4)&&shadow ) ||
 
 
 		    ( (loa==PORTF7)&&(!shadow) ) || ( (loa==SDCFG)&&(!shadow) ) || ( (loa==SDDAT) ) ||
@@ -404,10 +401,7 @@ module zports(output wire shadow_out,
 		//PORTFD:
 
 		VGSYS:
-			dout = { vg_intrq, vg_drq, vgFF }; // 6'b111111 };
-
-		SAVPORT1, SAVPORT2, SAVPORT3, SAVPORT4:
-			dout = savport[ loa[6:5] ];
+			dout = { vg_intrq, vg_drq, 1'b1, vgFF[4:0] }; // base_trdemu: last written bits 4..0
 
 
 		KJOY:
@@ -418,7 +412,7 @@ module zports(output wire shadow_out,
 		SDCFG:
 			dout = 8'h00; // always SD inserted, SD is in R/W mode
 		SDDAT:
-			dout = sd_dataout;
+			dout = sd_rd_buffer;
 
 
 		PORTF7: begin
@@ -756,8 +750,28 @@ module zports(output wire shadow_out,
 
 
 
-	// VG93 control
-	assign vg_cs_n =  (~shadow) | iorq_n | (rd_n & wr_n) | ( ~((loa==VGCOM)|(loa==VGTRK)|(loa==VGSEC)|(loa==VGDAT)) );
+	// fdd mask write (#13BD, base_trdemu)
+	always @(posedge fclk, negedge rst_n)
+	if( !rst_n )
+		fdd_mask <= 4'd0;
+	else if( zxevbrk_wr_fclk && a[12:8]==5'h13 )
+		fdd_mask <= din[3:0];
+
+	assign vg_drv = vgFF[1:0];
+
+	// TR-DOS any port access strobe -- for switching TR-DOS page to RAM page FE (base_trdemu)
+	always @(posedge fclk, negedge rst_n)
+	if( !rst_n )
+		vg_rdwr_fclk <= 1'b0;
+	else
+		vg_rdwr_fclk <= ((loa==VGCOM) ||
+		                 (loa==VGTRK) ||
+		                 (loa==VGSEC) ||
+		                 (loa==VGDAT) ||
+		                 (loa==VGSYS)  ) && shadow && (port_wr_fclk || port_rd_fclk);
+
+	// VG93 control: no CS for an emulated drive
+	assign vg_cs_n =  fdd_mask[vg_drv] | (~shadow) | iorq_n | (rd_n & wr_n) | ( ~((loa==VGCOM)|(loa==VGTRK)|(loa==VGSEC)|(loa==VGDAT)) );
 
 
 
@@ -789,6 +803,11 @@ module zports(output wire shadow_out,
 
 	// data for SPI module
 	assign sd_datain = sddat_rd ? 8'hFF : din;
+
+	// latch SD read data to fix bug with reading SD card in 48k and 128k contention modes (base_trdemu r996)
+	always @(posedge fclk)
+	if( sd_start )
+		sd_rd_buffer <= sd_dataout;
 
 
 
@@ -923,27 +942,12 @@ module zports(output wire shadow_out,
 	5'h11: portbemux = brk_addr[15:8];
 
 	5'h12: portbemux = wrdisables;
-	5'h13: portbemux = 8'h00; // physical FDC only
+	5'h13: portbemux = { 4'b0000, fdd_mask };
 
 	default: portbemux = 8'bXXXXXXXX;
 
 	endcase
 
-
-
-
-
-	// savelij ports write
-	//
-	always @(posedge fclk)
-	if( port_wr_fclk && shadow )
-	begin
-		if( (loa==SAVPORT1) ||
-		    (loa==SAVPORT2) ||
-		    (loa==SAVPORT3) ||
-		    (loa==SAVPORT4) )
-			savport[ loa[6:5] ] <= din;
-	end
 
 
 
