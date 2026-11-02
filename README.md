@@ -100,6 +100,11 @@ of `page5/source/rst8service.a80`: `JR Z` -> `JR`): the ERS no longer probes `FD
 prints "Incorrect FPGA zxevo_fw.bin" at the bottom of the main screen (the FDD emulation of the AVR is
 not used here, the VG93 is in the FPGA).
 
+Build **26110107**: the bitstreams of 26110104 with the ERS 0.61 of 26110104 again (pentevo `rom/zxevo.rom`,
+without `DOS_FE`). The FE ROM of 26110105 / 26110106 mounts the TRD images through `dos_fe`, which needs
+the trap FPGA of `fpga/base_trdemu` (`FDD_EMU_PORT`, page `#FE`): this port is on `fpga/baseconf`, so the
+TRD images mounted in the ERS did not work there. The EVO-DOS of the plain ROM reads them itself.
+
 ## Building
 
 ISE 14.7 (`ISE_SETTINGS`, default `/opt/Xilinx/14.7/ISE_DS/settings64.sh`), from `src/`:

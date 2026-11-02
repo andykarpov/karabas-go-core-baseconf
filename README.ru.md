@@ -95,6 +95,11 @@ OPL2, строки версий в ERS и виртуальный HDD (детек
 в `page5/source/rst8service.a80`: `JR Z` -> `JR`): ERS больше не проверяет `FDD_EMU_PORT` и не выводит
 внизу главного экрана «Incorrect FPGA zxevo_fw.bin» (эмуляция FDD на AVR здесь не используется, VG93 в FPGA).
 
+Сборка **26110107**: битстримы 26110104 снова с ERS 0.61 из 26110104 (pentevo `rom/zxevo.rom`, без
+`DOS_FE`). FE-ПЗУ из 26110105 / 26110106 монтирует TRD-образы через `dos_fe`, которому нужна FPGA с
+ловушками из `fpga/base_trdemu` (`FDD_EMU_PORT`, страница `#FE`). Порт сделан на `fpga/baseconf`, поэтому
+смонтированные в ERS TRD-образы там не работали. EVO-DOS обычного ПЗУ читает их сам.
+
 ## Сборка
 
 ISE 14.7 (`ISE_SETTINGS`, по умолчанию `/opt/Xilinx/14.7/ISE_DS/settings64.sh`):
