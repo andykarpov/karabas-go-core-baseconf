@@ -33,10 +33,32 @@ module zdos(
 	input  wire        dos_turn_off,
 
 	input  wire        cpm_n,
+	input  wire        atm_pen2, // atm palette write enable
 
 
-	output reg         dos
+	output reg         dos,
+
+
+	// TR-DOS emulation of base_trdemu (page #FE)
+	// for clearing trdemu_wr_disable
+	input  wire        zpos,
+	input  wire        m1_n,
+
+	// control of page #FE for emulation
+	output reg         in_trdemu,
+
+	input  wire        in_nmi, // not exiting trdemu mode when also in nmi mode
+
+	input  wire        clr_nmi, // out (#BE),a
+	input  wire        vg_rdwr_fclk,
+	input  wire [ 3:0] fdd_mask,
+	input  wire [ 1:0] vg_a,
+	input  wire        romnram,
+
+	output reg         trdemu_wr_disable
 );
+
+	wire trdemu_on = vg_rdwr_fclk && fdd_mask[vg_a] && dos && romnram && !atm_pen2;
 
 
 
@@ -63,6 +85,26 @@ module zdos(
 
 
 
+
+
+	// vg emulator RAM turn on/off
+	always @(posedge fclk, negedge rst_n)
+	if( !rst_n )
+		in_trdemu <= 1'b0;
+	else if( clr_nmi && !in_nmi )
+		in_trdemu <= 1'b0;
+	else if( trdemu_on )
+		in_trdemu <= 1'b1;
+
+
+	// wr disable for trdemu RAM page
+	always @(posedge fclk, negedge rst_n)
+	if( !rst_n )
+		trdemu_wr_disable <= 1'b0;
+	else if( zpos && !m1_n )
+		trdemu_wr_disable <= 1'b0;
+	else if( trdemu_on )
+		trdemu_wr_disable <= 1'b1;
 
 
 endmodule
