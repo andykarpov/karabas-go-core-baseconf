@@ -111,6 +111,9 @@ the port was made from `fpga/baseconf/trunk`, frozen since 2021) and the ERS 0.6
 its ports switches the window `#0000` to the RAM page `#FE` (the `dos_fe` of the ROM, it reads the TRD
 image mounted in the ERS), `OUT (#BE)` returns. Also from `base_trdemu`: port `#FF` reads its last written
 bits 4..0, the read buffer of the SD card (contended 48K / 128K modes), the `savelij` ports `#2F..#8F` are gone.
+Checked on the Mini G: a TRD mounted in the ERS (`Mount A:`) boots in TR-DOS (NEO-DOS "Nedo Emul"), `LIST`,
+`SAVE` to the image. Go / Mini not checked on hardware (Go: the physical drives should work as before, the
+emulation takes only the drives set in `#13BD`). Slices: Go 99 %, Mini 100 %, Mini G 100 % (map `-t 3`).
 
 ## Building
 
