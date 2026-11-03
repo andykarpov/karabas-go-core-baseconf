@@ -115,6 +115,14 @@ Checked on the Mini G: a TRD mounted in the ERS (`Mount A:`) boots in TR-DOS (NE
 `SAVE` to the image. Go / Mini not checked on hardware (Go: the physical drives should work as before, the
 emulation takes only the drives set in `#13BD`). Slices: Go 99 %, Mini 100 %, Mini G 100 % (map `-t 3`).
 
+Build **26110301**: the right arrow of a USB keyboard no longer resets the Z80 (Mini G 26110201: the machine
+restarted into the 128K ROM, with the key held into its keyboard self-test). F12 was a combinational compare of
+the key bytes (`== 8'h45`) in front of the asynchronous reset of `resetter`; while a key byte changes 00 <-> 4F
+(the right arrow = 45 plus bits 1 and 3) the compare could pass 45 for a moment, depending on the routing of a
+build. The reset keys (`kb_reset`, `btn_reset_n`) are registered on `clk_bus` in the board tops and the reset
+request of `resetter` on the CPU clock (only `locked` stays asynchronous). Checked on the Mini G: the right arrow
+in the ERS (10 times) and in the 128 BASIC editor, F12. Go / Mini not checked on hardware.
+
 ## Building
 
 ISE 14.7 (`ISE_SETTINGS`, default `/opt/Xilinx/14.7/ISE_DS/settings64.sh`), from `src/`:

@@ -351,7 +351,11 @@ module baseconf
 	// RESETTER
 	wire genrst;
 
-resetter myrst(.clk(fclk), .rst_in_n(resetbtn_n && locked && !loader_act && !storage_busy), .rst_out_n(rst_n));
+// rst_in_n of resetter is an asynchronous reset: its sources other than locked (a combination of signals of
+	// other modules) are registered, so a glitch does not reset the Z80
+	reg rst_req_n = 1'b0;
+	always @(posedge fclk) rst_req_n <= resetbtn_n && !loader_act && !storage_busy;
+resetter myrst(.clk(fclk), .rst_in_n(rst_req_n && locked), .rst_out_n(rst_n));
     defparam myrst.RST_CNT_SIZE = 6;
 
 

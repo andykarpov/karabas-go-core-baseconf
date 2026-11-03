@@ -676,9 +676,15 @@ assign kb_nmi = softsw[104];
 // of the BIOS does not stop it. The HID matrix and the filter are reset at power-up only: the held keys stay.
 wire hid_reset = hid_kb_dat0 == 8'h45 || hid_kb_dat1 == 8'h45 || hid_kb_dat2 == 8'h45 ||
                  hid_kb_dat3 == 8'h45 || hid_kb_dat4 == 8'h45 || hid_kb_dat5 == 8'h45;
-assign kb_reset = softsw[112] || hid_reset;
+// Registered: the compare of the key bytes glitches while a byte changes (00 <-> 4F, the right arrow, passes
+// 45 = F12), and the reset of baseconf is asynchronous (resetter), so a glitch reset the Z80 (Mini G 26110201)
+reg kb_reset_r = 1'b0;
+always @(posedge clk_bus) kb_reset_r <= softsw[112] || hid_reset;
+assign kb_reset = kb_reset_r;
 
-assign btn_reset_n = ~kb_reset && ~hw_btn[0] && ~mcu_busy;
+reg btn_reset_n_r = 1'b0;
+always @(posedge clk_bus) btn_reset_n_r <= ~kb_reset && ~hw_btn[0] && ~mcu_busy;
+assign btn_reset_n = btn_reset_n_r;
 
 //---------- Mouse / cursor ------------
 
