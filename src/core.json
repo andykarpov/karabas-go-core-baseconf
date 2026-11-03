@@ -1,7 +1,7 @@
 {
   "id": "baseconf",
   "name": "ZX Evolution BaseConf",
-  "build": "26110201",
+  "build": "26110301",
   "bitstream": "karabas_go.bin",
   "visible": true,
   "type": "osd",
