@@ -9,9 +9,9 @@ the RS232 port of the Evo (on the USB serial port of the board) and TS ZiFi (ESP
 
 | Board | Core file | Video | Audio | Drives |
 |---|---|---|---|---|
-| Karabas Go | `baseconf.kg1` | VGA | I2S DAC (PCM5102) | physical floppy drives, CF, SD |
-| Karabas Mini | `baseconf.kg2` | HDMI | HDMI, analog output (sigma-delta) | CF, SD |
-| Karabas Mini G | `baseconf.kg3` | HDMI | HDMI, I2S DAC (PCM5102) | CF, SD |
+| Karabas Go | `baseconf.kg` | VGA | I2S DAC (PCM5102) | physical floppy drives, CF, SD |
+| Karabas Mini | `baseconf.kg` | HDMI | HDMI, analog output (sigma-delta) | CF, SD |
+| Karabas Mini G | `baseconf.kg` | HDMI | HDMI, I2S DAC (PCM5102) | CF, SD |
 
 ## Authors
 
@@ -130,7 +130,7 @@ ISE 14.7 (`ISE_SETTINGS`, default `/opt/Xilinx/14.7/ISE_DS/settings64.sh`), from
 ```sh
 git submodule update --init
 cd src
-make go          # baseconf.kg1; mini, minig for the others; make for all three
+make go          # the Go bitstream into baseconf.kg; mini, minig for the others; make for all three
 make go-report   # LUTs, slices, timing
 ```
 
