@@ -6,3 +6,4 @@ docs/forge/tests/** -text
 *.kg2 binary
 *.kg3 binary
 *.rom binary
+*.kg binary

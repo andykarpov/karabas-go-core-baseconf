@@ -13,7 +13,7 @@ Keep the authorship: `README.md` / `README.ru.md` name the author of the port an
 - `karabas-go-modules` (submodule `modules/`, master): the shared modules come from it unchanged (`kg_osd_overlay` with `V_OFFSET_IN`, modules #19; the HDMI of the Mini boards `kg_hdmi_ft`, modules #20).
 - `karabas-go-core-tsconf`: the origin of `src/rtl/{T80,sound,vg93,mcu}` and of the board wrappers.
 - `karabas-go-firmware`: no firmware change is needed (EVO RTC mode `rtc_mode` 2, burst caps with `BURST_MAX_MHZ` 32 on Mini G, 0 (16 MHz) on Go / Mini, as in TS-Conf: the 16 entry ROM queue of `baseconf_storage` drains faster than a burst fills it, `BURST_READY` stays 1).
-- `karabas-go-tools`: `make_core.py` (`src/make_core.py` is a symlink to `../../karabas-go-tools/make_core/make_core.py`) packs `core.json` (Go), `core_mini.json`, `core_minig.json` into `baseconf.kg1` / `kg2` / `kg3`.
+- `karabas-go-tools`: `make_core.py` (`src/make_core.py` is a symlink to `../../karabas-go-tools/make_core/make_core.py`) packs `core.json` (one file for all boards: the common keys, `boards` for what differs; kgo2, karabas-go-tools `docs/kgo2.md`) into `baseconf.kg` (`make <board>-core`: `make_core.py core.json baseconf.kg --boards <board>` puts that board's bitstream in).
 
 ## Build
 
@@ -21,4 +21,4 @@ Keep the authorship: `README.md` / `README.ru.md` name the author of the port an
 - `src/Makefile` is that of the other cores (TS-Conf): map / par `-ol high`, cost table `-t 2` on every board; LUT combining `-lc area` on the Mini only (`MAP_LC_<board>`, needed since 26110104). Build 26102806 of forge (commit `50177ec`) used other options, so its bitstreams are not reproduced any more.
 - Inputs per board: `karabas_<board>.prj`, `.xst` (defines `HW_ID1` Go, `HW_ID2` Mini, `HW_ID2 HW_ID3` Mini G), `.ucf`, `.ut`. The board code is under `` `ifdef HW_ID1 `` in `baseconf.v` and the video, and in the tops `karabas_<board>_top.v` (after those of TS-Conf). Every Mini / Mini G top must drive `FT_CLK_OUT` (8 MHz).
 - Builds take 10..30 minutes: run them in the background, one board at a time, do not edit RTL while XST runs, and do not build all boards without need. The Mini builds use 96-98 % of the slices.
-- The `.bin` and `.kg*` files are committed as the release.
+- The `.bin` and `.kg` files are committed as the release.

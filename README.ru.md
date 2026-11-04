@@ -9,9 +9,9 @@ USB-последовательном порту платы) и TS ZiFi (ESP8266)
 
 | Плата | Файл ядра | Видео | Звук | Накопители |
 |---|---|---|---|---|
-| Karabas Go | `baseconf.kg1` | VGA | I2S ЦАП (PCM5102) | физические дисководы, CF, SD |
-| Karabas Mini | `baseconf.kg2` | HDMI | HDMI, аналоговый выход (sigma-delta) | CF, SD |
-| Karabas Mini G | `baseconf.kg3` | HDMI | HDMI, I2S ЦАП (PCM5102) | CF, SD |
+| Karabas Go | `baseconf.kg` | VGA | I2S ЦАП (PCM5102) | физические дисководы, CF, SD |
+| Karabas Mini | `baseconf.kg` | HDMI | HDMI, аналоговый выход (sigma-delta) | CF, SD |
+| Karabas Mini G | `baseconf.kg` | HDMI | HDMI, I2S ЦАП (PCM5102) | CF, SD |
 
 ## Авторы
 
@@ -125,7 +125,7 @@ ISE 14.7 (`ISE_SETTINGS`, по умолчанию `/opt/Xilinx/14.7/ISE_DS/setti
 ```sh
 git submodule update --init
 cd src
-make go          # baseconf.kg1; mini, minig — остальные платы; make — все три
+make go          # битстрим Go в baseconf.kg; mini, minig — остальные платы; make — все три
 make go-report   # LUT, слайсы, timing
 ```
 
