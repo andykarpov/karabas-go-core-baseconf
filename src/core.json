@@ -15,7 +15,7 @@
     "boards": {
         "go": {"bitstream": "karabas_go.bin"},
         "mini": {"bitstream": "karabas_mini.bin"},
-        "minig": {"bitstream": "karabas_minig.bin"}
+        "minig": {"link": 2, "build": "26111201", "bitstream": "karabas_minig.bin"}
     },
     "osd": [
     {"type": "S", "name": "Covox", "options": ["Off", "On"], "default": 1, "hotkey": "Menu+F6", "page": 1},

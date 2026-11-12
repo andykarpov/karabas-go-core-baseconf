@@ -128,6 +128,22 @@ module baseconf
 	input wire saa_en,    // SAA1099 on #FF (writes outside the shadow mode)
 	input wire opl_en,    // OPL2 on #C4 / #C5
 	input wire hdd_image, // the IDE device 0: 0 = the CF card, 1 = the image HDF0 (hdf_ata); HDF1 is device 1
+`ifdef LINK2
+	// image files of the mcu (kg_mcu2 ENABLE_IMG, its SDC_* = the sdc side of img_sdc): HDF0 = slot 4, HDF1 = slot 5
+	input wire [7:0] sdc_img_mounted,
+	input wire [63:0] sdc_img_size,
+	output wire [7:0] sdc_rd,
+	output wire [7:0] sdc_wr,
+	output wire [31:0] sdc_sector,
+	input wire sdc_busy,
+	input wire sdc_done,
+	input wire sdc_error,
+	input wire [2:0] sdc_slot,
+	input wire sdc_byte_in_strobe,
+	input wire [8:0] sdc_byte_addr,
+	input wire [7:0] sdc_byte_in_data,
+	output wire [7:0] sdc_byte_out_data,
+`else
 	// image files of the mcu (kg_mcu ENABLE_IMG): HDF0 = slot 4, HDF1 = slot 5 (img_sdc, hdf_ata)
 	input wire [7:0] img_mounted,
 	input wire [63:0] img_size,
@@ -140,6 +156,7 @@ module baseconf
 	output wire img_q_wr,
 	output wire [23:0] img_q_di,
 	input wire img_q_ack,
+`endif
 	input wire zifi_en,   // TS ZiFi (ESP8266) + TS RS232 + EVO RS232 #F8EF..#FFEF (USB UART of the mcu): zifi.vhd of TS-Conf
 	input wire [1:0] psg_mix,
 	input wire psg_type,
@@ -1213,16 +1230,24 @@ assign keyboard_addr = a[15:8];
 
     // Virtual hard disks: the image files HDF0 / HDF1 of the mcu (slots 4, 5) as ATA devices 0 / 1 on the Nemo
     // IDE ports, hdf_ata + img_sdc of karabas-go-modules, as in the Profi core
-    wire [7:0] sdc_img_mounted;
-    wire [63:0] sdc_img_size;
     wire [1:0] hdf_rd, hdf_wr;
     wire [31:0] hdf_sector;
+    wire [7:0] hdf_out_data;
+    wire hdf_own = sdc_slot[2:1] == 2'b10;
+    wire hdf_led; // activity (no LED / OSD icon on these boards)
+`ifdef LINK2
+    assign sdc_rd = {2'b00, hdf_rd, 4'b0000};
+    assign sdc_wr = {2'b00, hdf_wr, 4'b0000};
+    assign sdc_sector = hdf_sector;
+    assign sdc_byte_out_data = hdf_out_data;
+`else
+    wire [7:0] sdc_img_mounted;
+    wire [63:0] sdc_img_size;
     wire sdc_busy, sdc_done, sdc_error, sdc_byte_in_strobe;
     wire [2:0] sdc_slot;
     wire [8:0] sdc_byte_addr;
-    wire [7:0] sdc_byte_in_data, hdf_out_data;
-    wire hdf_own = sdc_slot[2:1] == 2'b10;
-    wire sdc_active, hdf_led; // activity (no LED / OSD icon on these boards)
+    wire [7:0] sdc_byte_in_data;
+    wire sdc_active;
     img_sdc #(.OUT_LATENCY(3), .TIMEOUT(24'd5600000), .RETRIES(2'd3)) img_sdc(.clk(fclk), .reset(!locked),
         .img_mounted(img_mounted), .img_size(img_size), .img_data_wr(img_data_wr), .img_data_addr(img_data_addr),
         .img_data(img_data), .img_result_wr(img_result_wr), .img_result(img_result), .img_sum(img_sum),
@@ -1232,7 +1257,8 @@ assign keyboard_addr = a[15:8];
         .sdc_busy(sdc_busy), .sdc_done(sdc_done), .sdc_error(sdc_error), .sdc_slot(sdc_slot),
         .sdc_byte_in_strobe(sdc_byte_in_strobe), .sdc_byte_addr(sdc_byte_addr), .sdc_byte_in_data(sdc_byte_in_data),
         .sdc_byte_out_data(hdf_out_data), .active(sdc_active));
-    hdf_ata hdf_ata(.clk(fclk), .reset(!locked), .ata_reset(!rst_n), .dev0_en(hdd_image), .dev(hdf_dev),
+`endif
+    hdf_ata #(.ENABLE_RDB(0)) hdf_ata(.clk(fclk), .reset(!locked), .ata_reset(!rst_n), .dev0_en(hdd_image), .dev(hdf_dev),
         .dev1_here(hdf_dev1_here), .a(ide_a_i), .cs_n({ide_cs1_n_i, ide_cs0_n_i}), .rd_n(ide_rd_n_i), .wr_n(ide_wr_n_i),
         .din(ideout), .dout(hdf_dout), .img_mounted(sdc_img_mounted[5:4]), .img_size(sdc_img_size),
         .sdc_rd(hdf_rd), .sdc_wr(hdf_wr), .sdc_sector(hdf_sector), .sdc_busy(sdc_busy && hdf_own),
