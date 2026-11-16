@@ -50,8 +50,11 @@ cp1251 comments are UTF-8.
 - `zdos.v`: a non-blocking assignment. `atm_pager.v`, `zint.v`: the `SIMULATE` blocks are always
   in; `zint.v` drives 1 instead of Z.
 - Mini / Mini G (`` `ifndef HW_ID1 ``): `baseconf.v` without the physical floppy controller (its
-  outputs inactive) and with `VGA_BLANK` from the video; `video_top.v` / `video_vga_double.v` carry
-  the blanking through the spare bit of the scan doubler RAM (for HDMI).
+  outputs inactive).
+- All boards: `VGA_BLANK` of `baseconf.v` comes from the video; `video_top.v` / `video_vga_double.v`
+  carry the blanking through the spare bit of the scan doubler RAM (HDMI of the Mini boards, `de` of
+  the OSD overlay of link v2 on every board; Go had a constant 0 there until 26111601 and showed the
+  OSD as stray lines).
 
 ## Changes to the TS-Conf and modules sources
 
