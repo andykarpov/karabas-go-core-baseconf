@@ -35,7 +35,10 @@ It is built from:
   nandland.com), SAA1099 (Miguel Angel Rodriguez Jodar), OPL2 on **JTOPL** (Jose Tejada),
   the physical floppy controller (`hrdy_fdc` with the VG93 model of
   [FD1793_1818VG93](https://github.com/demyanenko-d/FD1793_1818VG93) and its microcode ROM).
-- **T80** (Daniel Wallner, Sorgelig and others), **JT12 / JT03** (Jose Tejada),
+- **z80-silicon** (Andrey Titov, [z80-silicon-rtl](https://github.com/dr-Titus/z80-silicon-rtl), GPL v3), the CPU:
+  the NMOS Z80 rebuilt from its transistor netlist (exact INT timing, undocumented flags and MEMPTR,
+  OUT (C),0); `src/rtl/z80-silicon`, made for one clock with enables by `gen_cen.py` of TS-Conf.
+- **T80** (Daniel Wallner, Sorgelig and others: the GS), **JT12 / JT03** (Jose Tejada),
   **zhdmi** (François Galea) and the shared modules of
   [karabas-go-modules](https://github.com/andykarpov/karabas-go-modules) (the MCU link, OSD, PLL,
   audio, HDMI), the submodule `modules`.
@@ -77,6 +80,7 @@ the images power the board off and on (a reset or a core reload keeps the RAM).
 | OSD only | SAA1099, OPL2, ZiFi RS232: on / off (Off also mutes the device / frees its ports) |
 | Menu+N | HDD: CF card / image (IDE master) |
 | Menu+F5 | choose the image HDF0 |
+| Menu+T | tape monitor: off / in / out / both (the tape input and MIC heard in the mix) |
 
 Shift, Ctrl and keys held over F12 choose the start of the Evo BIOS (Shift: BASIC 128, Ctrl: BASIC 48,
 S: CMOS setup, 0: clears the boot choice, ...): [docs/hotkeys.md](docs/hotkeys.md). The joystick

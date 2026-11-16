@@ -12,6 +12,7 @@ Keep the authorship: `README.md` / `README.ru.md` name the author of the port an
 
 - `karabas-go-modules` (submodule `modules/`, master): the shared modules come from it unchanged (`kg_osd_overlay` with `V_OFFSET_IN`, modules #19; the HDMI of the Mini boards `kg_hdmi_ft`, modules #20).
 - `karabas-go-core-tsconf`: the origin of `src/rtl/{T80,sound,vg93,mcu}` and of the board wrappers.
+  The CPU is z80-silicon (`src/rtl/z80-silicon`, a copy of the one of TS-Conf: `gen_cen.py` makes `z80_silicon_cen.v`, `z80s_t80pa.v` the ports of T80pa; its tests are `src/sim/run_z80s_sim.sh` of TS-Conf; `` `define BASECONF_T80PA `` builds T80pa). The OSD item Tape monitor (index 19) mixes the tape in and MIC through `kg_tape_monitor` of modules.
 - `karabas-go-firmware`: no firmware change is needed (EVO RTC mode `rtc_mode` 2, burst caps with `BURST_MAX_MHZ` 32 on Mini G, 0 (16 MHz) on Go / Mini, as in TS-Conf: the 16 entry ROM queue of `baseconf_storage` drains faster than a burst fills it, `BURST_READY` stays 1).
 - `karabas-go-tools`: `make_core.py` (`src/make_core.py` is a symlink to `../../karabas-go-tools/make_core/make_core.py`) packs `core.json` (one file for all boards: the common keys, `boards` for what differs; kgo2, karabas-go-tools `docs/kgo2.md`) into `baseconf.kg` (`make <board>-core`: `make_core.py core.json baseconf.kg --boards <board>` puts that board's bitstream in).
 

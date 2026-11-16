@@ -221,6 +221,7 @@ wire sdc_busy, sdc_done, sdc_error, sdc_byte_in_strobe;
 wire [2:0] sdc_slot;
 wire [8:0] sdc_byte_addr;
 wire [1:0] psg_mix;
+wire [1:0] tape_mon;
 wire f1;
 wire [7:0] hwid;
 wire dvi_only;
@@ -325,6 +326,7 @@ baseconf machine (
 	.sdc_byte_in_data	(sdc_byte_in_data),
 	.sdc_byte_out_data(sdc_byte_out_data),
 	.psg_mix				(psg_mix),
+	.tape_mon				(tape_mon),
 	.psg_type			(psg_type),
 	.vga_60hz			(kb_vga_60hz),
 	.pause				(kb_pause),
@@ -495,7 +497,7 @@ wire [1:0] osd_alpha, osd_place;
 wire [4:0] osd_px, osd_ph;
 wire [3:0] osd_py;
 wire [5:0] osd_pw;
-wire [15*8-1:0] softsw;
+wire [20*8-1:0] softsw;
 
 // the EVO RS232 divisor of the core (tx_mode 1) to the mcu in the config of port 0 (0 = 115200)
 wire [127:0] port_cfg = { 96'd0, 16'd0, uart_tx_mode ? { uart_dlm, uart_dll } : 16'd0 };
@@ -504,7 +506,7 @@ wire [127:0] port_cfg = { 96'd0, 16'd0, uart_tx_mode ? { uart_dlm, uart_dll } : 
 // FT812 chip select passed through, the image files HDF0 / HDF1 (hdf_ata in baseconf.v); no matrix / debug
 kg_mcu2 #(
 	.CAPS(16'h0000),
-	.SW_N(15),
+	.SW_N(20),
 	.SW_INIT(120'h000000000100000000010101000101),
 	.CS_FILTER(3),
 	.ENABLE_OSD(1),
@@ -557,6 +559,13 @@ kg_mcu2 #(
 	.JOY_WR			(),
 	.PS2_CMD			(16'h0000),
 	.PS2_CMD_WR		(1'b0),
+
+	.BK_MOUNT		(1'b0),
+	.BK_FLUSHED		(1'b0),
+	.BK_SLOT			(3'd0),
+	.BK_SIZE			(32'd0),
+	.BK_KIND			(8'd0),
+	.BK_RESULT		(8'd0),
 
 	.LD_KIND			(ld_kind),
 	.LD_SLOT			(),
@@ -726,6 +735,7 @@ hid_parser hid_parser(
 
 assign covox_en = softsw[0];
 assign psg_mix = softsw[9:8];
+assign tape_mon = softsw[153:152];   // Tape monitor (index 19): 0 off, 1 in, 2 out, 3 both
 assign psg_type = softsw[16];
 assign saa_en = softsw[24];
 assign opl_en = softsw[32];
