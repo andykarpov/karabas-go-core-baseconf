@@ -13,9 +13,9 @@
     ],
     "spi_freq": 16,
     "boards": {
-        "go": {"link": 2, "build": "26111350", "bitstream": "karabas_go.bin"},
-        "mini": {"link": 2, "build": "26111350", "bitstream": "karabas_mini.bin"},
-        "minig": {"link": 2, "build": "26111201", "bitstream": "karabas_minig.bin"}
+        "go": {"link": 2, "build": "26111508", "bitstream": "karabas_go.bin"},
+        "mini": {"link": 2, "build": "26111508", "bitstream": "karabas_mini.bin"},
+        "minig": {"link": 2, "build": "26111508", "bitstream": "karabas_minig.bin"}
     },
     "osd": [
     {"type": "S", "name": "Covox", "options": ["Off", "On"], "default": 1, "hotkey": "Menu+F6", "page": 1},
@@ -36,6 +36,7 @@
     {"type": "-", "name": "-"},
     {"type": "M", "name": "Sound", "open": 1},
     {"type": "M", "name": "Disks", "open": 2},
-    {"type": "M", "name": "Input", "open": 3}
+    {"type": "M", "name": "Input", "open": 3},
+    {"type": "S", "name": "Tape monitor", "options": ["Off", "In", "Out", "Both"], "default": 0, "hotkey": "Menu+T", "page": 1}
     ]
 }

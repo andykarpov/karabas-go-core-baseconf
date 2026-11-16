@@ -159,6 +159,7 @@ module baseconf
 `endif
 	input wire zifi_en,   // TS ZiFi (ESP8266) + TS RS232 + EVO RS232 #F8EF..#FFEF (USB UART of the mcu): zifi.vhd of TS-Conf
 	input wire [1:0] psg_mix,
+	input wire [1:0] tape_mon,   // Tape monitor: the tape in / out heard in the mix (kg_tape_monitor): 0 off, 1 in, 2 out, 3 both
 	input wire psg_type,
 	input wire vga_60hz,
     input wire pause, input wire nmi_button,
@@ -242,12 +243,23 @@ module baseconf
     wire rst_n; // global reset
     wire gen_nmi;
     assign cpu_di = d_pre_out;
+    // the CPU: z80-silicon (rtl/z80-silicon, github.com/dr-Titus/z80-silicon-rtl, GPL v3: the NMOS Z80 from its
+    // transistor netlist; z80s_t80pa = the ports of T80pa, the bus timing of T80pa, checked in TS-Conf
+    // src/sim/run_z80s_sim.sh). NMOS: OUT (C),0. `define BASECONF_T80PA builds T80pa as before.
+`ifdef BASECONF_T80PA
     t80pa cpu(.RESET_n(rst_n), .CLK(fclk), .CEN_p(zpos), .CEN_n(zneg),
         .WAIT_n(wait_n && (!rom_req || rom_done) && !fdc_busy), .INT_n(int_n),
         .NMI_n(!gen_nmi), .BUSRQ_n(1'b1), .M1_n(m1_n), .MREQ_n(mreq_n),
         .IORQ_n(iorq_n), .RD_n(rd_n), .WR_n(wr_n), .RFSH_n(rfsh_n),
         .OUT0(1'b1), .A(a), .DI(cpu_di), .DO(d), .DIRSet(1'b0),
         .R800_mode(1'b0), .DIR(212'd0));
+`else
+    z80s_t80pa cpu(.RESET_n(rst_n), .CLK(fclk), .CEN_p(zpos), .CEN_n(zneg),
+        .WAIT_n(wait_n && (!rom_req || rom_done) && !fdc_busy), .INT_n(int_n),
+        .NMI_n(!gen_nmi), .BUSRQ_n(1'b1), .M1_n(m1_n), .MREQ_n(mreq_n),
+        .IORQ_n(iorq_n), .RD_n(rd_n), .WR_n(wr_n), .RFSH_n(rfsh_n), .HALT_n(), .BUSAK_n(),
+        .A(a), .DI(cpu_di), .DO(d));
+`endif
     assign VGA_R = {4{vred}};
     assign VGA_G = {4{vgrn}};
     assign VGA_B = {4{vblu}};
@@ -1153,6 +1165,13 @@ assign keyboard_addr = a[15:8];
     end
     assign beep=speaker, tape_out=tape;
 
+    // the tape monitor (modules rtl/audio/kg_tape_monitor.v, OSD "Tape monitor"): tape_in and MIC (#FE bit 3)
+    // into the mix, a 1 held longer than 37 ms relaxes to 0 (an open input with its pullup, MIC left at 1)
+    wire signed [15:0] tape_mon_sample;
+    kg_tape_monitor #(.CLK_HZ(28000000), .HOLD_US(37000), .LEVEL_IN(4096), .LEVEL_OUT(2048)) tape_monitor(
+        .clk(fclk), .mode(tape_mon), .tape_in(tape_in), .tape_out(tape), .in_on(), .out_on(),
+        .sample(tape_mon_sample));
+
     // covox #FB and Soundrive (#0F, #1F, #3F, #4F, #5F): covox.vhd of TS-Conf; not in the shadow mode (the VG93
     // ports #1F..#7F and SAVPORT2 #4F there)
     wire [7:0] covox_a, covox_b, covox_c, covox_d, covox_fb;
@@ -1213,6 +1232,7 @@ assign keyboard_addr = a[15:8];
         .sdram_a(sdram_a), .sdram_ba(sdram_ba), .sdram_dqm(sdram_dqm),
         .sdram_ras_n(sdram_ras_n), .sdram_cas_n(sdram_cas_n), .sdram_we_n(sdram_we_n), .sdram_dq(sdram_dq));
     audio_mixer mix(.clk(fclk), .mute(pause), .mode(psg_mix), .speaker(speaker), .tape_in(tape_in),
+        .tape_mon(tape_mon_sample),
         .ssg0_a(s0a), .ssg0_b(s0b), .ssg0_c(s0c), .ssg1_a(s1a), .ssg1_b(s1b), .ssg1_c(s1c),
         // an OSD switch Off also mutes the device (its registers keep what was written)
         .covox_a(covox_en ? covox_a : 8'd0), .covox_b(covox_en ? covox_b : 8'd0),

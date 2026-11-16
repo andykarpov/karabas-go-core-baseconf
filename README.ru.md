@@ -33,7 +33,10 @@ USB-последовательном порту платы) и TS ZiFi (ESP8266)
   (Miguel Angel Rodriguez Jodar), OPL2 на **JTOPL** (Jose Tejada), контроллер физических
   дисководов (`hrdy_fdc` с моделью VG93 из
   [FD1793_1818VG93](https://github.com/demyanenko-d/FD1793_1818VG93) и её ROM микрокода).
-- **T80** (Daniel Wallner, Sorgelig и другие), **JT12 / JT03** (Jose Tejada), **zhdmi**
+- **z80-silicon** (Андрей Титов, [z80-silicon-rtl](https://github.com/dr-Titus/z80-silicon-rtl), GPL v3), процессор:
+  NMOS Z80, восстановленный по транзисторной схеме кристалла (точный тайминг INT, недокументированные флаги
+  и MEMPTR, OUT (C),0); `src/rtl/z80-silicon`, переведён на один такт с разрешениями `gen_cen.py` из TS-Conf.
+- **T80** (Daniel Wallner, Sorgelig и другие: GS), **JT12 / JT03** (Jose Tejada), **zhdmi**
   (François Galea) и общие модули [karabas-go-modules](https://github.com/andykarpov/karabas-go-modules)
   (связь с MCU, OSD, PLL, звук, HDMI), подмодуль `modules`.
 
@@ -74,6 +77,7 @@ Sound, Disks и Input нужна прошивка 26103113 или новее (с
 | только в OSD | SAA1099, OPL2, ZiFi RS232: вкл. / выкл. (выкл. ещё и глушит устройство / освобождает его порты) |
 | Menu+N | HDD: карта CF / образ (IDE master) |
 | Menu+F5 | выбор образа HDF0 |
+| Menu+T | монитор магнитофона: выкл. / вход / выход / оба (вход с магнитофона и MIC слышны в звуке) |
 
 Shift, Ctrl и клавиши, удерживаемые при нажатии F12, выбирают, куда стартует BIOS Evo (Shift — BASIC 128,
 Ctrl — BASIC 48, S — настройка CMOS, 0 — сброс выбора загрузки, ...): [docs/hotkeys.md](docs/hotkeys.md).
