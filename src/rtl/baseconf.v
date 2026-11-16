@@ -265,11 +265,6 @@ module baseconf
     assign VGA_B = {4{vblu}};
     assign VGA_HS = vhsync;
     assign VGA_VS = vvsync;
-`ifdef HW_ID1
-    assign VGA_BLANK = 1'b0;
-`else // Mini, Mini G
-
-`endif
     assign ftcs_n=1'b1, espcs_n=1'b1, esp_ft_spi_dis=1'b0;
     assign ftclk=1'b0, ftdo=1'b1, vdac2_sel=1'b0;
     assign midi_reset_n=rst_n;
@@ -842,9 +837,7 @@ baseconf_sram ram(.clk(fclk), .rst_n(rst_n), .addr(daddr),
 		.vhsync(vhsync),
 		.vvsync(vvsync),
 		.vcsync(vcsync),
-`ifndef HW_ID1 // Mini, Mini G
-        .vblank_out(VGA_BLANK),
-`endif
+        .vblank_out(VGA_BLANK), // de of the OSD overlay (kg_l2_osd_overlay) on all boards
 
 		.zxborder(border),
 
