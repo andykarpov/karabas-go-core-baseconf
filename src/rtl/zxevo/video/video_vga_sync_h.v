@@ -36,7 +36,7 @@ module video_vga_sync_h(
 	input  wire hsync_start
 );
 
-	localparam HSYNC_END	= 10'd106;
+	localparam HSYNC_END	= 10'd64;   // karabas: 64 px at 28 MHz as 576p (was 106); the start and SCANOUT_BEG stay
 	localparam SCANOUT_BEG	= 10'd156;
 
 	localparam HPERIOD_224 = 10'd896;
