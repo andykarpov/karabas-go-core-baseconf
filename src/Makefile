@@ -30,18 +30,19 @@ JSON = core.json
 # map / par options of the cores of karabas-go; the cost table (map -t, the placement seed) 2 on every board.
 # Build 26102806 of karabas-forge used the map / par defaults on the Go and -ol high -t 2 / -t 1 on Mini / Mini G.
 MAP_T_go = 2
-MAP_T_mini = 2
+# Mini -t 3 since the OPL4 (26111801): with -t 2 the router did not finish (3739 / 3758 slices)
+MAP_T_mini = 3
 # Mini G -t 3 since 26110201: with -t 2 three JT12 paths were 1.3 ns short (100 % slices)
 MAP_T_minig = 3
-# LUT combining: the Mini (sigma-delta audio) fits only with -lc area since 26110104
+# LUT combining: the Mini (sigma-delta audio) fits only with -lc area since 26110104, the Mini G since the OPL4
 MAP_LC_go = off
 MAP_LC_mini = area
-MAP_LC_minig = off
+MAP_LC_minig = area
 MAP_OPT = -logic_opt off -ol high -xe n -xt 0 -register_duplication off -r 4 -global_opt off -mt 2 -detail -ir off -pr b -power off
 PAR_OPT = -ol high -xe n -mt 4
 
 # included or read by the sources, not in the prj
-INCLUDES = $(wildcard ../modules/rtl/mcu/*.vh rtl/vg93/*.vh) baseconf_tune.vh atm_font.hex rtl/vg93/vg93-microcode-rom.hex rtl/sound/saa1099_compressor_lut.hex
+INCLUDES = $(wildcard ../modules/rtl/mcu/*.vh rtl/vg93/*.vh) baseconf_tune.vh atm_font.hex rtl/vg93/vg93-microcode-rom.hex
 
 .PHONY: all clean $(BOARDS) $(BOARDS:=-xst) $(BOARDS:=-impl) $(BOARDS:=-core) $(BOARDS:=-report) mini-coremode minig-coremode
 

@@ -4,7 +4,8 @@
 
 The ZX Evolution (Pentevo) of NedoPC with its own FPGA configuration, **BaseConf**, on the Karabas Go
 family of boards (Xilinx Spartan-6 XC6SLX25). It runs the stock ZX Evo BIOS (ERS) with 4 MB of RAM,
-the extended video modes of the Evo, General Sound, TurboSound FM, SAA1099, OPL2, covox / Soundrive,
+the extended video modes of the Evo, General Sound, TurboSound (two AY / YM), OPL4 (ZXM-MoonSound: FM +
+wavetable), covox / Soundrive,
 the RS232 port of the Evo (on the USB serial port of the board) and TS ZiFi (ESP8266).
 
 | Board | Core file | Video | Audio | Drives |
@@ -30,27 +31,31 @@ It is built from:
   and the ATM font come from there too.
 - **The TS-Conf core of Karabas Go** ([karabas-go-core-tsconf](https://github.com/andykarpov/karabas-go-core-tsconf),
   Andy Karpov and contributors, Oleh Starychenko among them): the board wrapper that the top levels
-  derive from, General Sound (`gs.v`, ROM `roms/gs105b.rom`), TurboSound, the HID parser, covox /
+  derive from, General Sound (`gs.v` on z80-silicon, ROM `roms/gs105b.rom`), TurboSound (two YM2149),
+  the OPL4 (`opl4_kg`, `src/rtl/sound/opl4`: the wavetable part `opl4.v` bit exact to ymfm, from
+  u16_tsconf_gs_v24, TS-Conf for ReVerSE-U16; the FM part **opl3_fpga** of Greg Taylor, LGPL-3.0, from
+  ao486_MiSTer, checked against Nuked-OPL3), the two-port SDRAM controller `sdram2p.v` (from `sdram.v`
+  of the MiST board, Till Harbaum, Gyorgy Szombathelyi, GPL-3), the HID parser, covox /
   Soundrive (`covox.vhd`), TS ZiFi with the RS232 ports of TS-Conf and the Evo (`zifi.vhd`, the UART of
-  nandland.com), SAA1099 (Miguel Angel Rodriguez Jodar), OPL2 on **JTOPL** (Jose Tejada),
+  nandland.com),
   the physical floppy controller (`hrdy_fdc` with the VG93 model of
   [FD1793_1818VG93](https://github.com/demyanenko-d/FD1793_1818VG93) and its microcode ROM).
 - **z80-silicon** (Andrey Titov, [z80-silicon-rtl](https://github.com/dr-Titus/z80-silicon-rtl), GPL v3), the CPU:
   the NMOS Z80 rebuilt from its transistor netlist (exact INT timing, undocumented flags and MEMPTR,
   OUT (C),0); `src/rtl/z80-silicon`, made for one clock with enables by `gen_cen.py` of TS-Conf.
-- **T80** (Daniel Wallner, Sorgelig and others: the GS), **JT12 / JT03** (Jose Tejada),
+- **T80** (Daniel Wallner, Sorgelig and others), **YM2149** of TurboSound,
   **zhdmi** (François Galea) and the shared modules of
   [karabas-go-modules](https://github.com/andykarpov/karabas-go-modules) (the MCU link, OSD, PLL,
   audio, HDMI), the submodule `modules`.
 
 New in the port: `src/rtl/baseconf.v` and the board tops (adapted from BaseConf and TS-Conf),
-`baseconf_sram.v` (4 MB in the two SRAMs), `baseconf_sdram.v` (ROM and GS memory in SDRAM),
-`baseconf_storage.v`, `baseconf_keyboard_filter.v`, `video_fontrom.v`, and the changes to the shared
+`baseconf_sram.v` (4 MB in the two SRAMs), `baseconf_storage.v` (ROM, GS and OPL4 memory in SDRAM), `baseconf_keyboard_filter.v`, `video_fontrom.v`, and the changes to the shared
 sources listed in [docs/sources.md](docs/sources.md).
 
 ## License
 
-GPL-3.0-or-later, see [LICENSE](LICENSE). BaseConf, JT12, JTOPL and zhdmi are GPL-3.0-or-later; the
+GPL-3.0-or-later, see [LICENSE](LICENSE). BaseConf and zhdmi are GPL-3.0-or-later, opl3_fpga (the FM part of
+the OPL4) is LGPL-3.0 (`src/rtl/sound/opl4/opl3/COPYING.LESSER`); the
 TS-Conf core of Karabas Go is MIT ([docs/licenses/karabas-tsconf-MIT.txt](docs/licenses/karabas-tsconf-MIT.txt)),
 T80 has its BSD-style notice; every source file keeps its own header. The ROMs in `src/roms` are
 unchanged files of their projects (the ZX Evo BIOS of NedoPC, the General Sound ROM 1.05b as
@@ -61,6 +66,11 @@ shipped with the TS-Conf core) and keep their original terms: they are not relic
 Copy the core file of your board to the SD card (SD1). The OSD opens with Menu (Win) + Esc; its
 pages Sound, Disks and Input need firmware 26103113 or newer (older firmware shows one flat list),
 the core and firmware builds in the ERS need firmware 26110114 or newer.
+
+OPL4: its wavetable needs the YRW801 ROM of the Yamaha (2 MB, md5 42af93619160ef2116416f74a6cb12f2):
+put it on SD1 as `/baseconf/yrw801.rom` (the core also takes `/tsconf/yrw801.rom` of the TS-Conf core);
+it is loaded at the start of the core (OSD Sound, **OPL4 ROM**). Without it the FM part works, the
+wavetable plays silence. SAA1099, OPL2 and the FM part of TurboSound FM were removed to fit the OPL4.
 
 Virtual hard disks: in the OSD page Disks set **HDD** to *Image* and choose the image (`.hdf`, `.img`,
 `.vhd`, an MBR with a FAT partition) as **HDF0** (IDE master; with HDD = CF card the CF card is the
@@ -77,7 +87,8 @@ the images power the board off and on (a reset or a core reload keeps the RAM).
 | Menu+P | pause |
 | F11 | NMI |
 | F12 | reset (the core and GS) |
-| OSD only | SAA1099, OPL2, ZiFi RS232: on / off (Off also mutes the device / frees its ports) |
+| OSD only | OPL4, ZiFi RS232: on / off (Off also mutes the device / frees its ports) |
+| Menu+I | OPL4 interpolation on / off (the samples and the FM output interpolated linearly, as in openMSX) |
 | Menu+N | HDD: CF card / image (IDE master) |
 | Menu+F5 | choose the image HDF0 |
 | Menu+T | tape monitor: off / in / out / both (the tape input and MIC heard in the mix) |
@@ -126,6 +137,12 @@ the key bytes (`== 8'h45`) in front of the asynchronous reset of `resetter`; whi
 build. The reset keys (`kb_reset`, `btn_reset_n`) are registered on `clk_bus` in the board tops and the reset
 request of `resetter` on the CPU clock (only `locked` stays asynchronous). Checked on the Mini G: the right arrow
 in the ERS (10 times) and in the 128 BASIC editor, F12. Go / Mini not checked on hardware.
+
+Build **26111801**: the OPL4 (ZXM-MoonSound, FM + wavetable, `opl4_kg` of TS-Conf) instead of SAA1099, OPL2
+and the FM part of TurboSound FM; the GS on z80-silicon; the SDRAM controller `sdram2p` of TS-Conf (the main
+ROM on its own port). The YRW801 ROM: see the use above. Slices: Go 98 %, Mini 99 % (map `-t 3`), Mini G
+98 %. Checked in simulation (the OPL4 against ymfm, the GS memory test, the SDRAM ports); not yet checked on
+hardware.
 
 ## Building
 

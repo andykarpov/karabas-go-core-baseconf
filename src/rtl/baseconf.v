@@ -125,8 +125,8 @@ module baseconf
 	
 	// osd switches
 	input wire covox_en,  // covox #FB and Soundrive (covox.vhd of TS-Conf)
-	input wire saa_en,    // SAA1099 on #FF (writes outside the shadow mode)
-	input wire opl_en,    // OPL2 on #C4 / #C5
+	input wire opl4_en,     // OPL4 (ZXM-MoonSound: #C4..#C7 FM, #7E / #7F wave, outside the shadow mode)
+	input wire opl4_interp, // OPL4 Interp: the linear interpolation of the samples in opl4.v (openMSX; ymfm has none)
 	input wire hdd_image, // the IDE device 0: 0 = the CF card, 1 = the image HDF0 (hdf_ata); HDF1 is device 1
 `ifdef LINK2
 	// image files of the mcu (kg_mcu2 ENABLE_IMG, its SDC_* = the sdc side of img_sdc): HDF0 = slot 4, HDF1 = slot 5
@@ -184,6 +184,10 @@ module baseconf
 	input wire [31:0] loader_a,
 	input wire [7:0] loader_d,
 	input wire loader_wr,
+	// the YRW801 ROM of the OPL4 (the FL item of core.json): ld_wr of that item, the byte offset in the
+	// file (loader_a / loader_d); the OPL4 is held while fl_act
+	input wire fl_act,
+	input wire fl_wr,
 
     // sdram
 	output wire        sdram_clk,
@@ -234,8 +238,14 @@ module baseconf
     wire [7:0] fdc_data, ts_data, gs_data;
     wire fdc_oe, fdc_oe_n, gs_oe;
     wire fdc_busy, fdc_intrq, fdc_drq; // hrdy_fdc (Go): WAIT, bits 7, 6 of port #FF
-    wire [7:0] zifi_data, opl_data; // read data of zifi and OPL2 (instances at the sound below)
-    wire zifi_oe_n, opl_rd;
+    wire [7:0] zifi_data, opl4_data; // read data of zifi and the OPL4 (instances at the sound below)
+    wire zifi_oe_n, opl4_rd;
+    // ZXM-MoonSound: the FM timer IRQ of the OPL4 drives /INT too (a wired OR on the bus there), not in
+    // the shadow mode (as TS-Conf: not in DOS)
+    wire opl4_irq;
+    reg opl4_irq_r = 1'b0;
+    wire shadow;
+    wire cpu_int_n = int_n && !(opl4_irq_r && !shadow);
     wire ts_read = !iorq_n && !rd_n && a[15] && a[7:0]==8'hfd;
     // used by the CPU below, declared here: without `default_nettype none from the file before (hdmi_top.v
     // of TS-Conf) XST took them as implicit nets and failed on their declarations
@@ -248,14 +258,14 @@ module baseconf
     // src/sim/run_z80s_sim.sh). NMOS: OUT (C),0. `define BASECONF_T80PA builds T80pa as before.
 `ifdef BASECONF_T80PA
     t80pa cpu(.RESET_n(rst_n), .CLK(fclk), .CEN_p(zpos), .CEN_n(zneg),
-        .WAIT_n(wait_n && (!rom_req || rom_done) && !fdc_busy), .INT_n(int_n),
+        .WAIT_n(wait_n && (!rom_req || rom_done) && !fdc_busy), .INT_n(cpu_int_n),
         .NMI_n(!gen_nmi), .BUSRQ_n(1'b1), .M1_n(m1_n), .MREQ_n(mreq_n),
         .IORQ_n(iorq_n), .RD_n(rd_n), .WR_n(wr_n), .RFSH_n(rfsh_n),
         .OUT0(1'b1), .A(a), .DI(cpu_di), .DO(d), .DIRSet(1'b0),
         .R800_mode(1'b0), .DIR(212'd0));
 `else
     z80s_t80pa cpu(.RESET_n(rst_n), .CLK(fclk), .CEN_p(zpos), .CEN_n(zneg),
-        .WAIT_n(wait_n && (!rom_req || rom_done) && !fdc_busy), .INT_n(int_n),
+        .WAIT_n(wait_n && (!rom_req || rom_done) && !fdc_busy), .INT_n(cpu_int_n),
         .NMI_n(!gen_nmi), .BUSRQ_n(1'b1), .M1_n(m1_n), .MREQ_n(mreq_n),
         .IORQ_n(iorq_n), .RD_n(rd_n), .WR_n(wr_n), .RFSH_n(rfsh_n), .HALT_n(), .BUSAK_n(),
         .A(a), .DI(cpu_di), .DO(d));
@@ -270,7 +280,6 @@ module baseconf
     assign midi_reset_n=rst_n;
     assign ioa=a, iod=d, iowr=!iorq_n && !wr_n;
     assign f1_out=zpos;
-    wire shadow;
 	wire dos;
 
 
@@ -577,7 +586,7 @@ resetter myrst(.clk(fclk), .rst_in_n(rst_req_n && locked), .rst_out_n(rst_n));
 assign d_pre_out = drive_00 ? 8'h00 :
         rom_req ? rom_data : ena_ram ? dout_ram :
         fdc_oe ? fdc_data : ts_read ? ts_data : gs_oe ? gs_data :
-        !zifi_oe_n ? zifi_data : opl_rd ? opl_data :
+        !zifi_oe_n ? zifi_data : opl4_rd ? opl4_data :
         ena_ports ? dout_ports : 8'hff;
     assign csrom = csrom_int && !drive_00;
 
@@ -1144,13 +1153,11 @@ assign keyboard_addr = a[15:8];
     reg [2:0] sound_div = 0;
     always @(posedge fclk) sound_div <= sound_div + 1'b1;
     wire [7:0] s0a,s0b,s0c,s1a,s1b,s1c;
-    wire [15:0] fm0,fm1;
-    wire fm_ena;
+    // TurboSound: two YM2149 (turbosound.v of TS-Conf, the FM part of the TS-FM taken out for the OPL4)
     turbosound ts(.RESET(!rst_n), .CLK(fclk), .CE(sound_div==0),
         .BDIR(ay_bdir), .BC(a[14]), .DI(d), .DO(ts_data), .AY_MODE(!psg_type),
         .SSG0_AUDIO_A(s0a), .SSG0_AUDIO_B(s0b), .SSG0_AUDIO_C(s0c),
-        .SSG1_AUDIO_A(s1a), .SSG1_AUDIO_B(s1b), .SSG1_AUDIO_C(s1c),
-        .SSG0_AUDIO_FM(fm0), .SSG1_AUDIO_FM(fm1), .SSG_FM_ENA(fm_ena), .MIDI_TX(midi_tx));
+        .SSG1_AUDIO_A(s1a), .SSG1_AUDIO_B(s1b), .SSG1_AUDIO_C(s1c), .MIDI_TX(midi_tx));
     reg speaker=0, tape=0;
     always @(posedge fclk) begin
         if (!rst_n) begin speaker<=0; tape<=0; end
@@ -1172,22 +1179,41 @@ assign keyboard_addr = a[15:8];
         .I_WR_N(wr_n), .I_IORQ_N(iorq_n), .I_DOS(shadow),
         .O_A(covox_a), .O_B(covox_b), .O_C(covox_c), .O_D(covox_d), .O_FB(covox_fb));
 
-    // SAA1099 (#01FF address, #00FF data): writes outside the shadow mode only (there #FF is the VG93 system
-    // port and the ATM palette). 8 MHz enable from clk_bus: 8 / 28.0303 * 2^16 = 18704 (as TS-Conf)
-    reg [16:0] acc8 = 17'd0;
-    always @(posedge fclk) acc8 <= {1'b0, acc8[15:0]} + 17'd18704;
-    wire saa_wr_n = iorq_n || wr_n || a[7:0] != 8'hFF || shadow || !saa_en;
-    wire [7:0] saa_l, saa_r;
-    saa1099 saa(.clk(fclk), .ena(acc8[16]), .rst_n(rst_n), .cs_n(1'b0), .a0(a[8]), .wr_n(saa_wr_n), .din(d),
-        .out_l(saa_l), .out_r(saa_r));
-
-    // OPL2 (#C4 address / status, #C5 data): opl2_top of TS-Conf (jtopl)
-    wire opl_port = a[7:1] == 7'b1100010 && opl_en;
-    wire opl_cs_n = !(m1_n && !iorq_n && opl_port);
-    assign opl_rd = !opl_cs_n && !rd_n;
-    wire [15:0] opl_l, opl_r;
-    opl2_top opl(.clk(fclk), .reset(!rst_n), .din(d), .a(a[0]), .dout(opl_data), .wr_n(wr_n), .cs_n(opl_cs_n),
-        .out_l(opl_l), .out_r(opl_r));
+    // OPL4 (ZXM-MoonSound: #C4..#C7 FM, #7E / #7F wave; opl4_kg of TS-Conf), its sample memory on the second
+    // port of the SDRAM (baseconf_storage). Not in the shadow mode: #7F there is VGDAT of the VG93.
+    wire [15:0] opl4_l, opl4_r;
+    wire opl4_sel;
+    wire [7:0] opl4_do_bus;
+    wire [21:0] opl4_mem_addr;
+    wire opl4_mem_req, opl4_mem_we, opl4_mem_ack;
+    wire [7:0] opl4_mem_wdata;
+    wire [15:0] opl4_mem_rdata;
+    // the read data (clk, combinational from its registers) through a clk_bus register, as in TS-Conf
+    reg [7:0] opl4_do_r = 8'hFF;
+    always @(posedge fclk) opl4_do_r <= opl4_do_bus;
+    assign opl4_data = opl4_do_r;
+    assign opl4_rd = opl4_sel && !rd_n && opl4_en;
+    always @(posedge fclk) opl4_irq_r <= opl4_irq && opl4_en;
+    // the reset into clk (the OPL4 runs on it): the machine reset or the load of its ROM
+    reg [1:0] opl4_rst_s = 2'b11;
+    always @(posedge clk) opl4_rst_s <= {opl4_rst_s[0], !rst_n || fl_act};
+    opl4_kg opl4(.CLK(clk), .CLK28(fclk), .RESET(opl4_rst_s[1]),
+        .A(a[7:0]), .DI(d), .DO(opl4_do_bus), .IORQ_n(iorq_n || !opl4_en), .M1_n(m1_n), .RD_n(rd_n), .WR_n(wr_n),
+        .DOS(shadow), .INTERP(opl4_interp), .SEL(opl4_sel), .IRQ(opl4_irq),
+        .MEM_ADDR(opl4_mem_addr), .MEM_REQ(opl4_mem_req), .MEM_WE(opl4_mem_we), .MEM_WDATA(opl4_mem_wdata),
+        .MEM_ACK(opl4_mem_ack), .MEM_RDATA(opl4_mem_rdata),
+        .OUT_L(opl4_l), .OUT_R(opl4_r), .SAMPLE_T());
+    // the GS + the OPL4 at half (as TS-Conf, without its filter): OUT_L/R of clk held for a 44.1 kHz period,
+    // taken into clk_bus by a register (the first PAR of TS-Conf failed on that path without it)
+    reg signed [15:0] opl4_l_r = 16'sd0, opl4_r_r = 16'sd0;
+    reg signed [16:0] gs_opl4_l = 17'sd0, gs_opl4_r = 17'sd0;
+    wire [14:0] gs_l, gs_r;
+    always @(posedge fclk) begin
+        opl4_l_r <= opl4_en ? opl4_l : 16'sd0;
+        opl4_r_r <= opl4_en ? opl4_r : 16'sd0;
+        gs_opl4_l <= $signed({{2{gs_l[14]}}, gs_l}) + $signed({{2{opl4_l_r[15]}}, opl4_l_r[15:1]});
+        gs_opl4_r <= $signed({{2{gs_r[14]}}, gs_r}) + $signed({{2{opl4_r_r[15]}}, opl4_r_r[15:1]});
+    end
 
     // TS ZiFi (ESP8266 on the UART pins, #BFEF..#C7EF), TS RS232 and EVO RS232 (16550, #F8EF..#FFEF; in the EVO
     // the AVR answered them) on the USB UART of the mcu: zifi.vhd of TS-Conf
@@ -1203,10 +1229,9 @@ assign keyboard_addr = a[15:8];
     wire [20:0] gs_addr;
     wire [7:0] gs_din,gs_dout;
     wire gs_rd_n,gs_wr_n,gs_done;
-    wire [14:0] gs_l,gs_r;
     wire gs_req = !gs_rd_n || !gs_wr_n;
     gs gs(.CLK(fclk), .RESET(!rst_n || !resetgsbtn_n),
-        .CE(sound_div[0]), .MEM_WAIT_n(!gs_req || gs_done),
+        .CE(sound_div[0]), .CE_N(!sound_div[0]), .MEM_WAIT(gs_req && !gs_done), .SAMPLE_T(),
         .A(a), .DI(d), .DO(gs_data), .OE(gs_oe), .WR_n(wr_n), .RD_n(rd_n),
         .IORQ_n(iorq_n), .M1_n(m1_n), .MA(gs_addr), .MDI(gs_din), .MDO(gs_dout),
         .MRFSH_n(), .MWE_n(gs_wr_n), .MRD_n(gs_rd_n), .OUT_L(gs_l), .OUT_R(gs_r));
@@ -1215,12 +1240,15 @@ assign keyboard_addr = a[15:8];
     // holds rst_n during the SDRAM init, a loop), synchronized to clk.
     reg [1:0] storage_key_rst = 2'b00;
     always @(posedge clk) storage_key_rst <= {storage_key_rst[0], !resetkey_n};
-    baseconf_storage storage(.clk(clk), .reset(!locked || storage_key_rst[1]),
+    baseconf_storage storage(.clk(clk), .reset(!locked || storage_key_rst[1]), .sdram_init_n(locked),
         .rom_req(rom_req), .rom_wr(!romwe_n), .rom_addr({rompg,a[13:0]}),
         .rom_din(d), .rom_dout(rom_data), .rom_done(rom_done),
         .gs_req(gs_req), .gs_wr(!gs_wr_n), .gs_addr(gs_addr), .gs_din(gs_dout),
         .gs_dout(gs_din), .gs_done(gs_done),
         .loader_act(loader_act), .loader_wr(loader_wr), .loader_addr(loader_a), .loader_data(loader_d),
+        .fl_wr(fl_wr), .fl_a(loader_a), .fl_d(loader_d),
+        .opl_addr(opl4_mem_addr), .opl_req(opl4_mem_req), .opl_we(opl4_mem_we), .opl_wdata(opl4_mem_wdata),
+        .opl_ack(opl4_mem_ack), .opl_rdata(opl4_mem_rdata),
         .busy(storage_busy), .fault(storage_fault), .sdram_clk(sdram_clk),
         .sdram_a(sdram_a), .sdram_ba(sdram_ba), .sdram_dqm(sdram_dqm),
         .sdram_ras_n(sdram_ras_n), .sdram_cas_n(sdram_cas_n), .sdram_we_n(sdram_we_n), .sdram_dq(sdram_dq));
@@ -1230,15 +1258,14 @@ assign keyboard_addr = a[15:8];
         // an OSD switch Off also mutes the device (its registers keep what was written)
         .covox_a(covox_en ? covox_a : 8'd0), .covox_b(covox_en ? covox_b : 8'd0),
         .covox_c(covox_en ? covox_c : 8'd0), .covox_d(covox_en ? covox_d : 8'd0),
-        .covox_fb(covox_en ? covox_fb : 8'd0), .saa_l(saa_en ? saa_l : 8'd0), .saa_r(saa_en ? saa_r : 8'd0),
-        .gs_l(gs_l), .gs_r(gs_r), .fm_l(fm0), .fm_r(fm1), .fm_ena(fm_ena),
+        .covox_fb(covox_en ? covox_fb : 8'd0), .gs_opl4_l(gs_opl4_l), .gs_opl4_r(gs_opl4_r),
 `ifdef HW_ID2
         .adc_l(adc_in_l), .adc_r(adc_in_r),
 `endif
 `ifdef HW_ID3
         .esp_l(esp_in_l), .esp_r(esp_in_r),
 `endif
-        .opl3_l(opl_en ? opl_l : 16'd0), .opl3_r(opl_en ? opl_r : 16'd0), .audio_l(audio_out_l), .audio_r(audio_out_r));
+        .audio_l(audio_out_l), .audio_r(audio_out_r));
 
 
     // Virtual hard disks: the image files HDF0 / HDF1 of the mcu (slots 4, 5) as ATA devices 0 / 1 on the Nemo
