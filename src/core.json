@@ -13,7 +13,7 @@
     ],
     "spi_freq": 16,
     "boards": {
-        "go": {"link": 2, "build": "26111605", "bitstream": "karabas_go.bin"},
+        "go": {"link": 2, "build": "26111702", "bitstream": "karabas_go.bin"},
         "mini": {"link": 2, "build": "26111508", "bitstream": "karabas_mini.bin"},
         "minig": {"link": 2, "build": "26111508", "bitstream": "karabas_minig.bin"}
     },
@@ -37,6 +37,7 @@
     {"type": "M", "name": "Sound", "open": 1},
     {"type": "M", "name": "Disks", "open": 2},
     {"type": "M", "name": "Input", "open": 3},
-    {"type": "S", "name": "Tape monitor", "options": ["Off", "In", "Out", "Both"], "default": 0, "hotkey": "Menu+T", "page": 1}
+    {"type": "S", "name": "Tape monitor", "options": ["Off", "In", "Out", "Both"], "default": 0, "hotkey": "Menu+T", "page": 1},
+    {"type": "S", "name": "VGA Sync", "key": "vga_sync", "index": 20, "options": [{"name": "-H -V", "key": "hn_vn"}, {"name": "+H -V", "key": "hp_vn"}, {"name": "-H +V", "key": "hn_vp"}, {"name": "+H +V", "key": "hp_vp"}], "default": 0, "boards": ["go"]}
     ]
 }

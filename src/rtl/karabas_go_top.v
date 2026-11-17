@@ -216,6 +216,7 @@ wire [7:0] loader_data;
 wire loader_wr;
 wire [2:0] kb_joy_type_l, kb_joy_type_r;
 wire kb_vga_60hz;
+wire [1:0] vga_sync_pos;
 wire [7:0] joy_bus;
 wire kb_pause, kb_reset, kb_nmi, mcu_busy;
 wire covox_en, psg_type;
@@ -401,8 +402,8 @@ wire ft_video_active = vdac2_sel | mcu_ft_vga_on;
 assign VGA_R[7:0] = ft_video_active ? 8'bZZZZZZZZ : osd_r[7:0];
 assign VGA_G[7:0] = ft_video_active ? 8'bZZZZZZZZ : osd_g[7:0];
 assign VGA_B[7:0] = ft_video_active ? 8'bZZZZZZZZ : osd_b[7:0];
-assign VGA_HS = ft_video_active ? 1'bZ : osd_hs;   // the syncs of the overlay: in step with osd_rgb
-assign VGA_VS = ft_video_active ? 1'bZ : osd_vs;
+assign VGA_HS = ft_video_active ? 1'bZ : osd_hs ^ ~vga_sync_pos[0];  // the syncs of the overlay: in step with osd_rgb
+assign VGA_VS = ft_video_active ? 1'bZ : osd_vs ^ ~vga_sync_pos[1];
 assign V_CLK = ft_video_active ? FT_CLK : v_clk;
 
 // ------- i2s DAC --------------
@@ -452,7 +453,7 @@ wire [1:0] osd_alpha, osd_place;
 wire [4:0] osd_px, osd_ph;
 wire [3:0] osd_py;
 wire [5:0] osd_pw;
-wire [20*8-1:0] softsw;
+wire [21*8-1:0] softsw;
 
 // the EVO RS232 divisor of the core (tx_mode 1) to the mcu in the config of port 0 (0 = 115200)
 wire [127:0] port_cfg = { 96'd0, 16'd0, uart_tx_mode ? { uart_dlm, uart_dll } : 16'd0 };
@@ -461,7 +462,7 @@ wire [127:0] port_cfg = { 96'd0, 16'd0, uart_tx_mode ? { uart_dlm, uart_dll } : 
 // FT812 chip select passed through, the image files HDF0 / HDF1 (hdf_ata in baseconf.v); no matrix / debug
 kg_mcu2 #(
 	.CAPS(16'h0000),
-	.SW_N(20),
+	.SW_N(21),
 	.SW_INIT(120'h000000000100000000010101000101),
 	.CS_FILTER(3),
 	.ENABLE_OSD(1),
@@ -700,6 +701,7 @@ assign hdd_image = softsw[48];
 assign kb_joy_type_l = softsw[74:72];
 assign kb_joy_type_r = softsw[82:80];
 assign kb_vga_60hz = softsw[88];
+assign vga_sync_pos = softsw[161:160];  // VGA Sync (index 20, Go only): bit 0 +H, bit 1 +V (0 = -H -V, as 576p)
 assign kb_pause = softsw[96];
 assign kb_nmi = softsw[104];
 // the hotkeys of the mcu look at HID slot 0 only: F12 in any slot resets, so a key held for the boot choice
