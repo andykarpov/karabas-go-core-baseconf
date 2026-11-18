@@ -88,8 +88,10 @@ endtask
 // ---------------------------------------------------------------- the clients
 integer rom_n = 0, rom_sum = 0, rom_max = 0;
 integer gs_n = 0, gs_sum = 0, gs_max = 0;
-integer opl_n = 0;
-reg run = 0;
+integer opl_n = 0, busy_n = 0;
+reg run = 0, opl_seq = 0;
+// busy holds the Z80 in reset: it must stay 0 while the CPU reads the ROM (the loader is idle then)
+always @(posedge clk) if (run && busy) busy_n = busy_n + 1;
 reg [8*8-1:0] dummy;
 
 task rom_read(input [18:0] adr);
@@ -133,8 +135,8 @@ always @(posedge clk) begin
 		end
 		opl_n = opl_n + 1;
 		opl_req <= 0;
-	end else if (run && !opl_req && !$test$plusargs("noopl")) begin
-		opl_addr <= {$random} % N; opl_req <= 1;
+	end else if ((run || opl_seq) && !opl_req && !$test$plusargs("noopl")) begin
+		opl_addr <= opl_seq ? opl_addr + 22'd2 : {$random} % (N / 2); opl_req <= 1;
 	end
 end
 `endif
@@ -153,7 +155,9 @@ initial begin
 	repeat (40) @(posedge clk);
 	if (fault) begin errors = errors + 1; $display("fault: the loader queue overflowed"); end
 `ifndef OLD
-	for (i = 0; i < N; i = i + 1) fl_byte(i, fl_pat(i));
+	// the first half of the FL bytes alone, the second half below while the CPU, the GS and the OPL4 run
+	// (on the board the YRW801 loads while the ERS runs)
+	for (i = 0; i < N / 2; i = i + 1) fl_byte(i, fl_pat(i));
 	repeat (40) @(posedge clk);
 `endif
 	// the GS writes its pattern above 64 KiB
@@ -169,6 +173,12 @@ initial begin
 				repeat (6 + {$random} % 18) @(posedge clk);    // a 14 MHz Z80: one M cycle = 18..24 clk
 			end
 		end
+`ifndef OLD
+		begin : fl_side
+			integer k;
+			for (k = N / 2; k < N; k = k + 1) fl_byte(k, fl_pat(k));
+		end
+`endif
 		begin : gs_side
 			integer k;
 			reg [20:0] ad;
@@ -179,6 +189,16 @@ initial begin
 			end
 		end
 	join
+`ifndef OLD
+	// every FL byte read back by the OPL4 (none lost in the fifo of 4)
+	run <= 0;
+	repeat (40) @(posedge clk);                // the last OPL4 read done
+	opl_addr <= -22'd2; opl_seq <= 1;
+	@(posedge clk);
+	wait (opl_addr >= N - 2 && opl_ack);
+	@(posedge clk);
+	opl_seq <= 0;
+`endif
 	run <= 0;
 	repeat (40) @(posedge clk);
 
@@ -186,7 +206,8 @@ initial begin
 		rom_n, rom_sum / rom_n, (rom_sum * 100 / rom_n) % 100, rom_max,
 		gs_n, gs_sum / gs_n, (gs_sum * 100 / gs_n) % 100, gs_max, opl_n);
 	if (chip.errors) $display("sdram_model: %0d timing errors", chip.errors);
-	$display("tb_storage: %0d errors", errors + chip.errors + fault);
+	if (busy_n) $display("busy in the run: %0d clk (it holds the Z80 in reset)", busy_n);
+	$display("tb_storage: %0d errors", errors + chip.errors + fault + (busy_n != 0));
 	$finish;
 end
 

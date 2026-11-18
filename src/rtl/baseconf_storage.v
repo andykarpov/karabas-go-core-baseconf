@@ -3,8 +3,8 @@
 // The SDRAM is sdram2p of TS-Conf (two ports, one access each in every cycle of 8 clk):
 // port 1 (banks 0 / 1) = the main ROM and the ROM loader (the arbiter below): the main CPU waits for the
 //   ROM, it has the port alone (a read in 10..17 clk: no wait state at 3.5 MHz);
-// port 2 (banks 2 / 3) = the GS above its 64 KiB of block RAM (bytes 0..1FFFFF of the port, first),
-//   then the FL bytes and the OPL4 sample memory (opl4_kg, 4 MB at 400000 of the port: the YRW801 ROM
+// port 2 (banks 2 / 3) = the FL bytes (first), the GS above its 64 KiB of block RAM (bytes 0..1FFFFF
+//   of the port), then the OPL4 sample memory (opl4_kg, 4 MB at 400000 of the port: the YRW801 ROM
 //   0..1FFFFF from the FL item of core.json, the sample RAM 200000..3FFFFF), as gs_top.v of TS-Conf.
 `default_nettype none
 module baseconf_storage(
@@ -74,7 +74,9 @@ module baseconf_storage(
     wire valid_loader = loader_addr[31] ? loader_addr[30:15] == 0 : loader_addr[30:19] == 0;
     // DOS entry can change the mapped ROM before an M1 read finishes.
     assign rom_done = rom_ack && rom_req && rom_addr == rom_tag && rom_wr == rom_write_tag;
-    assign busy = !ready || count != 0 || (state != 0 && owner == 2) || fault;
+    // busy holds the Z80 in reset (rst_req_n of baseconf.v): the SDRAM not initialised, loader bytes left,
+    // not an access of the main CPU (ready = sd_ready && p1_idle falls in every ROM read)
+    assign busy = !sd_ready || count != 0 || (state != 0 && owner == 2) || fault;
     always @(posedge clk) begin
         loader_wr_seen <= loader_wr;
         if (!rom_req || rom_addr != rom_tag || rom_wr != rom_write_tag) rom_ack <= 0;
@@ -124,7 +126,7 @@ module baseconf_storage(
             endcase
         end
     end
-    // ---------------------------------------------------------------- port 2: the GS, then the FL bytes, then the OPL4
+    // ---------------------------------------------------------------- port 2: the FL bytes, then the GS, then the OPL4
     // (the FL / OPL4 part from gs_top.v of TS-Conf). The FL bytes: ld_wr of clk_bus is high for three clk; a
     // fifo of 4, as a port 2 write waits a cycle when port 1 reads and the bytes come every 250 ns (21 clk) at
     // most. A GS access left by a reset is let go: its ack comes, the port takes no new one before it.
@@ -154,13 +156,15 @@ module baseconf_storage(
                 gs_dout_s <= p2_a[0] ? p2_q[15:8] : p2_q[7:0];
             end
         end else if (!p2_busy) begin
-            if (gs_sd && !reset) begin
-                p2_busy <= 1'b1; p2_req <= ~p2_req; p2_opl <= 1'b0; p2_gs <= 1'b1; p2_we <= gs_wr;
-                p2_a <= {2'b00, gs_addr}; p2_d <= gs_din;
-            end else if (fl_pend) begin
+            // the FL bytes first: they come at the burst pace into a fifo of 4, a GS reading the SDRAM back
+            // to back would let it overflow (only while the YRW801 loads; the GS waits one access then)
+            if (fl_pend) begin
                 fl_rp <= fl_rp + 1'd1;
                 p2_busy <= 1'b1; p2_req <= ~p2_req; p2_opl <= 1'b0; p2_gs <= 1'b0; p2_we <= 1'b1;
                 p2_a <= {2'b10, fl_head[28:8]}; p2_d <= fl_head[7:0];
+            end else if (gs_sd && !reset) begin
+                p2_busy <= 1'b1; p2_req <= ~p2_req; p2_opl <= 1'b0; p2_gs <= 1'b1; p2_we <= gs_wr;
+                p2_a <= {2'b00, gs_addr}; p2_d <= gs_din;
             end else if (opl_req) begin
                 p2_busy <= 1'b1; p2_req <= ~p2_req; p2_opl <= 1'b1; p2_gs <= 1'b0; p2_we <= opl_we;
                 p2_a <= {1'b1, opl_addr}; p2_d <= opl_wdata;
