@@ -134,8 +134,9 @@ TRD-образ), возврат по `OUT (#BE)`. Также из `base_trdemu`:
 
 Сборка **26111801**: OPL4 (ZXM-MoonSound, FM + волновой синтез, `opl4_kg` из TS-Conf) вместо SAA1099, OPL2
 и FM-части TurboSound FM; GS на z80-silicon; контроллер SDRAM `sdram2p` из TS-Conf (основное ПЗУ на своём
-порту). ПЗУ YRW801: см. «Как пользоваться». Слайсы: Go 98 %, Mini 99 % (map `-t 3`), Mini G 98 %. Проверено
-в симуляции (OPL4 против ymfm, тест памяти GS, порты SDRAM); на железе пока не проверялось.
+порту). ПЗУ YRW801: см. «Как пользоваться». Слайсы: Go 98 %, Mini 99 % (map `-t 3`), Mini G 99 %. Проверено
+в симуляции (OPL4 против ymfm, тест памяти GS, порты SDRAM) и на Mini G: ERS стартует, музыка MoonSound (Mick Labs,
+MoonMus1) играет, OPL4 Off в OSD её глушит. Go / Mini на железе не проверялись.
 
 ## Сборка
 

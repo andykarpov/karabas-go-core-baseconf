@@ -141,8 +141,9 @@ in the ERS (10 times) and in the 128 BASIC editor, F12. Go / Mini not checked on
 Build **26111801**: the OPL4 (ZXM-MoonSound, FM + wavetable, `opl4_kg` of TS-Conf) instead of SAA1099, OPL2
 and the FM part of TurboSound FM; the GS on z80-silicon; the SDRAM controller `sdram2p` of TS-Conf (the main
 ROM on its own port). The YRW801 ROM: see the use above. Slices: Go 98 %, Mini 99 % (map `-t 3`), Mini G
-98 %. Checked in simulation (the OPL4 against ymfm, the GS memory test, the SDRAM ports); not yet checked on
-hardware.
+99 %. Checked in simulation (the OPL4 against ymfm, the GS memory test, the SDRAM ports) and on the Mini G:
+the ERS starts, MoonSound music (Mick Labs, MoonMus1) plays, OPL4 Off in the OSD silences it. Go / Mini not
+checked on hardware.
 
 ## Building
 

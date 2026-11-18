@@ -101,8 +101,11 @@ cp1251 comments are UTF-8.
   `-lc area` too, the Mini with `-t 3` (with `-t 2` its router did not finish, 3739 / 3758 slices). In
   `opl4.v` the two cache hits of the interpolation are registered in `E_CLK2` (they missed clk_sys by
   0.31 ns on the Mini; opl4ref against ymfm unchanged), and the Mini / Mini G `kg_hdmi_ft` have
-  `OUTPUT_REG` as in TS-Conf. Build 26111801: Go 13148 LUT 87 % (slices 98 %), Mini 13994 LUT 93 %
-  (99 %), Mini G 13987 LUT 93 % (98 %), 38..39 RAMB16, 21 DSP48A1; timing score 0 on all boards and in
-  the core mode of the Mini boards. Tests: `sim/run_storage_sim.sh` (iverilog, seconds), `sim/run_gs_sim.sh` (ISim, 20 s: the GS
+  `OUTPUT_REG` as in TS-Conf. `busy` of `baseconf_storage` (it holds the Z80 in reset) follows the
+  SDRAM init only (`sd_ready`), not the port 1 handshake: with it the first ROM fetch reset the CPU again
+  (the first Mini G bitstream of 26111801: a black screen); the FL bytes go before the GS on port 2 (the
+  fifo of 4 overflowed under GS reads). Build 26111801: Go 13159 LUT 87 % (slices 98 %), Mini 13951 LUT
+  92 % (99 %), Mini G 13958 LUT 92 % (99 %), 38..39 RAMB16, 21 DSP48A1; timing score 0 on all boards and
+  in the core mode of the Mini boards. Tests: `sim/run_storage_sim.sh` (iverilog, seconds), `sim/run_gs_sim.sh` (ISim, 20 s: the GS
   on z80-silicon runs `gs_memtest.asm` from the block RAM, its RAM tests in block RAM and SDRAM pass while
   the OPL4 reads, 14.02 MHz in the timed loop).
