@@ -8,11 +8,12 @@ core is on karabas-go-modules master and has its own board tops (below, "Since t
 | Path in `src/` | Origin |
 |---|---|
 | `rtl/baseconf.v`, `rtl/karabas_*_top.v` | the port: BaseConf `top.v` and the TS-Conf board wrappers, adapted (`HW_ID1` Go, `HW_ID2` Mini, `HW_ID2 HW_ID3` Mini G, in the `.xst`) |
-| `rtl/baseconf_sram.v`, `rtl/baseconf_sdram.v`, `rtl/baseconf_storage.v`, `rtl/baseconf_keyboard_filter.v`, `rtl/video_fontrom.v` | the port (new) |
+| `rtl/baseconf_sram.v`, `rtl/baseconf_storage.v`, `rtl/baseconf_keyboard_filter.v`, `rtl/video_fontrom.v` | the port (new) |
 | `rtl/zxevo/` | [zxevo.pentevo](https://github.com/aaydev/zxevo.pentevo) `ec1405e`, `fpga/baseconf/trunk` (`z80`, `mem`, `video`, `spihub`, `common`, `dram`) |
 | `rtl/T80`, `rtl/sound`, `rtl/mcu` | [karabas-go-core-tsconf](https://github.com/andykarpov/karabas-go-core-tsconf) `edb2060`, `src/rtl` |
 | `rtl/vg93` (with `vg93-microcode-rom.hex`) | karabas-go-core-tsconf `8a1ce1f`, `src/rtl/vg93`, unchanged: `hrdy_fdc` + the VG93 model of [FD1793_1818VG93](https://github.com/demyanenko-d/FD1793_1818VG93) on clk_bus (as in Profi) |
-| `rtl/uart`, `rtl/sound/{covox.vhd,saa1099.v,saa1099_compressor_lut.hex,opl2_top.v,opl2_clk.v,jtopl}` | karabas-go-core-tsconf `8a1ce1f`, unchanged: TS ZiFi + TS / Evo RS232 (`zifi.vhd`), covox / Soundrive, SAA1099, OPL2 on [JTOPL](https://github.com/jotego/jtopl) |
+| `rtl/uart`, `rtl/sound/covox.vhd` | karabas-go-core-tsconf `8a1ce1f`, unchanged: TS ZiFi + TS / Evo RS232 (`zifi.vhd`), covox / Soundrive |
+| `rtl/sound/opl4` (with `opl3/`), `rtl/sound/{gs.v,turbosound.v,audio_mixer.v}`, `rtl/ram/sdram2p.v` | karabas-go-core-tsconf `4a8c46a` (the OPL4 of TS-Conf, #25 / #29): `opl4_kg` (wavetable `opl4.v` from u16_tsconf_gs_v24, FM = opl3_fpga of Greg Taylor, LGPL-3, through sv2v: `opl3/gen_v.sh` -> `opl3_fm_gen.v`), the GS on z80-silicon, TurboSound = two YM2149, the saturating mixer; `sim/sdram_model.v`, `sim/lib/ODDR2.v`, `sim/gs_memtest.asm` from its `src/sim` |
 | `rtl/adc` | karabas-go-core-tsconf `d728bcc`, `src/rtl/adc` (the PCM1808 ADC, the I2S of the ESP32) |
 | `../modules` | [karabas-go-modules](https://github.com/andykarpov/karabas-go-modules) master, unchanged |
 | `roms/baseconf.rom` | NedoPC SVN `svn://svn.nedopc.com/pentevo` r1368 `rom/zxevo_fe.rom` (ERS 0.61.01 with `DOS_FE`, unpatched; needs the TR-DOS emulation traps below) |
@@ -58,15 +59,17 @@ cp1251 comments are UTF-8.
 
 ## Changes to the TS-Conf and modules sources
 
-- `sound/gs.v`: a `MEM_WAIT_n` input (GS memory in SDRAM / block RAM), the bank of the address
-  valid at once.
+- `sound/gs.v`: since the OPL4 the file of TS-Conf `4a8c46a` as it is (z80-silicon, `MEM_WAIT`, `CE_N`); the
+  page of the address valid at once was the change of the port before.
+- `ram/sdram2p.v`: an output `ready` (the SDRAM initialised); its `SDRAM_CLK` is left open (the tops drive
+  `SDR_CLK` with their own ODDR2, the same inverted clk_sys).
 - `mcu/hid_parser.vhd`: joystick mode 6 SEGA (all twelve buttons as Spectrum keys); the six key slots are decoded
   one per clock by one case (as in the spec256 core), the matrix taken every 6 clocks: 2168 -> 1085 LUT.
 - `mcu/hid_parser.vhd`, the RTC registers of the ZX Evolution AVR: reg D bit 6 = F12 held; F0..FF with the
   EEPROM flag (reg C bit 7) off, its power-up state as on the AVR: a write sets the type (not sent to the mcu),
   a read gives the version string of the type (0 = the core build id, 1 = the firmware build id, from the
   mcu as `kg_mcu` `CORE_BUILD` / `FW_BUILD`; date from the YYMMDD digits) or the PS/2 log (type 2).
-- `sound/turbosound.v`: the AY I/O ports read FF.
+- `sound/turbosound.v`: the AY I/O ports read FF (before the OPL4; now the file of TS-Conf, two YM2149).
 - `kg_osd_overlay.v`: the vertical offset of the OSD is an input (`v_offset`: 50 / 60 Hz); now
   `V_OFFSET_IN` of karabas-go-modules (#19).
 
@@ -88,3 +91,21 @@ cp1251 comments are UTF-8.
 - ROM bursts of the MCU at 32 MHz on the Mini G, 16 MHz on Go / Mini (`BURST_MAX_MHZ` of `kg_mcu`,
   1 MHz before): the queue of `baseconf_storage` writes a byte into the SDRAM faster than a burst
   brings one, so `BURST_READY` stays 1. The ROMs of the Mini G load in 0.56 s (5.7 s before).
+- The OPL4 (ZXM-MoonSound) instead of SAA1099, OPL2 and the FM part of TurboSound FM (2026-11-17): `opl4_kg`
+  of TS-Conf on #C4..#C7 / #7E / #7F outside the shadow mode, its FM timer IRQ on /INT (not in shadow), the
+  YRW801 ROM from the FL item "OPL4 ROM" (slot 1, `/baseconf/yrw801.rom` or `/tsconf/yrw801.rom`). The SDRAM
+  is `sdram2p` of TS-Conf: port 1 = the main ROM and the ROM loader (`baseconf_storage`, the main CPU alone:
+  a ROM read 10..17 clk_sys, mean 14, 25 with a refresh; `baseconf_sdram.v` 10 / 25 before), port 2 = the GS
+  above its 64 KiB of block RAM (first), the FL bytes, the OPL4 (GS reads mean 13 clk_sys, 24.5 with the OPL4
+  reading back to back). The GS / OPL4 filter of TS-Conf is not taken (no room). The Mini G maps with
+  `-lc area` too, the Mini with `-t 3` (with `-t 2` its router did not finish, 3739 / 3758 slices). In
+  `opl4.v` the two cache hits of the interpolation are registered in `E_CLK2` (they missed clk_sys by
+  0.31 ns on the Mini; opl4ref against ymfm unchanged), and the Mini / Mini G `kg_hdmi_ft` have
+  `OUTPUT_REG` as in TS-Conf. `busy` of `baseconf_storage` (it holds the Z80 in reset) follows the
+  SDRAM init only (`sd_ready`), not the port 1 handshake: with it the first ROM fetch reset the CPU again
+  (the first Mini G bitstream of 26111801: a black screen); the FL bytes go before the GS on port 2 (the
+  fifo of 4 overflowed under GS reads). Build 26111801: Go 13159 LUT 87 % (slices 98 %), Mini 13951 LUT
+  92 % (99 %), Mini G 13958 LUT 92 % (99 %), 38..39 RAMB16, 21 DSP48A1; timing score 0 on all boards and
+  in the core mode of the Mini boards. Tests: `sim/run_storage_sim.sh` (iverilog, seconds), `sim/run_gs_sim.sh` (ISim, 20 s: the GS
+  on z80-silicon runs `gs_memtest.asm` from the block RAM, its RAM tests in block RAM and SDRAM pass while
+  the OPL4 reads, 14.02 MHz in the timed loop).

@@ -4,7 +4,8 @@
 
 ZX Evolution (Pentevo) от NedoPC с её собственной конфигурацией FPGA, **BaseConf**, на платах семейства
 Karabas Go (Xilinx Spartan-6 XC6SLX25). Работает штатный BIOS ZX Evo (ERS), 4 МБ памяти, расширенные
-видеорежимы Evo, General Sound, TurboSound FM, SAA1099, OPL2, covox / Soundrive, порт RS232 Evo (на
+видеорежимы Evo, General Sound, TurboSound (два AY / YM), OPL4 (ZXM-MoonSound: FM + wavetable),
+covox / Soundrive, порт RS232 Evo (на
 USB-последовательном порту платы) и TS ZiFi (ESP8266).
 
 | Плата | Файл ядра | Видео | Звук | Накопители |
@@ -28,26 +29,29 @@ USB-последовательном порту платы) и TS ZiFi (ESP8266)
   (`rom/zxevo.rom`) и шрифт ATM.
 - **Ядро TS-Conf для Karabas Go** ([karabas-go-core-tsconf](https://github.com/andykarpov/karabas-go-core-tsconf),
   Андрей Карпов и участники, в том числе Олег Старыченко): обвязка платы, от которой произошли верхние
-  уровни, General Sound (`gs.v`, ROM `roms/gs105b.rom`), TurboSound, разбор HID, covox / Soundrive
-  (`covox.vhd`), TS ZiFi с портами RS232 TS-Conf и Evo (`zifi.vhd`, UART от nandland.com), SAA1099
-  (Miguel Angel Rodriguez Jodar), OPL2 на **JTOPL** (Jose Tejada), контроллер физических
+  уровни, General Sound (`gs.v` на z80-silicon, ROM `roms/gs105b.rom`), TurboSound (два YM2149), OPL4
+  (`opl4_kg`, `src/rtl/sound/opl4`: часть wavetable `opl4.v`, побитно совпадающая с ymfm, из
+  u16_tsconf_gs_v24, TS-Conf для ReVerSE-U16; часть FM — **opl3_fpga** Грега Тейлора, LGPL-3.0, из
+  ao486_MiSTer, сверена с Nuked-OPL3), двухпортовый контроллер SDRAM `sdram2p.v` (из `sdram.v` платы
+  MiST, Till Harbaum, Gyorgy Szombathelyi, GPL-3), разбор HID, covox / Soundrive
+  (`covox.vhd`), TS ZiFi с портами RS232 TS-Conf и Evo (`zifi.vhd`, UART от nandland.com), контроллер физических
   дисководов (`hrdy_fdc` с моделью VG93 из
   [FD1793_1818VG93](https://github.com/demyanenko-d/FD1793_1818VG93) и её ROM микрокода).
 - **z80-silicon** (Андрей Титов, [z80-silicon-rtl](https://github.com/dr-Titus/z80-silicon-rtl), GPL v3), процессор:
   NMOS Z80, восстановленный по транзисторной схеме кристалла (точный тайминг INT, недокументированные флаги
   и MEMPTR, OUT (C),0); `src/rtl/z80-silicon`, переведён на один такт с разрешениями `gen_cen.py` из TS-Conf.
-- **T80** (Daniel Wallner, Sorgelig и другие: GS), **JT12 / JT03** (Jose Tejada), **zhdmi**
+- **T80** (Daniel Wallner, Sorgelig и другие), **YM2149** в TurboSound, **zhdmi**
   (François Galea) и общие модули [karabas-go-modules](https://github.com/andykarpov/karabas-go-modules)
   (связь с MCU, OSD, PLL, звук, HDMI), подмодуль `modules`.
 
 Своё в порте: `src/rtl/baseconf.v` и верхние уровни плат (переделаны из BaseConf и TS-Conf),
-`baseconf_sram.v` (4 МБ в двух SRAM), `baseconf_sdram.v` (ROM и память GS в SDRAM),
-`baseconf_storage.v`, `baseconf_keyboard_filter.v`, `video_fontrom.v`, а также изменения общих
+`baseconf_sram.v` (4 МБ в двух SRAM), `baseconf_storage.v` (ROM, память GS и OPL4 в SDRAM), `baseconf_keyboard_filter.v`, `video_fontrom.v`, а также изменения общих
 исходников, перечисленные в [docs/sources.md](docs/sources.md).
 
 ## Лицензия
 
-GPL-3.0-or-later, см. [LICENSE](LICENSE). BaseConf, JT12, JTOPL и zhdmi распространяются под GPL-3.0-or-later;
+GPL-3.0-or-later, см. [LICENSE](LICENSE). BaseConf и zhdmi распространяются под GPL-3.0-or-later, opl3_fpga
+(часть FM в OPL4) — под LGPL-3.0 (`src/rtl/sound/opl4/opl3/COPYING.LESSER`);
 ядро TS-Conf для Karabas Go — под MIT ([docs/licenses/karabas-tsconf-MIT.txt](docs/licenses/karabas-tsconf-MIT.txt)),
 у T80 свой текст в стиле BSD; каждый файл исходников сохраняет свой заголовок. ROM в `src/roms` —
 неизменённые файлы своих проектов (BIOS ZX Evo от NedoPC, ROM General Sound 1.05b в том виде, в каком
@@ -58,6 +62,11 @@ GPL-3.0-or-later, см. [LICENSE](LICENSE). BaseConf, JT12, JTOPL и zhdmi ра�
 Скопируйте файл ядра своей платы на SD-карту (SD1). OSD открывается по Menu (Win) + Esc; страницам
 Sound, Disks и Input нужна прошивка 26103113 или новее (старая покажет один плоский список), номерам
 сборок ядра и прошивки в ERS — прошивка 26110114 или новее.
+
+OPL4: его wavetable нужно ПЗУ YRW801 от Yamaha (2 МБ, md5 42af93619160ef2116416f74a6cb12f2):
+положите его на SD1 как `/baseconf/yrw801.rom` (ядро берёт и `/tsconf/yrw801.rom` от ядра TS-Conf);
+оно загружается при старте ядра (OSD Sound, **OPL4 ROM**). Без него FM работает, а wavetable молчит.
+SAA1099, OPL2 и часть FM у TurboSound FM убраны, чтобы поместился OPL4.
 
 Виртуальные жёсткие диски: на странице OSD Disks поставьте **HDD** = *Image* и выберите образ (`.hdf`,
 `.img`, `.vhd`, MBR с разделом FAT) как **HDF0** (IDE master; при HDD = CF card master — карта CF),
@@ -74,7 +83,8 @@ Sound, Disks и Input нужна прошивка 26103113 или новее (с
 | Menu+P | пауза |
 | F11 | NMI |
 | F12 | сброс (ядра и GS) |
-| только в OSD | SAA1099, OPL2, ZiFi RS232: вкл. / выкл. (выкл. ещё и глушит устройство / освобождает его порты) |
+| только в OSD | OPL4, ZiFi RS232: вкл. / выкл. (выкл. ещё и глушит устройство / освобождает его порты) |
+| Menu+I | интерполяция OPL4 вкл. / выкл. (сэмплы и выход FM интерполируются линейно, как в openMSX) |
 | Menu+N | HDD: карта CF / образ (IDE master) |
 | Menu+F5 | выбор образа HDF0 |
 | Menu+T | монитор магнитофона: выкл. / вход / выход / оба (вход с магнитофона и MIC слышны в звуке) |
@@ -121,6 +131,12 @@ TRD-образ), возврат по `OUT (#BE)`. Также из `base_trdemu`:
 Клавиши сброса (`kb_reset`, `btn_reset_n`) теперь регистрируются на `clk_bus` в топах плат, а запрос сброса
 `resetter` — на частоте процессора (асинхронным остался только `locked`). Проверено на Mini G: «вправо» в ERS
 (10 раз) и в редакторе 128 BASIC, F12. Go / Mini на железе не проверялись.
+
+Сборка **26111801**: OPL4 (ZXM-MoonSound, FM + волновой синтез, `opl4_kg` из TS-Conf) вместо SAA1099, OPL2
+и FM-части TurboSound FM; GS на z80-silicon; контроллер SDRAM `sdram2p` из TS-Conf (основное ПЗУ на своём
+порту). ПЗУ YRW801: см. «Как пользоваться». Слайсы: Go 98 %, Mini 99 % (map `-t 3`), Mini G 99 %. Проверено
+в симуляции (OPL4 против ymfm, тест памяти GS, порты SDRAM) и на Mini G: ERS стартует, музыка MoonSound (Mick Labs,
+MoonMus1) играет, OPL4 Off в OSD её глушит. Go / Mini на железе не проверялись.
 
 ## Сборка
 

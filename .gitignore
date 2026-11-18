@@ -76,3 +76,6 @@ src/build_*.log
 src/*_core.log
 src/netlist.lst
 src/kg_*.stamp
+
+# simulation outputs (src/sim/run_*.sh, src/sim/opl4ref)
+src/sim/build/

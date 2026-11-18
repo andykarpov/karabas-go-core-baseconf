@@ -162,7 +162,7 @@ BUFG bufg_clk_bus(.I(clk_bus_pll), .O(clk_bus));
 // audio output hums into the ADC and the analog outputs)
 ODDR2 u_ft_clk (.Q(FT_CLK_OUT), .C0(clk_8mhz), .C1(~clk_8mhz), .CE(1'b1), .D0(1'b1), .D1(1'b0), .R(1'b0), .S(1'b0));
 
-// sdram clock, inverted (the controller of baseconf_sdram.v runs on clk_sys)
+// sdram clock, inverted (sdram2p of baseconf_storage.v runs on clk_sys)
 ODDR2 sdr_clock(.Q(SDR_CLK), .C0(clk_sys), .C1(~clk_sys), .CE(1'b1), .D0(1'b0), .D1(1'b1), .R(1'b0), .S(1'b0));
 
 assign areset = ~locked;
@@ -207,12 +207,13 @@ wire loader_act;
 wire [31:0] loader_addr;
 wire [7:0] loader_data;
 wire loader_wr;
+wire fl_act, fl_wr; // the FL item OPL4 ROM (below)
 wire [2:0] kb_joy_type_l, kb_joy_type_r;
 wire kb_vga_60hz;
 wire [7:0] joy_bus;
 wire kb_pause, kb_reset, kb_nmi, mcu_busy;
 wire covox_en, psg_type;
-wire saa_en, opl_en, zifi_en, hdd_image; // OSD switches (see the soft switches below)
+wire opl4_en, opl4_interp, zifi_en, hdd_image; // OSD switches (see the soft switches below)
 // the image files of the mcu (HDF0 slot 4, HDF1 slot 5): the SDC_* of kg_mcu2 (the sdc side of img_sdc)
 wire [7:0] sdc_img_mounted, sdc_rd, sdc_wr, sdc_byte_in_data, sdc_byte_out_data;
 wire [63:0] sdc_img_size;
@@ -306,9 +307,9 @@ baseconf machine (
 
 	.covox_en			(covox_en),
 
-	.saa_en			(saa_en),
+	.opl4_en			(opl4_en),
 
-	.opl_en			(opl_en),
+	.opl4_interp			(opl4_interp),
 
 	.zifi_en			(zifi_en),
 	.hdd_image			(hdd_image),
@@ -336,6 +337,8 @@ baseconf machine (
 	.loader_a			(loader_addr),
 	.loader_d			(loader_data),
 	.loader_wr			(loader_wr),
+	.fl_act			(fl_act),
+	.fl_wr				(fl_wr),
 
 	.usb_uart_rx_data	(uart_rx_data),
 	.usb_uart_rx_idx	(uart_rx_idx),
@@ -389,7 +392,9 @@ BUFG bufg_ft_clk(.I(ft_clk_ibufg), .O(ft_clk_int));
 
 // hdmi
 wire [7:0] hdmi_freq;
-kg_hdmi_ft #(.SAMPLERATE(48000), .CLKRATE(28030303), .REF_MHZ(8'd28)) hdmi_top(
+// OUTPUT_REG: the TMDS words registered before the serializers (the encoder -> serializer route missed
+// the 64 MHz FT pixel clock near 99 % slices, modules #46, as in TS-Conf)
+kg_hdmi_ft #(.SAMPLERATE(48000), .CLKRATE(28030303), .REF_MHZ(8'd28), .OUTPUT_REG(1)) hdmi_top(
 	.clk				(ft_clk_int),
 	.clk_ref			(clk_bus),
 	.clk_ref_pll	(clk_bus_pll),
@@ -485,6 +490,7 @@ wire [15:0] mcu_joy_l, mcu_joy_r;
 wire [5:0] mcu_btns;
 wire [1:0] ld_kind;
 wire ld_active, ld_wr;
+wire [7:0] ld_slot;
 wire [31:0] ld_addr;
 wire [7:0] ld_data;
 wire [31:0] port_out_data;
@@ -568,7 +574,7 @@ kg_mcu2 #(
 	.BK_RESULT		(8'd0),
 
 	.LD_KIND			(ld_kind),
-	.LD_SLOT			(),
+	.LD_SLOT			(ld_slot),
 	.LD_SIZE			(),
 	.LD_START		(),
 	.LD_ACTIVE		(ld_active),
@@ -658,6 +664,9 @@ assign ms_b = mcu_ms_b[2:0];
 // the ROMs of the core file (LD kind 0)
 assign loader_act = ld_active && ld_kind == 2'd0;
 assign loader_wr = ld_wr && ld_kind == 2'd0;
+// the FL item "OPL4 ROM" (slot 1): the YRW801 ROM into the sample memory of the OPL4
+assign fl_act = ld_active && ld_kind == 2'd2 && ld_slot == 8'd1;
+assign fl_wr = ld_wr && fl_act;
 assign loader_addr = ld_addr;
 assign loader_data = ld_data;
 
@@ -737,8 +746,8 @@ assign covox_en = softsw[0];
 assign psg_mix = softsw[9:8];
 assign tape_mon = softsw[153:152];   // Tape monitor (index 19): 0 off, 1 in, 2 out, 3 both
 assign psg_type = softsw[16];
-assign saa_en = softsw[24];
-assign opl_en = softsw[32];
+assign opl4_en = softsw[24];       // OPL4 (index 3)
+assign opl4_interp = softsw[32];   // OPL4 Interp (index 4)
 assign zifi_en = softsw[40];
 assign hdd_image = softsw[48];
 // items 7, 8: the files HDF0 / HDF1 (their registers are unused)
