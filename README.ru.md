@@ -6,7 +6,7 @@ ZX Evolution (Pentevo) от NedoPC с её собственной конфигу
 Karabas Go (Xilinx Spartan-6 XC6SLX25). Работает штатный BIOS ZX Evo (ERS), 4 МБ памяти, расширенные
 видеорежимы Evo, General Sound, TurboSound (два AY / YM), OPL4 (ZXM-MoonSound: FM + wavetable),
 covox / Soundrive, порт RS232 Evo (на
-USB-последовательном порту платы) и TS ZiFi (ESP8266).
+порту ядра платы, втором USB-последовательном порту, `...-if02` в Linux) и TS ZiFi (ESP8266).
 
 | Плата | Файл ядра | Видео | Звук | Накопители |
 |---|---|---|---|---|
