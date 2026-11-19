@@ -6,7 +6,7 @@ The ZX Evolution (Pentevo) of NedoPC with its own FPGA configuration, **BaseConf
 family of boards (Xilinx Spartan-6 XC6SLX25). It runs the stock ZX Evo BIOS (ERS) with 4 MB of RAM,
 the extended video modes of the Evo, General Sound, TurboSound (two AY / YM), OPL4 (ZXM-MoonSound: FM +
 wavetable), covox / Soundrive,
-the RS232 port of the Evo (on the USB serial port of the board) and TS ZiFi (ESP8266).
+the RS232 port of the Evo (on the core serial port of the board (the second USB serial port, `/dev/serial/by-id/usb-Karabas_Go_<serial>-if02` on Linux)) and TS ZiFi (ESP8266).
 
 | Board | Core file | Video | Audio | Drives |
 |---|---|---|---|---|
