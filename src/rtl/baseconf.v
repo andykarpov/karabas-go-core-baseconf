@@ -184,6 +184,7 @@ module baseconf
 	input wire [31:0] loader_a,
 	input wire [7:0] loader_d,
 	input wire loader_wr,
+	output wire loader_ready, // LD_READY of kg_mcu2: the ROM storage takes loader bytes (its SDRAM initialised)
 	// the YRW801 ROM of the OPL4 (the FL item of core.json): ld_wr of that item, the byte offset in the
 	// file (loader_a / loader_d); the OPL4 is held while fl_act
 	input wire fl_act,
@@ -1249,7 +1250,7 @@ assign keyboard_addr = a[15:8];
         .fl_wr(fl_wr), .fl_a(loader_a), .fl_d(loader_d),
         .opl_addr(opl4_mem_addr), .opl_req(opl4_mem_req), .opl_we(opl4_mem_we), .opl_wdata(opl4_mem_wdata),
         .opl_ack(opl4_mem_ack), .opl_rdata(opl4_mem_rdata),
-        .busy(storage_busy), .fault(storage_fault), .sdram_clk(sdram_clk),
+        .busy(storage_busy), .fault(storage_fault), .load_ready(loader_ready), .sdram_clk(sdram_clk),
         .sdram_a(sdram_a), .sdram_ba(sdram_ba), .sdram_dqm(sdram_dqm),
         .sdram_ras_n(sdram_ras_n), .sdram_cas_n(sdram_cas_n), .sdram_we_n(sdram_we_n), .sdram_dq(sdram_dq));
     audio_mixer mix(.clk(fclk), .mute(pause), .mode(psg_mix), .speaker(speaker), .tape_in(tape_in),

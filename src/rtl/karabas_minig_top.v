@@ -207,6 +207,7 @@ wire loader_act;
 wire [31:0] loader_addr;
 wire [7:0] loader_data;
 wire loader_wr;
+wire loader_ready;
 wire fl_act, fl_wr; // the FL item OPL4 ROM (below)
 wire [2:0] kb_joy_type_l, kb_joy_type_r;
 wire kb_vga_60hz;
@@ -337,6 +338,7 @@ baseconf machine (
 	.loader_a			(loader_addr),
 	.loader_d			(loader_data),
 	.loader_wr			(loader_wr),
+	.loader_ready		(loader_ready),
 	.fl_act			(fl_act),
 	.fl_wr				(fl_wr),
 
@@ -511,7 +513,7 @@ wire [127:0] port_cfg = { 96'd0, 16'd0, uart_tx_mode ? { uart_dlm, uart_dll } : 
 // the configuration as on v1: RTC (all registers below F0 sent, D too), USB UART with the EVO RS232 registers,
 // FT812 chip select passed through, the image files HDF0 / HDF1 (hdf_ata in baseconf.v); no matrix / debug
 kg_mcu2 #(
-	.CAPS(16'h0000),
+	.CAPS(16'h0010),	// bit 4: LD_READY driven (the SDRAM of the ROM storage initialised)
 	.SW_N(20),
 	.SW_INIT(120'h000000000100000000010101000101),
 	.CS_FILTER(3),
@@ -582,7 +584,7 @@ kg_mcu2 #(
 	.LD_ADDR			(ld_addr),
 	.LD_DATA			(ld_data),
 	.LD_WR			(ld_wr),
-	.LD_READY		(1'b1),
+	.LD_READY		(loader_ready),
 
 	.OSD_WR			(osd_wr),
 	.OSD_WADDR		(osd_waddr),
