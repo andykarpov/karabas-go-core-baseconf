@@ -207,6 +207,8 @@ wire loader_act;
 wire [31:0] loader_addr;
 wire [7:0] loader_data;
 wire loader_wr;
+wire loader_ready;
+wire loader_fault;
 wire fl_act, fl_wr; // the FL item OPL4 ROM (below)
 wire [2:0] kb_joy_type_l, kb_joy_type_r;
 wire kb_vga_60hz;
@@ -337,6 +339,8 @@ baseconf machine (
 	.loader_a			(loader_addr),
 	.loader_d			(loader_data),
 	.loader_wr			(loader_wr),
+	.loader_ready		(loader_ready),
+	.loader_fault		(loader_fault),
 	.fl_act			(fl_act),
 	.fl_wr				(fl_wr),
 
@@ -511,7 +515,7 @@ wire [127:0] port_cfg = { 96'd0, 16'd0, uart_tx_mode ? { uart_dlm, uart_dll } : 
 // the configuration as on v1: RTC (all registers below F0 sent, D too), USB UART with the EVO RS232 registers,
 // FT812 chip select passed through, the image files HDF0 / HDF1 (hdf_ata in baseconf.v); no matrix / debug
 kg_mcu2 #(
-	.CAPS(16'h0000),
+	.CAPS(16'h0110),	// bit 4: LD_READY driven (the SDRAM of the ROM storage initialised), bit 8: reload
 	.SW_N(20),
 	.SW_INIT(120'h000000000100000000010101000101),
 	.CS_FILTER(3),
@@ -547,8 +551,8 @@ kg_mcu2 #(
 	.FW_BUILD		(fw_build),
 	.BUSY				(mcu_busy),
 	.BTNS				(mcu_btns),
-	.RELOAD_REQ		(1'b0),
-	.RELOAD_CORE	(8'd0),
+	.RELOAD_REQ		(loader_fault),	// a load fault of the ROM storage: the firmware loads the core again
+	.RELOAD_CORE	(8'hFE),
 
 	.KBD				(mcu_kbd),
 	.KBD_WR			(),
@@ -582,7 +586,7 @@ kg_mcu2 #(
 	.LD_ADDR			(ld_addr),
 	.LD_DATA			(ld_data),
 	.LD_WR			(ld_wr),
-	.LD_READY		(1'b1),
+	.LD_READY		(loader_ready),
 
 	.OSD_WR			(osd_wr),
 	.OSD_WADDR		(osd_waddr),

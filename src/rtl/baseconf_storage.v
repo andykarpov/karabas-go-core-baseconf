@@ -18,6 +18,10 @@ module baseconf_storage(
     input wire loader_act, input wire loader_wr, input wire [31:0] loader_addr,
     input wire [7:0] loader_data,
     output wire busy, output reg fault = 0,
+    // LD_READY of the link (caps bit 4): the SDRAM initialised. Then the queue drains a byte in 32 clk at
+    // most (0.38 us, a refresh included), faster than the link sends them (0.67 us at 12 MHz sck); before
+    // it, the bytes of a DATA packet would fill the 16 entries and set fault.
+    output wire load_ready,
     // the YRW801 ROM of the OPL4 from the FL item (ld_wr of clk_bus): byte offset in the file
     input wire fl_wr, input wire [31:0] fl_a, input wire [7:0] fl_d,
     // the sample memory of the OPL4 (clk), see opl4_kg
@@ -47,6 +51,7 @@ module baseconf_storage(
     wire [15:0] p1_q;
     wire p1_idle = p1_ack == p1_req;
     wire ready = sd_ready && p1_idle;
+    assign load_ready = sd_ready;
     wire [7:0] result = address[0] ? p1_q[15:8] : p1_q[7:0];
     wire pop = state == 0 && ready && count != 0;
     // GS spends most playback time in its ROM and fixed workspace/sample
