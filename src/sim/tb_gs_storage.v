@@ -57,7 +57,7 @@ baseconf_storage storage(.clk(clk), .reset(st_reset), .sdram_init_n(1'b1),
 	.opl_rdata(opl_rdata),
 	.sdram_clk(sclk), .sdram_a(sa), .sdram_ba(sba), .sdram_dqm(sdqm), .sdram_ras_n(sras),
 	.sdram_cas_n(scas), .sdram_we_n(swe), .sdram_dq(sdq));
-sdram_model #(.CL(3), .ROW_BITS(8)) sdr(.clk(clk), .ba(sba), .a(sa), .dqm(sdqm), .ras_n(sras), .cas_n(scas),
+sdram_model #(.CL(3), .ROW_BITS(8), .SKEW(6.0), .TAC(5.4), .TOH(3.0)) sdr(.clk(clk), .ba(sba), .a(sa), .dqm(sdqm), .ras_n(sras), .cas_n(scas),
 	.we_n(swe), .dq(sdq));
 
 reg [7:0] rom [0:1023];

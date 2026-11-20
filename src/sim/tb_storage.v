@@ -52,11 +52,18 @@ baseconf_storage dut(.clk(clk), .reset(reset),
 	.sdram_clk(sclk), .sdram_a(sa), .sdram_ba(sba), .sdram_dqm(sdqm), .sdram_ras_n(sras),
 	.sdram_cas_n(scas), .sdram_we_n(swe), .sdram_dq(sdq));
 
+// the read window at the DQ flip-flops (sdram_model): -DSKEW=.. -DTAC=.. -DTOH=.. (ns); the default is
+// a typical Go (SDR_CLK pin + traces + DQ pad 6 ns), run_storage_sim.sh adds the corners 4 / 8.5 ns
+`ifndef SKEW
+`define SKEW 6.0
+`define TAC 5.4
+`define TOH 3.0
+`endif
 `ifdef OLD
-sdram_model #(.CL(2), .ROW_BITS(12)) chip(.clk(clk), .ba(sba), .a(sa), .dqm(sdqm), .ras_n(sras), .cas_n(scas),
+sdram_model #(.CL(2), .ROW_BITS(12), .SKEW(`SKEW), .TAC(`TAC), .TOH(`TOH)) chip(.clk(clk), .ba(sba), .a(sa), .dqm(sdqm), .ras_n(sras), .cas_n(scas),
 	.we_n(swe), .dq(sdq));
 `else
-sdram_model #(.CL(3), .ROW_BITS(12)) chip(.clk(clk), .ba(sba), .a(sa), .dqm(sdqm), .ras_n(sras), .cas_n(scas),
+sdram_model #(.CL(3), .ROW_BITS(12), .SKEW(`SKEW), .TAC(`TAC), .TOH(`TOH)) chip(.clk(clk), .ba(sba), .a(sa), .dqm(sdqm), .ras_n(sras), .cas_n(scas),
 	.we_n(swe), .dq(sdq));
 `endif
 

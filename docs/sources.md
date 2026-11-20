@@ -62,7 +62,10 @@ cp1251 comments are UTF-8.
 - `sound/gs.v`: since the OPL4 the file of TS-Conf `4a8c46a` as it is (z80-silicon, `MEM_WAIT`, `CE_N`); the
   page of the address valid at once was the change of the port before.
 - `ram/sdram2p.v`: an output `ready` (the SDRAM initialised); its `SDRAM_CLK` is left open (the tops drive
-  `SDR_CLK` with their own ODDR2, the same inverted clk_sys).
+  `SDR_CLK` with their own ODDR2, the same inverted clk_sys). Since the fix of 2026-11-20: DQ taken on the
+  rising edge after the CL edge (was the falling edge: setup -2 ns at the slow corner of the Go, a "matrass"
+  on one board), the initialisation after ~390 us with 8 AUTO REFRESH (was ~3 us, 2). `sim/sdram_model.v`
+  has a read window (`SKEW` / `TAC` / `TOH`). TS-Conf has the same `sdram2p`: to take there too.
 - `mcu/hid_parser.vhd`: joystick mode 6 SEGA (all twelve buttons as Spectrum keys); the six key slots are decoded
   one per clock by one case (as in the spec256 core), the matrix taken every 6 clocks: 2168 -> 1085 LUT.
 - `mcu/hid_parser.vhd`, the RTC registers of the ZX Evolution AVR: reg D bit 6 = F12 held; F0..FF with the
