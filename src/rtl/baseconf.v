@@ -185,6 +185,7 @@ module baseconf
 	input wire [7:0] loader_d,
 	input wire loader_wr,
 	output wire loader_ready, // LD_READY of kg_mcu2: the ROM storage takes loader bytes (its SDRAM initialised)
+	output wire loader_fault, // RELOAD_REQ of kg_mcu2 (core id FE): the ROM queue overflowed, the Z80 is held
 	// the YRW801 ROM of the OPL4 (the FL item of core.json): ld_wr of that item, the byte offset in the
 	// file (loader_a / loader_d); the OPL4 is held while fl_act
 	input wire fl_act,
@@ -234,6 +235,7 @@ module baseconf
     wire [1:0] vred,vgrn,vblu;
     wire vhsync,vvsync,vcsync;
     wire storage_busy, storage_fault, rom_done;
+    assign loader_fault = storage_fault;
     wire [7:0] rom_data;
     wire rom_req = csrom && !mreq_n && (!rd_n || !romwe_n);
     wire [7:0] fdc_data, ts_data, gs_data;
