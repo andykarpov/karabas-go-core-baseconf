@@ -338,7 +338,7 @@ baseconf machine (
 	.psg_type			(psg_type),
 	.vga_60hz			(kb_vga_60hz),
 	.pause				(kb_pause),
-	.nmi_button			(kb_nmi),
+	.nmi_button			(kb_nmi || hw_btn[1]),   // F11 / OSD NMI or board button 2
 
 	// the floppy connector of the Go (the physical drive of the FDC of baseconf)
 	.fdc_side			(FDC_SIDE_N),

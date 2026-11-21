@@ -85,7 +85,7 @@ the images power the board off and on (a reset or a core reload keeps the RAM).
 | Menu+F9 | video: 50 Hz / 60 Hz |
 | Menu+J, Menu+R | the mapping of the left / right joystick: Kempston, Sinclair 1, Sinclair 2, Cursor, QAOPM, QAOPS, SEGA |
 | Menu+P | pause |
-| F11 | NMI |
+| F11, board button 2 | NMI |
 | F12 | reset (the core and GS) |
 | OSD only | OPL4, ZiFi RS232: on / off (Off also mutes the device / frees its ports) |
 | Menu+I | OPL4 interpolation on / off (the samples and the FM output interpolated linearly, as in openMSX) |
@@ -144,6 +144,13 @@ ROM on its own port). The YRW801 ROM: see the use above. Slices: Go 98 %, Mini 9
 99 %. Checked in simulation (the OPL4 against ymfm, the GS memory test, the SDRAM ports) and on the Mini G:
 the ERS starts, MoonSound music (Mick Labs, MoonMus1) plays, OPL4 Off in the OSD silences it. Go / Mini not
 checked on hardware.
+
+Build **26112003**: the border is written by any even port (A0 = 0), as on the Spectrum / Pentagon: NMI 3
+writes it by `OUT (C),r` with C = `#06` (reported by Activator RFG). The other even ports of the core keep their
+devices: `#xxBE` (NMI end), the IDE registers, the OPL4 (`#C4`, `#C6`, `#7E`); the bright bit is set only by
+`#F6`, the beeper / MIC stay on `#FE`. Board button 2 gives the NMI as F11 (button 1 = reset).
+Checked on the Mini G: `OUT 6,2` red, `OUT 198,1` (OPL4) keeps it, `OUT 246,1` bright blue; button 2 opens the
+EVO Magic Service, `0` continues. Go / Mini not checked on hardware.
 
 ## Building
 

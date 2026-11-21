@@ -44,7 +44,9 @@ cp1251 comments are UTF-8.
 - `zports.v`: the registers clocked by `zclk` run on `fclk` with `zpos`; the three transparent IDE
   trigger latches are `fclk` registers; blocking assignments of the ATM registers are non-blocking;
   `xxBD` reads as `xxBE` (the register map of the newer `base_trdemu` that the BIOS uses), breakpoint
-  writes only at `10BD` / `11BD`; the output `shadow_out`.
+  writes only at `10BD` / `11BD`; the output `shadow_out`; the border on any even port (A0 = 0) except
+  `#xxBE`, the IDE registers and the OPL4 `#C4` / `#C6` / `#7E`, its bright bit only on `#F6` (was `#FE` /
+  `#F6` / `#FC`, bright = `~A3`).
 - `zmem.v`: the CPU read latch clocked by `cpu_strobe` is an `fclk` register with a bypass while
   `cpu_strobe` is high.
 - `zclock.v`: the power-up values of the simulation are kept for the FPGA (INIT values).

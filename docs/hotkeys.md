@@ -25,7 +25,7 @@ Use these while the core is running. For a Win combination, hold Win, press the 
 | Win+J | Cycle the left joystick mapping |
 | Win+R | Cycle the right joystick mapping |
 | Win+P | Toggle CPU pause |
-| F11 | Request NMI; behavior depends on the running software |
+| F11, board button 2 | Request NMI; behavior depends on the running software |
 | F12 | Reset the core and GS together |
 
 The OSD has the pages **Sound** (Covox, PSG Mix, PSG Type, SAA1099, OPL2), **Disks** (HDD, HDF0, HDF1) and **Input** (the joysticks); the main page keeps ZiFi RS232, VGA Hsync, Pause, NMI and Reset. **Win+N** switches HDD (the IDE master) between the CF card and the image HDF0, **Win+F5** chooses the image HDF0.

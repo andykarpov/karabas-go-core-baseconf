@@ -487,11 +487,16 @@ module zports(output wire shadow_out,
 	//border port FE
 	wire portwe_wr_fclk;
 
-	assign portfe_wr_fclk = (((loa==PORTFE) || (loa==PORTF6) || (loa==8'hFC)) && port_wr_fclk);
+	// the border on any even port (A0 = 0) as on the Spectrum / Pentagon (NMI 3 writes it by OUT (C) with C = #06),
+	// except the other even ports of this core: #xxBE (NMI end), the IDE registers and the OPL4 (#C4, #C6, #7E);
+	// the bright bit only on #F6 (was ~a[3]: #FE / #FC 0, #F6 1); the beeper / MIC stay on #FE
+	wire opl4_even = (loa==8'hC4) || (loa==8'hC6) || (loa==8'h7E);
+
+	assign portfe_wr_fclk = !loa[0] && (loa!=ZXEVBE) && !ide_ports && !opl4_even && port_wr_fclk;
 
 	always @(posedge fclk)
 	if( portfe_wr_fclk )
-		border <= { ~a[3], din[2:0] };
+		border <= { (loa==PORTF6), din[2:0] };
 
 
 

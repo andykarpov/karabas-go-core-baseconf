@@ -30,8 +30,9 @@ JSON = core.json
 # map / par options of the cores of karabas-go; the cost table (map -t, the placement seed) 2 on every board.
 # Build 26102806 of karabas-forge used the map / par defaults on the Go and -ol high -t 2 / -t 1 on Mini / Mini G.
 MAP_T_go = 2
-# Mini -t 3 since the OPL4 (26111801): with -t 2 the router did not finish (3739 / 3758 slices)
-MAP_T_mini = 3
+# Mini -t 3 since the OPL4 (26111801): with -t 2 the router did not finish (3739 / 3758 slices);
+# -t 4 since 26112003: with -t 3 the router stood in phase 4 for over an hour
+MAP_T_mini = 4
 # Mini G -t 3 since 26110201: with -t 2 three JT12 paths were 1.3 ns short (100 % slices)
 MAP_T_minig = 3
 # LUT combining: the Mini (sigma-delta audio) fits only with -lc area since 26110104, the Mini G since the OPL4
