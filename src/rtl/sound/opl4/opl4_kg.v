@@ -6,13 +6,15 @@
 // and the FM part opl3_fm (opl3_fpga of Greg Taylor, LGPL-3, checked against
 // Nuked-OPL3) are taken as they are.
 //
-// Ports (low address byte, M1 = 1, not in DOS) as in the ZXM-MoonSound CPLD:
+// Ports (low address byte, M1 = 1) as in the ZXM-MoonSound CPLD firmware 1.01 (rev01):
 //   #C4 W FM address bank 0 / R status
 //   #C5 W FM data   bank 0
-//   #C6 W FM address bank 1
-//   #C7 W FM data   bank 1
-//   #7E W wave address
-//   #7F W wave data / R wave data  (#7F in DOS is the VG93 data register)
+//   #C6 W FM address bank 1 / R: moves the wave ports to #C2 / #C3 until the reset
+//   #C7 W FM data   bank 1  / R: the same
+//   #7E W wave address                  (before a read of #C6 / #C7, not in DOS)
+//   #7F W wave data / R wave data       (the same; #7F in DOS is the VG93 data register)
+//   #C2 W wave address                  (after a read of #C6 / #C7, in DOS too)
+//   #C3 W wave data / R wave data       (the same)
 //
 // Clocks: CLK = clk_sys 84 MHz (the wavetable engine, the sample memory),
 // CLK28 = clk_bus 28 MHz of the same PLL (the FM part, the Z80 bus).
@@ -57,10 +59,17 @@ module opl4_kg (
 // ---------------------------------------------------------------------------
 // port decode
 // ---------------------------------------------------------------------------
-wire sel_lo = (A[7:1] == 7'b0111111);           // #7E/#7F
-wire sel_hi = (A[7:2] == 6'b110001);            // #C4..#C7
-assign SEL  = !IORQ_n && M1_n && !DOS && (sel_lo || sel_hi);
-wire [2:0] off = sel_lo ? {2'b10, A[0]} : {1'b0, A[1:0]};
+// As the CPLD firmware 1.01 of the ZXM-MoonSound rev01 (Mick, 31.01.2022): a read of #C6 / #C7 moves the
+// wave ports from #7E / #7F to #C2 / #C3 until the reset (en_c2; OmniPlayer of NedoOS does IN (#C6) and works
+// on #C2 / #C3). The card works in DOS too (no PEVO jumper), only the VG93 ports are taken from it there:
+// of its ports that is #7F (VGDAT); #7E follows #7F, so #7E / #7F stay off in DOS.
+reg  en_c2 = 1'b0;
+wire sel_7e = (A[7:1] == 7'b0111111) && !en_c2 && !DOS; // #7E/#7F
+wire sel_c2 = (A[7:1] == 7'b1100001) &&  en_c2;         // #C2/#C3
+wire sel_hi = (A[7:2] == 6'b110001);                    // #C4..#C7
+wire sel_wv = sel_7e || sel_c2;
+assign SEL  = !IORQ_n && M1_n && (sel_wv || sel_hi);
+wire [2:0] off = sel_wv ? {2'b10, A[0]} : {1'b0, A[1:0]};
 
 // strobes into CLK
 reg [2:0] wr_s = 3'd0, rd_s = 3'd0;
@@ -75,6 +84,12 @@ always @(posedge CLK) begin
 	wr_p      <= wr_s[1] && !wr_s[2];
 	rd_done_p <= !rd_s[1] && rd_s[2];
 end
+
+// en_c2: set at the end of a read of #C6 / #C7 (off 2 / 3, FM bank 1: they read nothing on the YMF278),
+// the bus decode above takes it when the next IORQ comes (static by then)
+always @(posedge CLK)
+	if (RESET) en_c2 <= 1'b0;
+	else if (rd_done_p && off_r[2:1] == 2'b01) en_c2 <= 1'b1;
 
 reg [1:0] INTERP_s = 2'b00;
 always @(posedge CLK) INTERP_s <= {INTERP_s[0], INTERP};
