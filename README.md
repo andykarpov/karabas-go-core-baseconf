@@ -152,6 +152,15 @@ devices: `#xxBE` (NMI end), the IDE registers, the OPL4 (`#C4`, `#C6`, `#7E`); t
 Checked on the Mini G: `OUT 6,2` red, `OUT 198,1` (OPL4) keeps it, `OUT 246,1` bright blue; button 2 opens the
 EVO Magic Service, `0` continues. Go / Mini not checked on hardware.
 
+Build **26112301**: the OPL4 works under NedoOS (OmniPlayer `gp`), reported by Activator RFG. Its ports are
+those of the CPLD firmware 1.01 of the ZXM-MoonSound rev01 (Mick, 2022): a read of `#C6` / `#C7` moves the
+wave ports from `#7E` / `#7F` to `#C2` / `#C3` until the reset (`gp` does `IN (#C6)` and plays through
+`#C2` / `#C3`). NedoOS keeps the shadow mode on, where `#7F` is the VG93 data register: `#7E` / `#7F` stay off
+there, `#C2`..`#C7` work in it too (before, the whole OPL4 was off in the shadow mode). A write to `#C2`
+keeps the border. Slices: Go 98 %, Mini 99 %, Mini G 99 %, timing met. The port decode is checked in
+simulation; on hardware the fix was checked by Activator RFG on the Go (his build of the same change: OmniPlayer
+under NedoOS, `mfm_sample_4.trd` on `#7E` / `#7F`); this build is not checked on hardware.
+
 ## Building
 
 ISE 14.7 (`ISE_SETTINGS`, default `/opt/Xilinx/14.7/ISE_DS/settings64.sh`), from `src/`:

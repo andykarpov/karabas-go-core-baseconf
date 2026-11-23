@@ -125,7 +125,7 @@ module baseconf
 	
 	// osd switches
 	input wire covox_en,  // covox #FB and Soundrive (covox.vhd of TS-Conf)
-	input wire opl4_en,     // OPL4 (ZXM-MoonSound: #C4..#C7 FM, #7E / #7F wave, outside the shadow mode)
+	input wire opl4_en,     // OPL4 (ZXM-MoonSound fw 1.01: #C4..#C7 FM, #7E / #7F wave outside the shadow mode, #C2 / #C3 after IN #C6)
 	input wire opl4_interp, // OPL4 Interp: the linear interpolation of the samples in opl4.v (openMSX; ymfm has none)
 	input wire hdd_image, // the IDE device 0: 0 = the CF card, 1 = the image HDF0 (hdf_ata); HDF1 is device 1
 `ifdef LINK2
@@ -1182,8 +1182,9 @@ assign keyboard_addr = a[15:8];
         .I_WR_N(wr_n), .I_IORQ_N(iorq_n), .I_DOS(shadow),
         .O_A(covox_a), .O_B(covox_b), .O_C(covox_c), .O_D(covox_d), .O_FB(covox_fb));
 
-    // OPL4 (ZXM-MoonSound: #C4..#C7 FM, #7E / #7F wave; opl4_kg of TS-Conf), its sample memory on the second
-    // port of the SDRAM (baseconf_storage). Not in the shadow mode: #7F there is VGDAT of the VG93.
+    // OPL4 (ZXM-MoonSound fw 1.01: #C4..#C7 FM, #7E / #7F wave, after a read of #C6 / #C7 #C2 / #C3 wave;
+    // opl4_kg of TS-Conf), its sample memory on the second port of the SDRAM (baseconf_storage). #7E / #7F
+    // not in the shadow mode (#7F there is VGDAT of the VG93), the other ports in it too (NedoOS).
     wire [15:0] opl4_l, opl4_r;
     wire opl4_sel;
     wire [7:0] opl4_do_bus;

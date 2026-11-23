@@ -45,7 +45,7 @@ cp1251 comments are UTF-8.
   trigger latches are `fclk` registers; blocking assignments of the ATM registers are non-blocking;
   `xxBD` reads as `xxBE` (the register map of the newer `base_trdemu` that the BIOS uses), breakpoint
   writes only at `10BD` / `11BD`; the output `shadow_out`; the border on any even port (A0 = 0) except
-  `#xxBE`, the IDE registers and the OPL4 `#C4` / `#C6` / `#7E`, its bright bit only on `#F6` (was `#FE` /
+  `#xxBE`, the IDE registers and the OPL4 `#C2` / `#C4` / `#C6` / `#7E`, its bright bit only on `#F6` (was `#FE` /
   `#F6` / `#FC`, bright = `~A3`).
 - `zmem.v`: the CPU read latch clocked by `cpu_strobe` is an `fclk` register with a bypass while
   `cpu_strobe` is high.
@@ -97,7 +97,9 @@ cp1251 comments are UTF-8.
   1 MHz before): the queue of `baseconf_storage` writes a byte into the SDRAM faster than a burst
   brings one, so `BURST_READY` stays 1. The ROMs of the Mini G load in 0.56 s (5.7 s before).
 - The OPL4 (ZXM-MoonSound) instead of SAA1099, OPL2 and the FM part of TurboSound FM (2026-11-17): `opl4_kg`
-  of TS-Conf on #C4..#C7 / #7E / #7F outside the shadow mode, its FM timer IRQ on /INT (not in shadow), the
+  of TS-Conf on #C4..#C7 / #7E / #7F (since 26112301 as the CPLD firmware 1.01 of the ZXM-MoonSound rev01, Mick,
+  2022: a read of #C6 / #C7 moves the wave ports to #C2 / #C3 until the reset; #7E / #7F not in the shadow mode,
+  the other ports in it too, for NedoOS; this change only in this repo, not in TS-Conf), its FM timer IRQ on /INT (not in shadow), the
   YRW801 ROM from the FL item "OPL4 ROM" (slot 1, `/baseconf/yrw801.rom` or `/tsconf/yrw801.rom`). The SDRAM
   is `sdram2p` of TS-Conf: port 1 = the main ROM and the ROM loader (`baseconf_storage`, the main CPU alone:
   a ROM read 10..17 clk_sys, mean 14, 25 with a refresh; `baseconf_sdram.v` 10 / 25 before), port 2 = the GS
